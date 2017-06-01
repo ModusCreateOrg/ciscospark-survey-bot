@@ -1,3 +1,10 @@
+.env.local
+lib
+dump.rdb
+public
+
+#### Standard Node stuff:
+
 # Logs
 logs
 *.log
@@ -53,7 +60,4 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
-
-# dotenv environment variables file
-.env
 

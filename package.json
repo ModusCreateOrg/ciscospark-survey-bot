@@ -1,0 +1,74 @@
+{
+  "name": "ciscospark-survey-bot",
+  "version": "1.0.0",
+  "description": "Bot for taking surveys",
+  "main": "lib/index.js",
+  "engines": {
+    "node": "~8.0"
+  },
+  "scripts": {
+    "prod": "node lib/index.js",
+    "start": "concurrently  'npm run server-dev'  'gulp'  'npm run redis'",
+    "server-dev": "./inenv.sh babel-watch src/index.js",
+    "ngrok": "ngrok http 3000 -subdomain=sparksurvey",
+    "redis": "redis-server",
+    "test": "ava",
+    "test-watch": "ava --watch",
+    "transpile": "babel --out-dir=lib src",
+    "lint": "eslint .",
+    "fix": "eslint . --fix",
+    "webui-dummy-server": "babel-watch src/dummy-ui.js",
+    "webui-dev": "concurrently  'npm run webui-dummy-server'  'gulp'",
+    "build": "gulp build",
+    "gulp": "gulp",
+    "bower": "bower",
+    "postinstall": "echo 'rebuild node-sass b/c Yarn bug'  &&  npm rebuild node-sass  &&  npm run bower install  &&  npm run gulp clean  &&  npm run gulp build",
+    "heroku-postbuild": "npm run gulp clean-transpiled  &&  npm run transpile"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.22.1",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-transform-class-properties": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-env": "^1.1.8",
+    "botkit": "^0.5.2",
+    "botkit-storage-redis": "^1.1.0",
+    "bower": "^1.8.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-clean": "^0.3.2",
+    "gulp-load-plugins": "^1.1.0",
+    "gulp-sass": "^2.1.0",
+    "main-bower-files": "^2.13.1",
+    "node-sass": "^4.5.0",
+    "promisify-node": "^0.4.0",
+    "pug": "^2.0.0-beta11"
+  },
+  "devDependencies": {
+    "ava": "^0.17.0",
+    "babel-watch": "^2.0.5",
+    "babel-eslint": "^7.1.1",
+    "concurrently": "^3.3.0",
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.js",
+      "!test/setup.js"
+    ],
+    "require": [
+      "babel-register",
+      "babel-polyfill",
+      "./test/setup"
+    ],
+    "babel": "inherit"
+  }
+}
+
