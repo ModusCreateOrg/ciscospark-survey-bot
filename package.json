@@ -38,6 +38,7 @@
     "botkit": "^0.5.2",
     "botkit-storage-redis": "^1.1.0",
     "bower": "^1.8.0",
+    "caminte": "^0.3.6",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-clean": "^0.3.2",
@@ -50,8 +51,8 @@
   },
   "devDependencies": {
     "ava": "^0.17.0",
-    "babel-watch": "^2.0.5",
     "babel-eslint": "^7.1.1",
+    "babel-watch": "^2.0.5",
     "concurrently": "^3.3.0",
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",
@@ -71,4 +72,3 @@
     "babel": "inherit"
   }
 }
-

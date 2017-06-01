@@ -1246,7 +1246,7 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@^3.0.0, bluebird@^3.4.1:
+bluebird@^3.0.0, bluebird@^3.4.1, bluebird@^3.4.6:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
@@ -1439,6 +1439,13 @@ camelcase@^2.0.0, camelcase@^2.1.0:
 camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
+
+caminte@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/caminte/-/caminte-0.3.6.tgz#4eb77cfd3a3a596c1b92c6fb0276fb52d9d8b334"
+  dependencies:
+    bluebird "^3.4.6"
+    uuid "^3.0.1"
 
 caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
   version "1.0.30000676"
