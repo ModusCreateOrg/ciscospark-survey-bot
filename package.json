@@ -39,6 +39,7 @@
     "botkit-storage-redis": "^1.1.0",
     "bower": "^1.8.0",
     "caminte": "^0.3.6",
+    "cookie-session": "^2.0.0-beta.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-clean": "^0.3.2",
@@ -46,8 +47,12 @@
     "gulp-sass": "^2.1.0",
     "main-bower-files": "^2.13.1",
     "node-sass": "^4.5.0",
+    "passport": "^0.3.2",
+    "passport-cisco-spark": "^1.0.3",
+    "passport-oauth": "^1.0.0",
     "promisify-node": "^0.4.0",
-    "pug": "^2.0.0-beta11"
+    "pug": "^2.0.0-beta11",
+    "url-join": "^2.0.2"
   },
   "devDependencies": {
     "ava": "^0.17.0",
