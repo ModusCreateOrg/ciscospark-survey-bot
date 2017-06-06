@@ -12,6 +12,14 @@ html
         | Survey Bot
         span
 
+      if currentUser
+        .current-user
+          img.avatar(src=currentUser.profile.avatar width=100 height=100)
+          .name= currentUser.profile.displayName
+          // .data= JSON.stringify(currentUser)
+          .logout
+            a(href='/auth/logout') Logout
+
     .row
       .small-12.small-centered.medium-10.large-8.columns
         section.content-box
