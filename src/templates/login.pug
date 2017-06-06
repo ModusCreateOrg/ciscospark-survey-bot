@@ -5,6 +5,6 @@ block content
 
   h2 Dev Login
   form(action="/auth/local" method="POST")
-    input(name="username")
+    input(name="username" required=true)
     input(name="password" type="hidden" value='just need something here')
     button Submit
