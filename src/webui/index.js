@@ -14,6 +14,7 @@ import actions from './actions'
 export default (app) => {
   app.set('views', 'src/templates')
   app.set('view engine', 'pug')
+  app.use('/bower', express.static('bower_components'))
   app.use('/static', express.static('public'))
 
   app.use(bodyParser.urlencoded())

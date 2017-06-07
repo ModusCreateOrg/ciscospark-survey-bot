@@ -45,7 +45,6 @@
     "gulp-clean": "^0.3.2",
     "gulp-load-plugins": "^1.1.0",
     "gulp-sass": "^2.1.0",
-    "main-bower-files": "^2.13.1",
     "node-sass": "^4.5.0",
     "passport": "^0.3.2",
     "passport-cisco-spark": "^1.0.3",

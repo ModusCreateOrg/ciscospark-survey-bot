@@ -15,6 +15,12 @@ const sassPaths = [
 ]
 
 const stylesheetsDir = 'src/stylesheets'
+const javascriptsDir = 'src/javascripts'
+
+gulp.task('js', () =>
+  gulp.src(`${javascriptsDir}/*`)
+    .pipe(gulp.dest('public/javascripts'))
+)
 
 gulp.task('sass', () =>
   gulp.src(`${stylesheetsDir}/index.s*ss`)
@@ -34,6 +40,10 @@ gulp.task('watch-sass', ['sass'], () =>
   gulp.watch([`${stylesheetsDir}/**/*.scss`], ['sass'])
 )
 
+gulp.task('watch-js', ['sass'], () =>
+  gulp.watch([`${javascriptsDir}/**/*.js`], ['js'])
+)
+
 
 function cleanTask (name, dir) {
   gulp.task(`clean-${name}`, () =>
@@ -42,12 +52,13 @@ function cleanTask (name, dir) {
   )
 }
 
+cleanTask('js', 'public/javascripts/*')
 cleanTask('sass', 'public/stylesheets/*')
 cleanTask('images', 'public/images/*')
 cleanTask('transpiled', 'lib/*')
 
-gulp.task('clean', ['clean-sass', 'clean-images', 'clean-transpiled'])
+gulp.task('clean', ['clean-js', 'clean-sass', 'clean-images', 'clean-transpiled'])
 
-gulp.task('build', ['images', 'sass'])
+gulp.task('build', ['images', 'js', 'sass'])
 
-gulp.task('default', ['build', 'watch-sass'])
+gulp.task('default', ['build', 'watch-js', 'watch-sass'])
