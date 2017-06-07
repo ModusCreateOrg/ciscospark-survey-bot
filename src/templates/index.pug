@@ -15,11 +15,11 @@ block content
     #survey-form
       .survey-title
         label Survey title:
-        input(v-model="title")
+        input(v-model="survey.title")
 
       div Questions
       ul.questions
-        li(v-for="question in questions")
+        li(v-for="question in survey.questions")
           label Question:
           input(v-model="question.text")
 
@@ -27,7 +27,7 @@ block content
           select(v-model="question.type")
             option(v-for="type in questionTypes") {{type}}
 
-          button(type="button" @click="remove(questions, question)") ➖ remove
+          button(type="button" @click="remove(survey.questions, question)") ➖ remove
 
 
           .multi-options(v-if="question.type === 'multi'")
@@ -39,4 +39,8 @@ block content
                 button(type="button" @click="remove(question.choices, choice)") ➖ remove
             button(type="button" @click="addChoice(question)") ➕ choice
 
-      button(type="button" @click="addQuestion") ➕ question
+      div
+        button(type="button" @click="addQuestion") ➕ question
+
+      div
+        button(type="button" @click="submit") Done
