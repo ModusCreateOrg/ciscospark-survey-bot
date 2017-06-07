@@ -18,12 +18,26 @@ const ensureLoggedIn = (loginPath) => async (req, res, next) => {
 router.use(ensureLoggedIn('/auth/login'))
 
 router.get('/', async (req, res) => {
-  const surveys = await actions.listSurveys()
-  res.render('index', { surveys })
+  res.locals.surveys = await actions.listSurveys()
+  res.render('index')
+})
+
+router.get('/surveys/new', async (req, res) => {
+  res.render('new')
+})
+
+router.get('/surveys/:id', async (req, res) => {
+  res.locals.survey = await actions.getSurvey(req.user, req.params.id)
+  res.render('show')
 })
 
 router.post('/surveys', async (req, res) => {
   const survey = await actions.createSurvey(req.user, req.body)
+  res.json(survey)
+})
+
+router.put('/surveys/:id', async (req, res) => {
+  const survey = await actions.updateSurvey(req.user, req.params.id, req.body)
   res.json(survey)
 })
 

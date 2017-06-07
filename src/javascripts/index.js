@@ -10,9 +10,15 @@ const newQuestion = () => ({
   choices: [newChoice()],
 })
 
-const postJSON = (url, json) =>
+const newSurvey = () => ({
+  title: '',
+  description: '',
+  questions: [newQuestion()],
+})
+
+const fetchJSON = (method, url, json) =>
   fetch(url, {
-    method: 'post',
+    method,
     credentials: 'include',
     body: JSON.stringify(json),
     headers: {
@@ -20,20 +26,20 @@ const postJSON = (url, json) =>
       'Content-Type': 'application/json'
     },
   }).then((response) => {
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
+    if (!response.ok) throw new Error(response.statusText)
     return response.json()
   })
 
+const selector = '#survey-form'
+const surveyData = $(selector).data('survey') || { data: newSurvey() }
+
+console.log(surveyData)
 const surveyForm = new Vue({
-  el: '#survey-form',
+  el: selector,
   data: {
     questionTypes,
-    survey: {
-      title: "",
-      questions: [newQuestion()]
-    }
+    id: surveyData.id,
+    survey: surveyData.data,
   },
   methods: {
     addQuestion: function () {
@@ -46,9 +52,17 @@ const surveyForm = new Vue({
       collection.splice(collection.indexOf(item), 1)
     },
     submit: function () {
-      postJSON('/surveys', this.survey)
-        .then(console.log)
+      const [ method, path ] = this.id ? ['put', `/surveys/${this.id}`] : ['post', '/surveys']
+      fetchJSON(method, path, this.survey)
+        .then(() => {
+          window.location = '/'
+        })
         .catch(console.error)
     }
   }
+})
+
+
+$(document).on('click', '[link-href]', function () {
+  window.location = $(this).attr('link-href')
 })

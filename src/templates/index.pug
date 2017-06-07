@@ -3,45 +3,15 @@ extends layout.pug
 block content
   h2
     img.chat-bubble(src='/static/images/chat-bubble.png')
-    span Users
+    span Dashboard
+
+  a(href="/surveys/new") ➕ Survey
 
   pre= JSON.stringify(currentUser)
   .content
     ul
       each survey in surveys
-        li= JSON.stringify(survey)
-
-    h3 New Survey
-
-    #survey-form
-      .survey-title
-        label Survey title:
-        input(v-model.trim="survey.title")
-
-      div Questions
-      ul.questions
-        li(v-for="question in survey.questions")
-          label Question:
-          input(v-model.trim="question.text")
-
-          label Type:
-          select(v-model="question.type")
-            option(v-for="type in questionTypes") {{type}}
-
-          button(type="button" @click="remove(survey.questions, question)") ➖ remove
-
-
-          .multi-options(v-if="question.type === 'multi'")
-            div Choices
-            ul.choices
-              li(v-for="choice in question.choices")
-                | choice
-                input(v-model.trim="choice.text")
-                button(type="button" @click="remove(question.choices, choice)") ➖ remove
-            button(type="button" @click="addChoice(question)") ➕ choice
-
-      div
-        button(type="button" @click="addQuestion") ➕ question
-
-      div
-        button(type="button" @click="submit") Save Draft
+        li(link-href=`/surveys/${survey.id}`)
+          .title= survey.data.title
+          // .raw= JSON.stringify(survey)
+          // .description= survey.data.description

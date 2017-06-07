@@ -10,7 +10,7 @@ var schema = new Schema('redis', {
 });
 
 const Survey = schema.define('Survey', {
-  id:          { type: String, default: uuid, index: true },
+  // id:          { type: String, default: uuid, index: true },
   userSparkId: { type: String, index: true },
   data:        { type: schema.Json },
 });
@@ -25,9 +25,17 @@ promisifyAll(Survey, {
 const listSurveys = () => Survey.allAsync()
 
 const createSurvey = (currentUser, data) =>
-  Survey.createAsync({ userSparkId: currentUser.id, data })
+  Survey.createAsync({ userSparkId: currentUser.profile.id, data })
+
+const getSurvey = (currentUser, id) =>
+  Survey.findOneAsync({where: { userSparkId: currentUser.profile.id, id}})
+
+const updateSurvey = (currentUser, id, data) =>
+  Survey.updateAsync({ userSparkId: currentUser.profile.id, id}, {data})
 
 export default {
   listSurveys,
   createSurvey,
+  getSurvey,
+  updateSurvey,
 }
