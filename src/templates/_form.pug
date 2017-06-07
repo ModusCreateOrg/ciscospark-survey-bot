@@ -4,6 +4,10 @@ mixin form(survey)
       label Survey title:
       input(v-model.trim="survey.title")
 
+    .survey-description
+      label Description
+      textarea(v-model.trim="survey.description")
+
     div Questions
     ul.questions
       li(v-for="question in survey.questions")

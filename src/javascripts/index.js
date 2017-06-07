@@ -33,7 +33,6 @@ const fetchJSON = (method, url, json) =>
 const selector = '#survey-form'
 const surveyData = $(selector).data('survey') || { data: newSurvey() }
 
-console.log(surveyData)
 const surveyForm = new Vue({
   el: selector,
   data: {
