@@ -5,30 +5,38 @@ block content
     img.chat-bubble(src='/static/images/chat-bubble.png')
     span Users
 
-  ul
-    each user in users
-      li= JSON.stringify(user)
+  .content
+    ul
+      each user in users
+        li= JSON.stringify(user)
 
-  h3 Form
+    h3 New Survey
 
-  #survey-form
-    input(v-model="title")
+    #survey-form
+      .survey-title
+        label Survey title:
+        input(v-model="title")
 
-    ul.questions
-      li(v-for="question in questions")
-        | Question
-        input(v-model="question.text")
-        button(type="button" @click="remove(questions, question)") ➖
+      div Questions
+      ul.questions
+        li(v-for="question in questions")
+          label Question:
+          input(v-model="question.text")
 
-        select(v-model="question.type")
-          option(v-for="type in questionTypes") {{type}}
+          label Type:
+          select(v-model="question.type")
+            option(v-for="type in questionTypes") {{type}}
 
-        .multi-options(v-if="question.type === 'multi'")
-          ul.choices
-            li(v-for="choice in question.choices")
-              | choice
-              input(v-model="choice.text")
-              button(type="button" @click="remove(question.choices, choice)") ➖
-          button(type="button" @click="addChoice(question)") ➕ choice
+          button(type="button" @click="remove(questions, question)") ➖ remove
 
-    button(type="button" @click="addQuestion") ➕ question
+
+          .multi-options(v-if="question.type === 'multi'")
+            div Choices
+            ul.choices
+              li(v-for="choice in question.choices")
+                | choice
+                input(v-model="choice.text")
+                button(type="button" @click="remove(question.choices, choice)") ➖ remove
+            button(type="button" @click="addChoice(question)") ➕ choice
+
+      button(type="button" @click="addQuestion") ➕ question

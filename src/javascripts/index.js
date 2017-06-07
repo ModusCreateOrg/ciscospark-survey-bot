@@ -1,11 +1,11 @@
 const questionTypes = ['text', 'multi']
 
 const newChoice = () => ({
-  text: 'choice-text',
+  text: '',
 })
 
 const newQuestion = () => ({
-  text: 'question-text',
+  text: '',
   type: questionTypes[0],
   choices: [newChoice()],
 })
@@ -14,7 +14,7 @@ const surveyForm = new Vue({
   el: '#survey-form',
   data: {
     questionTypes,
-    title: "Default title",
+    title: "",
     message: "Ok",
     questions: [newQuestion()]
   },
