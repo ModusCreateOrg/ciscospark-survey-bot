@@ -10,6 +10,22 @@ const newQuestion = () => ({
   choices: [newChoice()],
 })
 
+const postJSON = (url, json) =>
+  fetch(url, {
+    method: 'post',
+    credentials: 'include',
+    body: JSON.stringify(json),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error(response.statusText)
+    }
+    return response.json()
+  })
+
 const surveyForm = new Vue({
   el: '#survey-form',
   data: {
@@ -30,7 +46,9 @@ const surveyForm = new Vue({
       collection.splice(collection.indexOf(item), 1)
     },
     submit: function () {
-      console.log(JSON.stringify(this.survey))
+      postJSON('/surveys', this.survey)
+        .then(console.log)
+        .catch(console.error)
     }
   }
 })

@@ -18,17 +18,7 @@ passport.deserializeUser((user, done) => {
 })
 
 
-export const ensureLoggedIn = (loginPath) => (req, res, next) => {
-  if (!req.user) {
-    res.redirect(loginPath)
-  } else {
-    res.locals.currentUser = req.user
-  }
-  next()
-}
-
-
-export const router = express.Router()
+const router = express.Router()
 
 router.use('/spark', sparkRouter)
 
@@ -42,3 +32,6 @@ router.get('/logout', (req, res) => {
 router.get('/login', (req, res) => {
   res.render('login')
 })
+
+
+export default router

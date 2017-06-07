@@ -1,5 +1,6 @@
 import { Schema } from 'caminte'
 import { promisifyAll } from 'bluebird'
+import uuid from 'uuid/v4'
 
 var schema = new Schema('redis', {
   driver     : "redis",
@@ -8,21 +9,25 @@ var schema = new Schema('redis', {
   database   : "test"
 });
 
-const User = schema.define('User', {
-    name:     { type: schema.String },
-    email:    { type: schema.String },
-    joinedAt: { type: schema.Date, default: Date.now },
+const Survey = schema.define('Survey', {
+  id:          { type: String, default: uuid, index: true },
+  userSparkId: { type: String, index: true },
+  data:        { type: schema.Json },
 });
 
-promisifyAll(User, {
+promisifyAll(Survey, {
   // b/c of this: http://bluebirdjs.com/docs/error-explanations.html#error-cannot-promisify-an-api-that-has-normal-methods
   filter: (name, func, target, passesDefaultFilter) =>
     passesDefaultFilter && !name.match(/Async$/)
 })
 
 
-const listUsers = () => User.allAsync()
+const listSurveys = () => Survey.allAsync()
+
+const createSurvey = (currentUser, data) =>
+  Survey.createAsync({ userSparkId: currentUser.id, data })
 
 export default {
-  listUsers,
+  listSurveys,
+  createSurvey,
 }

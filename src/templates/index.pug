@@ -5,10 +5,11 @@ block content
     img.chat-bubble(src='/static/images/chat-bubble.png')
     span Users
 
+  pre= JSON.stringify(currentUser)
   .content
     ul
-      each user in users
-        li= JSON.stringify(user)
+      each survey in surveys
+        li= JSON.stringify(survey)
 
     h3 New Survey
 
@@ -43,4 +44,4 @@ block content
         button(type="button" @click="addQuestion") ➕ question
 
       div
-        button(type="button" @click="submit") Done
+        button(type="button" @click="submit") Save Draft

@@ -1,15 +1,13 @@
 import bodyParser from 'body-parser'
 import cookieSession from 'cookie-session'
 import express from 'express'
+import morgan from 'morgan'
 import passport from 'passport'
 
-import {
-  ensureLoggedIn,
-  router as authRouter,
-} from './auth'
+import authRouter from './auth'
+import uiRouter from './ui_routes'
 
-import actions from './actions'
-
+var app = express()
 
 export default (app) => {
   app.set('views', 'src/templates')
@@ -26,12 +24,8 @@ export default (app) => {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  app.use('/auth/', authRouter)
+  app.use(morgan('dev'))
 
-  app.get('/', ensureLoggedIn('/auth/login'), async (req, res) => {
-    try {
-      const users = await actions.listUsers()
-      res.render('index', { users })
-    } catch (e) { console.error(e) }
-  })
+  app.use('/auth/', authRouter)
+  app.use('/', uiRouter)
 }
