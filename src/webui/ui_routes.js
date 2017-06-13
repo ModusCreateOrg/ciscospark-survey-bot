@@ -18,7 +18,7 @@ const ensureLoggedIn = (loginPath) => async (req, res, next) => {
 router.use(ensureLoggedIn('/auth/login'))
 
 router.get('/', async (req, res) => {
-  res.locals.surveys = await actions.listSurveys()
+  res.locals.surveys = await actions.listSurveys(req.user)
   res.render('index')
 })
 
@@ -27,7 +27,7 @@ router.get('/surveys/new', async (req, res) => {
 })
 
 router.get('/surveys/:id', async (req, res) => {
-  res.locals.survey = await actions.getSurvey(req.user, req.params.id)
+  res.locals.survey = await actions.getSurvey(req.user, parseInt(req.params.id))
   res.render('show')
 })
 

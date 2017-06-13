@@ -22,13 +22,13 @@ promisifyAll(Survey, {
 })
 
 
-const listSurveys = () => Survey.allAsync()
+const listSurveys = (currentUser) => Survey.allAsync({where: { userSparkId: currentUser.profile.id }})
 
 const createSurvey = (currentUser, data) =>
   Survey.createAsync({ userSparkId: currentUser.profile.id, data })
 
 const getSurvey = (currentUser, id) =>
-  Survey.findOneAsync({where: { userSparkId: currentUser.profile.id, id}})
+  Survey.findOneAsync({where: { userSparkId: currentUser.profile.id, id }})
 
 const updateSurvey = (currentUser, id, data) =>
   Survey.updateAsync({ userSparkId: currentUser.profile.id, id}, {data})

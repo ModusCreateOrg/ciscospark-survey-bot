@@ -33,6 +33,11 @@ const fetchJSON = (method, url, json) =>
 const selector = '#survey-form'
 const surveyData = $(selector).data('survey') || { data: newSurvey() }
 
+const save = ({id, survey}) => {
+  const [ method, path ] = id ? ['put', `/surveys/${id}`] : ['post', '/surveys']
+  return fetchJSON(method, path, survey)
+}
+
 const surveyForm = new Vue({
   el: selector,
   data: {
@@ -50,13 +55,13 @@ const surveyForm = new Vue({
     remove: function (collection, item) {
       collection.splice(collection.indexOf(item), 1)
     },
-    submit: function () {
-      const [ method, path ] = this.id ? ['put', `/surveys/${this.id}`] : ['post', '/surveys']
-      fetchJSON(method, path, this.survey)
-        .then(() => {
-          window.location = '/'
-        })
-        .catch(console.error)
+    saveDraft: async function () {
+      await save(this)
+      window.location = '/'
+    },
+    conduct: async function () {
+      const survey = save(this)
+      window.location = '/'
     }
   }
 })
