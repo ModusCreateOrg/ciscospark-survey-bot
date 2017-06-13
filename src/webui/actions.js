@@ -22,49 +22,48 @@ promisifyAll(Survey, {
 })
 
 
-const listSurveys = (currentUser) => Survey.allAsync({where: { userSparkId: currentUser.profile.id }})
-
-const createSurvey = (currentUser, data) =>
-  Survey.createAsync({ userSparkId: currentUser.profile.id, data })
-
-const getSurvey = (currentUser, id) =>
-  Survey.findOneAsync({where: { userSparkId: currentUser.profile.id, id }})
-
-const updateSurvey = (currentUser, id, data) =>
-  Survey.updateAsync({ userSparkId: currentUser.profile.id, id}, {data})
-
-
-
 import CiscoSpark from 'ciscospark'
 
-const sparkClient = (currentUser) => {
-  const spark = CiscoSpark.init({
-    config: {
-      credentials: {
-        client_secret: process.env.SPARK_OAUTH__CLIENT_SECRET,
-        client_id: process.env.SPARK_OAUTH__CLIENT_ID,
+
+export default class {
+  constructor(user) {
+    this.user = user
+    this.userId = user.profile.id
+  }
+
+  listSurveys = () => Survey.allAsync({where: { userSparkId: this.userId }})
+
+  createSurvey = data => Survey.createAsync({ userSparkId: this.userId, data })
+
+  getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
+
+  updateSurvey = (id, data) => Survey.updateAsync({ userSparkId: this.userId, id}, {data})
+
+  _sparkClient = () => {
+    this.__sparkClient = this.__sparkClient || this._buildSparkClient()
+    return this.__sparkClient
+  }
+
+  _buildSparkClient = () => {
+    const spark = CiscoSpark.init({
+      config: {
+        credentials: {
+          client_secret: process.env.SPARK_OAUTH__CLIENT_SECRET,
+          client_id: process.env.SPARK_OAUTH__CLIENT_ID,
+        },
       },
-    },
-  })
+    })
 
-  spark.credentials.set({
-    authorization: { // TODO: which of these do we actually need?
-      access_token: currentUser.accessToken,
-      token_type: 'Bearer',
-      refresh_token: currentUser.refreshToken,
-    },
-  })
+    spark.credentials.set({
+      authorization: { // TODO: which of these do we actually need?
+        access_token: this.user.accessToken,
+        refresh_token: this.user.refreshToken,
+        token_type: 'Bearer',
+      },
+    })
 
-  return spark
-}
+    return spark
+  }
 
-const listRooms = async (currentUser) =>
-  sparkClient(currentUser).rooms.list().then(({items}) => items)
-
-export default {
-  listSurveys,
-  createSurvey,
-  getSurvey,
-  updateSurvey,
-  listRooms,
+  listRooms = () => this._sparkClient().rooms.list().then(({items}) => items)
 }
