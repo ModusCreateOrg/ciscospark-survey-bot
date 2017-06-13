@@ -33,9 +33,38 @@ const getSurvey = (currentUser, id) =>
 const updateSurvey = (currentUser, id, data) =>
   Survey.updateAsync({ userSparkId: currentUser.profile.id, id}, {data})
 
+
+
+import CiscoSpark from 'ciscospark'
+
+const sparkClient = (currentUser) => {
+  const spark = CiscoSpark.init({
+    config: {
+      credentials: {
+        client_secret: process.env.SPARK_OAUTH__CLIENT_SECRET,
+        client_id: process.env.SPARK_OAUTH__CLIENT_ID,
+      },
+    },
+  })
+
+  spark.credentials.set({
+    authorization: { // TODO: which of these do we actually need?
+      access_token: currentUser.accessToken,
+      token_type: 'Bearer',
+      refresh_token: currentUser.refreshToken,
+    },
+  })
+
+  return spark
+}
+
+const listRooms = async (currentUser) =>
+  sparkClient(currentUser).rooms.list().then(({items}) => items)
+
 export default {
   listSurveys,
   createSurvey,
   getSurvey,
   updateSurvey,
+  listRooms,
 }

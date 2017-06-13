@@ -1,5 +1,11 @@
 mixin form(survey)
-  #survey-form(data-survey=JSON.stringify(survey))
+  pre=JSON.stringify(rooms)
+  #survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
+    .survey-room
+      select(v-model="survey.roomId" required=true)
+        option(disabled selected value="") Choose a Spark room
+        option(v-for="room in rooms" v-bind:value="room.id") {{room.title}}
+
     .survey-title
       label Survey title:
       input(v-model.trim="survey.title")

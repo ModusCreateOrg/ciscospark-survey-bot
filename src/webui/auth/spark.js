@@ -9,15 +9,12 @@ const sparkOauthConfig = {
   callbackURL: urlJoin(process.env.PUBLIC_ADDRESS, 'auth/spark/callback'),
 }
 
+export const router = express.Router()
+
+
 passport.use(new CiscoSparkStrategy(sparkOauthConfig, (accessToken, refreshToken, profile, done) => {
-  // User.findOrCreate({ sparkId: profile.id }, function (err, user) {
-  //   return done(err, user);
-  // });
   done(null, { accessToken, refreshToken, profile })
 }))
-
-
-export const router = express.Router()
 
 router.get('/', passport.authenticate('cisco-spark', {
   scope: ['spark:all'],

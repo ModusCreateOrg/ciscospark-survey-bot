@@ -14,6 +14,7 @@ const newSurvey = () => ({
   title: '',
   description: '',
   questions: [newQuestion()],
+  roomId: null,
 })
 
 const fetchJSON = (method, url, json) =>
@@ -32,6 +33,9 @@ const fetchJSON = (method, url, json) =>
 
 const selector = '#survey-form'
 const surveyData = $(selector).data('survey') || { data: newSurvey() }
+const roomData = $(selector).data('rooms')
+
+console.log('roomData', $(selector).data('rooms'))
 
 const save = ({id, survey}) => {
   const [ method, path ] = id ? ['put', `/surveys/${id}`] : ['post', '/surveys']
@@ -44,6 +48,7 @@ const surveyForm = new Vue({
     questionTypes,
     id: surveyData.id,
     survey: surveyData.data,
+    rooms: roomData,
   },
   methods: {
     addQuestion: function () {

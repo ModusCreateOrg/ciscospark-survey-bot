@@ -25,6 +25,5 @@ passport.use(new LocalStrategy((username, password, done) => {
 export const router = express.Router()
 
 router.post('/', passport.authenticate('local'), (req, res) => {
-  console.error('ARRIVED /auth/local')
   res.redirect('/')
 })
