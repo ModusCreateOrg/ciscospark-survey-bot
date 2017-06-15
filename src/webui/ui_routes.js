@@ -1,5 +1,5 @@
 import { AsyncRouter } from 'express-async-router'
-import Actions from './actions'
+import Actions from './Actions'
 
 const router = AsyncRouter()
 

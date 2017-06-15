@@ -22,13 +22,16 @@ promisifyAll(Survey, {
 })
 
 
-import CiscoSpark from 'ciscospark'
+import DummySparkClient from './DummySparkClient'
+import SparkClient from './SparkClient'
 
 
 export default class {
-  constructor(user) {
-    this.user = user
+  constructor (user) {
     this.userId = user.profile.id
+
+    const SparkClientClass = user.isLocal ? DummySparkClient : SparkClient
+    this.sparkClient = new SparkClientClass(user)
   }
 
   listSurveys = () => Survey.allAsync({where: { userSparkId: this.userId }})
@@ -39,31 +42,5 @@ export default class {
 
   updateSurvey = (id, data) => Survey.updateAsync({ userSparkId: this.userId, id}, {data})
 
-  _sparkClient = () => {
-    this.__sparkClient = this.__sparkClient || this._buildSparkClient()
-    return this.__sparkClient
-  }
-
-  _buildSparkClient = () => {
-    const spark = CiscoSpark.init({
-      config: {
-        credentials: {
-          client_secret: process.env.SPARK_OAUTH__CLIENT_SECRET,
-          client_id: process.env.SPARK_OAUTH__CLIENT_ID,
-        },
-      },
-    })
-
-    spark.credentials.set({
-      authorization: { // TODO: which of these do we actually need?
-        access_token: this.user.accessToken,
-        refresh_token: this.user.refreshToken,
-        token_type: 'Bearer',
-      },
-    })
-
-    return spark
-  }
-
-  listRooms = () => this._sparkClient().rooms.list().then(({items}) => items)
+  listRooms = function () { return this.sparkClient.listRooms(...arguments) }
 }

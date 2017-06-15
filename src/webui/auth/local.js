@@ -13,6 +13,7 @@ const imageUrlForEmoji = (emoji) => `data:image/svg+xml;utf8,
 
 passport.use(new LocalStrategy((username, password, done) => {
   done(null, {
+    isLocal: true,
     profile: {
       displayName: username,
       id: uuid(),
