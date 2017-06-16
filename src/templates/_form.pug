@@ -24,7 +24,7 @@ mixin form(survey)
         select(v-model="question.type")
           option(v-for="type in questionTypes") {{type}}
 
-        button(type="button" @click="remove(survey.questions, question)") ➖ remove
+        button(type="button" class="small warning button" @click="remove(survey.questions, question)") ➖ remove
 
 
         .multi-options(v-if="question.type === 'multi'")
@@ -32,15 +32,15 @@ mixin form(survey)
           ul.choices
             li(v-for="choice in question.choices")
               | choice
-              button(type="button" @click="remove(question.choices, choice)") ➖ remove
-          button(type="button" @click="addChoice(question)") ➕ choice
               input(type='text' v-model.trim="choice.text")
+              button(type="button" class="tiny warning button" @click="remove(question.choices, choice)") ➖ remove
+          button(type="button" class="tiny secondary button" @click="addChoice(question)") ➕ choice
 
     div
-      button(type="button" @click="addQuestion") ➕ question
+      button(type="button" class="small secondary button" @click="addQuestion") ➕ question
 
     div
-      button(type="button" @click="saveDraft") Save Draft
+      button(type="button" class="secondary button" @click="saveDraft") Save Draft
 
     div
-      button(type="button" @click="conduct") Conduct Survey
+      button(type="button" class="primary button" @click="conduct") Conduct Survey
