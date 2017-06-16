@@ -8,7 +8,7 @@ mixin form(survey)
 
     .survey-title
       label Survey title:
-      input(v-model.trim="survey.title")
+        input(type='text' v-model.trim="survey.title")
 
     .survey-description
       label Description
@@ -18,7 +18,7 @@ mixin form(survey)
     ul.questions
       li(v-for="question in survey.questions")
         label Question:
-        input(v-model.trim="question.text")
+        input(type='text' v-model.trim="question.text")
 
         label Type:
         select(v-model="question.type")
@@ -32,9 +32,9 @@ mixin form(survey)
           ul.choices
             li(v-for="choice in question.choices")
               | choice
-              input(v-model.trim="choice.text")
               button(type="button" @click="remove(question.choices, choice)") ➖ remove
           button(type="button" @click="addChoice(question)") ➕ choice
+              input(type='text' v-model.trim="choice.text")
 
     div
       button(type="button" @click="addQuestion") ➕ question
