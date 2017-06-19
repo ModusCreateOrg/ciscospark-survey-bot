@@ -37,7 +37,7 @@ body {
 }
 
 .content-box {
-  text-align: center;
+  text-align: left;
   background: $white;
   border-radius: 3px;
   padding: 1rem;
@@ -49,6 +49,7 @@ body {
 
   h2 {
     font-weight: 300;
+    font-size: 1.4em;
 
     .chat-bubble {
       width: 2.5rem;
@@ -75,14 +76,19 @@ body {
       }
     }
   }
-
-  .button {
-    border-radius: 3px;
-  }
 }
 
 .content {
   text-align: left;
+}
+
+ul {
+  list-style-type: square;
+}
+
+h3 {
+  font-weight: 300;
+  font-size: 1.2em;
 }
 
 *[link-href] {
