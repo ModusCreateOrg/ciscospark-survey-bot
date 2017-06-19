@@ -4,20 +4,19 @@ html
     link(href='/static/stylesheets/index.css' type='text/css' rel='stylesheet')
 
   body
-    header.main-header
-      h1
+    header.main-header.top-bar
+      div.brand.top-bar-left
         img.cisco(src='/static/images/cisco.png')
         span.spark Spark
-        img.spark-logo(src='/static/images/spark-logo.png')
-        | Survey Bot
-        span
+        | &nbsp;
+        h1 Survey Bot
 
       if currentUser
-        .current-user
-          img.avatar(src=currentUser.profile.avatar width=100 height=100)
-          .name= currentUser.profile.displayName
+        .current-user.top-bar-right
+          img.avatar(src=currentUser.profile.avatar width=32 height=32)
+          span.name= currentUser.profile.displayName
           // .data= JSON.stringify(currentUser)
-          .logout
+          span.logout
             a(href='/auth/logout') Logout
 
     .row

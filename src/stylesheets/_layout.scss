@@ -6,27 +6,32 @@ body {
 
 .main-header {
   text-align: center;
-  padding: 3rem;
+  padding: 1rem;
+  color: $dark-gray;
 
   h1 {
     font-size: 1.2rem;
     font-weight: 300;
-    color: $dark-gray;
+    display: inline;
+  }
 
-    img.cisco {
-      width: 3rem;
-      height: auto;
-      padding: 0 .5rem;
+  img.cisco {
+    width: 3rem;
+    height: auto;
+    padding: 0 .5rem;
+  }
+
+  .spark {
+    color: $primary-color;
+  }
+
+  .current-user {
+    .avatar {
+      margin: 0 .5em;
     }
 
-    .spark {
-      color: $primary-color;
-    }
-
-    img.spark-logo {
-      width: 3rem;
-      height: auto;
-      padding: 0 .5rem;
+    .logout {
+      padding: 0 1em;
     }
   }
 }
