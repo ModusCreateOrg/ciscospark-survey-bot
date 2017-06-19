@@ -14,7 +14,7 @@ mixin form(survey)
       label Description
       textarea(v-model.trim="survey.description")
 
-    div Questions
+    h3 Questions
     ul.questions
       li(v-for="question in survey.questions")
         label Question:
