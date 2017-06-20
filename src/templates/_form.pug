@@ -35,12 +35,11 @@ mixin form(survey)
             button(type="button" class="alert small button remove-button" @click="remove(survey.questions, question)") &#8722; remove
 
         .multi-options(v-if="question.type === 'multi'")
-          div Choices
-          ul.choices
+          ol.choices
             li(v-for="choice in question.choices")
               | choice
               input(type='text' v-model.trim="choice.text")
-              button(type="button" class="tiny warning button" @click="remove(question.choices, choice)") &#8722; remove
+              button(type="button" class="alert tiny button" @click="remove(question.choices, choice)") &#8722; remove
           button(type="button" class="tiny secondary button" @click="addChoice(question)") &#43; choice
 
     div
