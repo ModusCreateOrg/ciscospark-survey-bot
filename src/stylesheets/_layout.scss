@@ -99,8 +99,14 @@ ul.questions {
   .question {
     position: relative;
     margin: 0 0 1rem 0;
-    padding: 1.5rem 1rem 1rem;
+    padding: 1.5rem 1rem 0rem;
     border: 1px solid $light-gray;
+  }
+
+  ol.choices {
+    padding: 0;
+    margin: .8em 0 0;
+    list-style-type: none;
   }
 }
 

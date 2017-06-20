@@ -1,5 +1,5 @@
 mixin form(survey)
-  pre=JSON.stringify(rooms)
+  //pre=JSON.stringify(rooms)
   #survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
 
     .row
@@ -32,14 +32,16 @@ mixin form(survey)
 
           .columns.medium-2
             label &nbsp;
-            button(type="button" class="alert small button remove-button" @click="remove(survey.questions, question)") &#8722; remove
+            button(type="button" class="alert small button remove-button float-right" @click="remove(survey.questions, question)") &#8722; remove
 
         .multi-options(v-if="question.type === 'multi'")
           ol.choices
-            li(v-for="choice in question.choices")
-              | choice
-              input(type='text' v-model.trim="choice.text")
-              button(type="button" class="alert tiny button" @click="remove(question.choices, choice)") &#8722; remove
+            li.choice(v-for="choice in question.choices")
+              .row
+                .question-choice.columns.medium-9
+                  input(type='text' v-model.trim="choice.text")
+                div.columns.medium-3
+                  button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)") &#8722; remove
           button(type="button" class="tiny secondary button" @click="addChoice(question)") &#43; choice
 
     div
