@@ -40,11 +40,11 @@ body {
   text-align: left;
   background: $white;
   border-radius: 3px;
-  padding: 1rem;
+  padding: .5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
 
   @include breakpoint(medium up) {
-    padding: 2rem;
+    padding: 1rem;
   }
 
   h2 {
@@ -89,6 +89,7 @@ ul {
 h3 {
   font-weight: 300;
   font-size: 1.2em;
+  margin: 2em 0 .5em;
 }
 
 ul.questions {
@@ -98,9 +99,10 @@ ul.questions {
 
   .question {
     position: relative;
-    margin: 0 0 1rem 0;
-    padding: 1.5rem 1rem 0rem;
+    margin: 0 0 2rem 0;
+    padding: 1rem 1rem 0rem;
     border: 1px solid $light-gray;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
   }
 
   ol.choices {
