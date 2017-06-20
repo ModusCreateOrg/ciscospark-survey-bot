@@ -19,16 +19,20 @@ mixin form(survey)
 
     h3 Questions
     ul.questions
-      li(v-for="question in survey.questions")
-        label Question:
-        input(type='text' v-model.trim="question.text")
+      li.question(v-for="question in survey.questions")
+        .row
+          .columns.medium-7
+            label Question:
+            input(type='text' v-model.trim="question.text")
 
-        label Type:
-        select(v-model="question.type")
-          option(v-for="type in questionTypes") {{type}}
+          .columns.medium-3
+            label Type:
+            select(v-model="question.type")
+              option(v-for="type in questionTypes") {{type}}
 
-        button(type="button" class="small warning button" @click="remove(survey.questions, question)") &#8722; remove
-
+          .columns.medium-2
+            label &nbsp;
+            button(type="button" class="alert small button remove-button" @click="remove(survey.questions, question)") &#8722; remove
 
         .multi-options(v-if="question.type === 'multi'")
           div Choices

@@ -91,9 +91,17 @@ h3 {
   font-size: 1.2em;
 }
 
-.questions {
+ul.questions {
   padding: 0;
   margin: 0;
+  list-style-type: none;
+
+  .question {
+    position: relative;
+    margin: 0 0 1rem 0;
+    padding: 1.5rem 1rem 1rem;
+    border: 1px solid $light-gray;
+  }
 }
 
 *[link-href] {
