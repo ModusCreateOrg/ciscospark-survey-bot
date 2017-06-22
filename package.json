@@ -54,6 +54,7 @@
     "passport-oauth": "^1.0.0",
     "promisify-node": "^0.4.0",
     "pug": "^2.0.0-beta11",
+    "redis-url": "^1.2.1",
     "url-join": "^2.0.2",
     "uuid": "^3.0.1"
   },

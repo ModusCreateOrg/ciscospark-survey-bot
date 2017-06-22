@@ -1,19 +1,29 @@
 import { Schema } from 'caminte'
 import { promisifyAll } from 'bluebird'
+import redisUrl from 'redis-url'
 import uuid from 'uuid/v4'
 
-var schema = new Schema('redis', {
-  driver     : "redis",
-  host       : "localhost",
-  port       : "6379",
-  database   : "test"
-});
+const redisOptions = () => {
+  const {
+    port,
+    hostname: host,
+    password,
+  } = redisUrl.parse(process.env.REDIS_URL)
+
+  return {
+    port,
+    host,
+    password,
+  }
+}
+const schema = new Schema('redis', {...redisOptions(),
+  database: "test"
+})
 
 const Survey = schema.define('Survey', {
-  // id:          { type: String, default: uuid, index: true },
   userSparkId: { type: String, index: true },
   data:        { type: schema.Json },
-});
+})
 
 promisifyAll(Survey, {
   // b/c of this: http://bluebirdjs.com/docs/error-explanations.html#error-cannot-promisify-an-api-that-has-normal-methods
