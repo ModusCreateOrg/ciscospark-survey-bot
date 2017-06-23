@@ -16,9 +16,7 @@ const redisOptions = () => {
     password,
   }
 }
-const schema = new Schema('redis', {...redisOptions(),
-  database: "test"
-})
+const schema = new Schema('redis', redisOptions())
 
 const Survey = schema.define('Survey', {
   userSparkId: { type: String, index: true },

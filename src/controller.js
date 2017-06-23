@@ -24,7 +24,7 @@ const controller = sparkbot({
   studio_token: process.env.STUDIO_TOKEN,
   storage: promisify(redisStorage({
     url: process.env.REDIS_URL,
-    methods: ['tickets']
+    methods: ['tickets'] // TODO get rid of this
   }), promisifyHack),
   limit_to_org: process.env.LIMIT_TO_ORG || null,
   limit_to_domain: (process.env.LIMIT_TO_DOMAIN && process.env.LIMIT_TO_DOMAIN.split(' ')) || null
