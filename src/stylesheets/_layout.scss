@@ -115,3 +115,19 @@ ul.questions {
 *[link-href] {
   cursor: pointer;
 }
+
+.login {
+  text-align: center;
+
+  .dev {
+    display: inline-block;
+    text-align: left;
+    margin-top: 20px;
+  }
+}
+
+.spark-login-button img {
+  height: 20px;
+  opacity: 0.75;
+  margin-right: 10px;
+}

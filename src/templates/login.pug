@@ -1,10 +1,16 @@
 extends layout.pug
 
 block content
-  a(href="/auth/spark") Login with Cisco Spark
+  .login
+    .spark
+      a.button.spark-login-button(href="/auth/spark")
+        img(src="/static/images/spark-logo-white.png")
+        | Login with Cisco Spark
 
-  h2 Dev Login
-  form(action="/auth/local" method="POST")
-    input(name="username" required=true)
-    input(name="password" type="hidden" value='just need something here')
-    button Submit
+    .or or
+
+    form.dev(action="/auth/local" method="POST")
+      h2 Dev Login
+      input(type="text" name="username" required=true placeholder="Your name")
+      input(name="password" type="hidden" value='just need something here')
+      button.button Submit
