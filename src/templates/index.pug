@@ -2,15 +2,15 @@ extends layout.pug
 
 block content
   h2
-    img.chat-bubble(src='/static/images/chat-bubble.png')
     span Dashboard
 
-  a(href="/surveys/new") ➕ Survey
+  a.button.new(href="/surveys/new") &#43; New Survey
 
   pre= JSON.stringify(currentUser)
   .content
-    ul
+    h3 Drafts
+    ul.surveys
       each survey in surveys
         li(link-href=`/surveys/${survey.id}`)
-          .title= survey.data.title
+          a.title= survey.data.title
           // .raw= JSON.stringify(survey)

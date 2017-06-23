@@ -6,44 +6,50 @@ body {
 
 .main-header {
   text-align: center;
-  padding: 3rem;
+  padding: 1rem;
+  color: $dark-gray;
 
   h1 {
     font-size: 1.2rem;
     font-weight: 300;
-    color: $dark-gray;
+    display: inline;
+  }
 
-    img.cisco {
-      width: 3rem;
-      height: auto;
-      padding: 0 .5rem;
+  img.cisco {
+    width: 3rem;
+    height: auto;
+    padding: 0 .5rem;
+  }
+
+  .spark {
+    color: $primary-color;
+  }
+
+  .current-user {
+    .avatar {
+      margin: 0 .5em;
     }
 
-    .spark {
-      color: $primary-color;
-    }
-
-    img.spark-logo {
-      width: 3rem;
-      height: auto;
-      padding: 0 .5rem;
+    .logout {
+      padding: 0 1em;
     }
   }
 }
 
 .content-box {
-  text-align: center;
+  text-align: left;
   background: $white;
   border-radius: 3px;
-  padding: 1rem;
+  padding: .5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
 
   @include breakpoint(medium up) {
-    padding: 2rem;
+    padding: 1rem;
   }
 
   h2 {
     font-weight: 300;
+    font-size: 1.4em;
 
     .chat-bubble {
       width: 2.5rem;
@@ -70,14 +76,40 @@ body {
       }
     }
   }
-
-  .button {
-    border-radius: 3px;
-  }
 }
 
 .content {
   text-align: left;
+}
+
+ul {
+  list-style-type: square;
+}
+
+h3 {
+  font-weight: 300;
+  font-size: 1.2em;
+  margin: 2em 0 .5em;
+}
+
+ul.questions {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+
+  .question {
+    position: relative;
+    margin: 0 0 2rem 0;
+    padding: 1rem 1rem 0rem;
+    border: 1px solid $light-gray;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
+  }
+
+  ol.choices {
+    padding: 0;
+    margin: .8em 0 0;
+    list-style-type: none;
+  }
 }
 
 *[link-href] {

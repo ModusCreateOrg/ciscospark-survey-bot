@@ -1,46 +1,53 @@
 mixin form(survey)
-  pre=JSON.stringify(rooms)
+  //pre=JSON.stringify(rooms)
   #survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
-    .survey-room
-      select(v-model="survey.roomId" required=true)
-        option(disabled selected value="") Choose a Spark room
-        option(v-for="room in rooms" v-bind:value="room.id") {{room.title}}
 
-    .survey-title
-      label Survey title:
-      input(v-model.trim="survey.title")
+    .row
+      .survey-title.columns.medium-8
+        label Survey title:
+          input(type='text' v-model.trim="survey.title")
+
+      .survey-room.columns.medium-4
+        label Survey room:
+        select(v-model="survey.roomId" required=true)
+          option(disabled selected value="") Choose a Spark room
+          option(v-for="room in rooms" v-bind:value="room.id") {{room.title}}
 
     .survey-description
       label Description
       textarea(v-model.trim="survey.description")
 
-    div Questions
+    h3 Questions
     ul.questions
-      li(v-for="question in survey.questions")
-        label Question:
-        input(v-model.trim="question.text")
+      li.question(v-for="question in survey.questions")
+        .row
+          .columns.medium-7
+            label Question:
+            input(type='text' v-model.trim="question.text")
 
-        label Type:
-        select(v-model="question.type")
-          option(v-for="type in questionTypes") {{type}}
+          .columns.medium-3
+            label Type:
+            select(v-model="question.type")
+              option(v-for="type in questionTypes") {{type}}
 
-        button(type="button" @click="remove(survey.questions, question)") ➖ remove
-
+          .columns.medium-2
+            label &nbsp;
+            button(type="button" class="alert small button remove-button float-right" @click="remove(survey.questions, question)") &#8722; remove
 
         .multi-options(v-if="question.type === 'multi'")
-          div Choices
-          ul.choices
-            li(v-for="choice in question.choices")
-              | choice
-              input(v-model.trim="choice.text")
-              button(type="button" @click="remove(question.choices, choice)") ➖ remove
-          button(type="button" @click="addChoice(question)") ➕ choice
+          ol.choices
+            li.choice(v-for="choice in question.choices")
+              .row
+                .question-choice.columns.medium-9
+                  input(type='text' v-model.trim="choice.text")
+                div.columns.medium-3
+                  button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)") &#8722; remove
+          button(type="button" class="tiny secondary button" @click="addChoice(question)") &#43; choice
 
     div
-      button(type="button" @click="addQuestion") ➕ question
+      button(type="button" class="small secondary button" @click="addQuestion") &#43; question
 
-    div
-      button(type="button" @click="saveDraft") Save Draft
-
-    div
-      button(type="button" @click="conduct") Conduct Survey
+    br
+    div.button-group
+      button(type="button" class="secondary button" @click="saveDraft") Save Draft
+      button(type="button" class="primary button" @click="conduct") Conduct Survey
