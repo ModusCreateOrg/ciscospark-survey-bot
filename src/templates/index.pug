@@ -6,11 +6,9 @@ block content
 
   a.button.new(href="/surveys/new") &#43; New Survey
 
-  pre= JSON.stringify(currentUser)
   .content
     h3 Drafts
     ul.surveys
       each survey in surveys
         li(link-href=`/surveys/${survey.id}`)
           a.title= survey.data.title
-          // .raw= JSON.stringify(survey)
