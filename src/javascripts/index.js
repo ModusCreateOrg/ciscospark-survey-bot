@@ -42,6 +42,10 @@ const save = ({id, survey}) => {
   return fetchJSON(method, path, survey)
 }
 
+const conduct = ({id}) => {
+  return fetchJSON('POST', `/surveys/${id}/conduct`)
+}
+
 const surveyForm = new Vue({
   el: selector,
   data: {
@@ -65,7 +69,8 @@ const surveyForm = new Vue({
       window.location = '/'
     },
     conduct: async function () {
-      const survey = save(this)
+      const survey = await save(this)
+      conduct(survey)
       window.location = '/'
     }
   }

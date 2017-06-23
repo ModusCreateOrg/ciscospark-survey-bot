@@ -21,6 +21,7 @@ const schema = new Schema('redis', redisOptions())
 const Survey = schema.define('Survey', {
   userSparkId: { type: String, index: true },
   data:        { type: schema.Json },
+  isActive:    { type: Boolean },
 })
 
 promisifyAll(Survey, {
@@ -48,7 +49,20 @@ export default class {
 
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
-  updateSurvey = (id, data) => Survey.updateAsync({ userSparkId: this.userId, id}, {data})
+  async updateSurvey (id, attributes) {
+    await Survey.updateAsync({ userSparkId: this.userId, id}, attributes)
+    return this.getSurvey(id)
+  }
 
-  listRooms = function () { return this.sparkClient.listRooms(...arguments) }
+  conductSurvey (id) {
+    return this.updateSurvey(id, { isActive: true })
+  }
+
+  listRooms () {
+    return this.sparkClient.listRooms(...arguments)
+  }
+
+  listRoomMembers () {
+    return this.sparkClient
+  }
 }

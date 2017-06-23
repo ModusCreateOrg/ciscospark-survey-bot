@@ -5,10 +5,17 @@ block content
 
   a.button.new(href="/surveys/new") + New Survey
 
-  if surveys.length
-    .content
-      h3 Drafts
+  .content
+    if activeSurveys.length
+      h3 Active Surveys
         ul.surveys
-          each survey in surveys
+          each survey in activeSurveys
+            li(link-href=`/surveys/${survey.id}`)
+              a.title= survey.data.title
+
+    if draftSurveys.length
+      h3 Draft Surveys
+        ul.surveys
+          each survey in draftSurveys
             li(link-href=`/surveys/${survey.id}`)
               a.title= survey.data.title

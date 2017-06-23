@@ -1,4 +1,5 @@
 import { AsyncRouter } from 'express-async-router'
+import partition from 'lodash/partition'
 import Actions from './Actions'
 
 const router = AsyncRouter()
@@ -22,7 +23,9 @@ router.use(async (req, res, next) => {
 })
 
 router.get('/', async (req, res) => {
-  res.locals.surveys = await req.actions.listSurveys()
+  const [activeSurveys, draftSurveys] = partition(await req.actions.listSurveys(), 'isActive')
+  res.locals.activeSurveys = activeSurveys
+  res.locals.draftSurveys = draftSurveys
   res.render('index')
 })
 
@@ -45,7 +48,12 @@ router.post('/surveys', async (req, res) => {
 })
 
 router.put('/surveys/:id', async (req, res) => {
-  const survey = await req.actions.updateSurvey(req.params.id, req.body)
+  const survey = await req.actions.updateSurvey(req.params.id, { data: req.body })
+  res.json(survey)
+})
+
+router.post('/surveys/:id/conduct', async (req, res) => {
+  const survey = await req.actions.conductSurvey(req.params.id)
   res.json(survey)
 })
 
