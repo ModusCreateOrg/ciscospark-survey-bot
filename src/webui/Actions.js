@@ -21,7 +21,7 @@ const schema = new Schema('redis', redisOptions())
 const Survey = schema.define('Survey', {
   userSparkId: { type: String, index: true },
   data:        { type: schema.Json },
-  isActive:    { type: Boolean },
+  state:       { type: String, default: 'draft' },
 })
 
 promisifyAll(Survey, {
@@ -55,7 +55,7 @@ export default class {
   }
 
   conductSurvey (id) {
-    return this.updateSurvey(id, { isActive: true })
+    return this.updateSurvey(id, { state: 'active' })
   }
 
   listRooms () {

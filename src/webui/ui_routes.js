@@ -1,5 +1,5 @@
 import { AsyncRouter } from 'express-async-router'
-import partition from 'lodash/partition'
+import groupBy from 'lodash/groupBy'
 import Actions from './Actions'
 
 const router = AsyncRouter()
@@ -23,9 +23,7 @@ router.use(async (req, res, next) => {
 })
 
 router.get('/', async (req, res) => {
-  const [activeSurveys, draftSurveys] = partition(await req.actions.listSurveys(), 'isActive')
-  res.locals.activeSurveys = activeSurveys
-  res.locals.draftSurveys = draftSurveys
+  res.locals.surveys = groupBy(await req.actions.listSurveys(), 'state')
   res.render('index')
 })
 

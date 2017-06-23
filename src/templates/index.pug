@@ -6,6 +6,7 @@ block content
   a.button.new(href="/surveys/new") + New Survey
 
   .content
+    - var activeSurveys = surveys.active || []
     if activeSurveys.length
       h3 Active Surveys
         ul.surveys
@@ -13,6 +14,7 @@ block content
             li(link-href=`/surveys/${survey.id}`)
               a.title= survey.data.title
 
+    - var draftSurveys = surveys.draft || []
     if draftSurveys.length
       h3 Draft Surveys
         ul.surveys
