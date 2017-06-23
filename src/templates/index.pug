@@ -1,14 +1,14 @@
 extends layout.pug
 
 block content
-  h2
-    span Dashboard
+  h2 Dashboard
 
-  a.button.new(href="/surveys/new") &#43; New Survey
+  a.button.new(href="/surveys/new") + New Survey
 
-  .content
-    h3 Drafts
-    ul.surveys
-      each survey in surveys
-        li(link-href=`/surveys/${survey.id}`)
-          a.title= survey.data.title
+  if surveys.length
+    .content
+      h3 Drafts
+        ul.surveys
+          each survey in surveys
+            li(link-href=`/surveys/${survey.id}`)
+              a.title= survey.data.title
