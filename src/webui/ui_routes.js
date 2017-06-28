@@ -36,7 +36,7 @@ export default (controller, bot) => {
   router.get('/surveys/:id', async (req, res) => {
     [ res.locals.rooms, res.locals.survey ] = await Promise.all([
       req.actions.listRooms(),
-      req.actions.getSurvey(req.params.id),
+      req.actions.getSurvey(req.params.id)
     ])
     res.render('show')
   })

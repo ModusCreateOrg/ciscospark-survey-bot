@@ -17,11 +17,10 @@ passport.use(new LocalStrategy((username, password, done) => {
     profile: {
       displayName: username,
       id: uuid(),
-      avatar: imageUrlForEmoji('😃'),
-    },
+      avatar: imageUrlForEmoji('😃')
+    }
   })
 }))
-
 
 export const router = express.Router()
 

@@ -19,7 +19,7 @@ export default (app, controller, bot) => {
   app.use(cookieSession({
     name: 'session',
     keys: ['my secret key'], // TODO: put in .env.local
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }))
   app.use(passport.initialize())
   app.use(passport.session())

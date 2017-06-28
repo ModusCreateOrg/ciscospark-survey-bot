@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-const {promisify} = require('util');
+const {promisify} = require('util')
 import controller from './controller'
 import handlers from './handlers'
 import attachHandlers from './attachHandlers'
