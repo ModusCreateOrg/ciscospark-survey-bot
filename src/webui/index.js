@@ -9,7 +9,7 @@ import uiRouter from './ui_routes'
 
 var app = express()
 
-export default (app) => {
+export default (app, controller, bot) => {
   app.set('views', 'src/templates')
   app.set('view engine', 'pug')
   app.use('/bower', express.static('bower_components'))
@@ -27,5 +27,5 @@ export default (app) => {
   app.use(morgan('dev'))
 
   app.use('/auth/', authRouter)
-  app.use('/', uiRouter)
+  app.use('/', uiRouter(controller, bot))
 }

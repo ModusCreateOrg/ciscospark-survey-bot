@@ -11,5 +11,5 @@ attachHandlers(controller, handlers)
 const bot = controller.spawn({})
 
 startServer(controller, bot)
-  .then(startWebUI)
+  .then((webServer) => startWebUI(webServer, controller, bot))
   .catch(console.error)

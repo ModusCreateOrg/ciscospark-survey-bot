@@ -36,7 +36,7 @@ import SparkClient from './SparkClient'
 
 
 export default class {
-  constructor (user) {
+  constructor (user, controller, bot) {
     this.userId = user.profile.id
 
     const SparkClientClass = user.isLocal ? DummySparkClient : SparkClient
