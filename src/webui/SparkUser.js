@@ -32,4 +32,9 @@ export default class {
   }
 
   listRooms = () => this._sparkClient().rooms.list().then(({items}) => items)
+
+  listRoomMembers = async (roomId) => {
+    const { items } = await this._sparkClient().memberships.list({ roomId })
+    return items
+  }
 }

@@ -31,16 +31,18 @@ promisifyAll(Survey, {
 })
 
 
-import DummySparkClient from './DummySparkClient'
-import SparkClient from './SparkClient'
+import DummySparkUser from './DummySparkUser'
+import SparkUser from './SparkUser'
+import SparkBot from './SparkBot'
 
 
 export default class {
   constructor (user, controller, bot) {
     this.userId = user.profile.id
+    this.sparkBot = new SparkBot(controller, bot)
 
-    const SparkClientClass = user.isLocal ? DummySparkClient : SparkClient
-    this.sparkClient = new SparkClientClass(user)
+    const SparkUserClass = user.isLocal ? DummySparkUser : SparkUser
+    this.sparkUser = new SparkUserClass(user)
   }
 
   listSurveys = () => Survey.allAsync({where: { userSparkId: this.userId }})
@@ -51,18 +53,23 @@ export default class {
 
   async updateSurvey (id, attributes) {
     await Survey.updateAsync({ userSparkId: this.userId, id}, attributes)
-    return this.getSurvey(id)
+    return await this.getSurvey(id)
   }
 
-  conductSurvey (id) {
-    return this.updateSurvey(id, { state: 'active' })
+  async conductSurvey (id) {
+    const survey = await this.updateSurvey(id, { state: 'active' })
+    const roomMembers = await this.listRoomMembers(survey.data.roomId)
+    await Promise.all(
+      roomMembers.map(({ personId }) => this.sparkBot.conductUserSurvey(personId, survey))
+    )
+    return survey
   }
 
   listRooms () {
-    return this.sparkClient.listRooms(...arguments)
+    return this.sparkUser.listRooms(...arguments)
   }
 
-  listRoomMembers () {
-    return this.sparkClient
+  listRoomMembers (roomId) {
+    return this.sparkUser.listRoomMembers(roomId)
   }
 }
