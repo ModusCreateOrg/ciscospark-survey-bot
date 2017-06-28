@@ -60,7 +60,7 @@ export default class {
     const survey = await this.updateSurvey(id, { state: 'active' })
     const roomMembers = await this.listRoomMembers(survey.data.roomId)
     await Promise.all(
-      roomMembers.map(({ personId }) => this.sparkBot.conductUserSurvey(personId, survey))
+      roomMembers.map(({ personEmail }) => this.sparkBot.conductUserSurvey(personEmail, survey))
     )
     return survey
   }
