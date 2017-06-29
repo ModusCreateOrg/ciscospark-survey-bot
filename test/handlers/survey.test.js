@@ -1,9 +1,10 @@
 import test from 'ava'
-import TestBot from '../testBot'
+import setupBot from '../helpers/setupBot'
+
+test.beforeEach(setupBot)
 
 test('bot gives a survey', async t => {
-  const controller = TestBot({ timeout: 100 })
-  const bot = controller.spawn()
+  const { bot, controller } = t.context
 
   const survey = {
     id: 'foo',
