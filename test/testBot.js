@@ -7,28 +7,27 @@ class AsyncQueue {
     this.waitingForData = []
   }
 
-  enqueue = (message) => {
+  enqueue = message => {
     this.queue.push(message)
+
     if (this.waitingForData.length) {
       const resolve = this.waitingForData.shift()
       resolve(this.queue.shift())
     }
   }
 
-  dequeue = () => {
+  dequeue = () => new Promise((resolve, reject) => {
     if (this.queue.length) {
-      return Promise.resolve(this.queue.shift())
+      resolve(this.queue.shift())
     } else {
-      return new Promise((resolve, reject) => {
-        this.waitingForData.push(resolve)
+      this.waitingForData.push(resolve)
 
-        if (this.timeout < Infinity) {
-          const err = new Error('No message received within timeout limit')
-          setTimeout(() => reject(err), this.timeout)
-        }
-      })
+      if (this.timeout < Infinity) {
+        const err = new Error('No message received within timeout limit')
+        setTimeout(() => reject(err), this.timeout)
+      }
     }
-  }
+  })
 }
 
 export default (configuration = {}) => {
