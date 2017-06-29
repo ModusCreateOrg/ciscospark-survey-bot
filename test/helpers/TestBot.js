@@ -20,19 +20,20 @@ export default (configuration = {}) => {
     }
 
     bot.initialize = () => {
-      this.responses = new AsyncQueue({ timeout })
+      bot.responses = new AsyncQueue({ timeout })
+      testBotkit.startTicking()
     }
 
     bot.createConversation = (message, cb) => {
-      botkit.createConversation(this, message, cb)
+      botkit.createConversation(bot, message, cb)
     }
 
     bot.startConversation = (message, cb) => {
-      botkit.startConversation(this, message, cb)
+      botkit.startConversation(bot, message, cb)
     }
 
     bot.send = (message, cb) => {
-      this.responses.enqueue(message)
+      bot.responses.enqueue(message)
 
       console.log('BOT.send:', message.text)
       if (cb) {
@@ -61,21 +62,26 @@ export default (configuration = {}) => {
         channel: 'text',
         timestamp: Date.now()
       }
-      testBotkit.receiveMessage(this, message)
+      testBotkit.receiveMessage(bot, message)
     }
 
-    bot.nextResponse = () => this.responses.dequeue()
+    bot.userReplies = (user, channel, text) => {
+      testBotkit.receiveMessage(bot, { user, channel, text })
+    }
+
+    bot.nextResponse = () => bot.responses.dequeue()
 
     bot.findConversation = (message, cb) => {
-      botkit.debug('CUSTOM FIND CONVO', message.user, message.channel)
-      for (var t = 0; t < botkit.tasks.length; t++) {
-        for (var c = 0; c < botkit.tasks[t].convos.length; c++) {
+      console.log('CUSTOM FIND CONVO', message)
+      for (const task of botkit.tasks) {
+        for (const convo of task.convos) {
           if (
-              botkit.tasks[t].convos[c].isActive() &&
-              botkit.tasks[t].convos[c].source_message.user == message.user
-            ) {
+            convo.isActive() &&
+            convo.source_message.user === message.user &&
+            convo.source_message.channel === message.channel
+          ) {
             botkit.debug('FOUND EXISTING CONVO!')
-            cb(botkit.tasks[t].convos[c])
+            cb(convo)
             return
           }
         }
