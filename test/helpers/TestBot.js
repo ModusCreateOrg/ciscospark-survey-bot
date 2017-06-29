@@ -1,5 +1,6 @@
 import Botkit from 'botkit'
 import AsyncQueue from './AsyncQueue'
+import uuid from 'uuid'
 
 export default (configuration = {}) => {
   const { timeout = 5000, ...coreConfig } = configuration
@@ -55,18 +56,15 @@ export default (configuration = {}) => {
       bot.say(msg, cb)
     }
 
-    bot.userSays = (text) => {
-      const message = {
-        text,
-        user: 'user',
-        channel: 'text',
-        timestamp: Date.now()
+    bot.createUser = (id = uuid(), channel = uuid()) => {
+      const sendUserMessage = (text) => {
+        testBotkit.receiveMessage(bot, { user: id, channel, text })
       }
-      testBotkit.receiveMessage(bot, message)
-    }
-
-    bot.userReplies = (user, channel, text) => {
-      testBotkit.receiveMessage(bot, { user, channel, text })
+      return {
+        says: sendUserMessage,
+        id,
+        channel
+      }
     }
 
     bot.nextResponse = () => bot.responses.dequeue()

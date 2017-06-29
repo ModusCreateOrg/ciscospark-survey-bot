@@ -2,29 +2,29 @@ import test from 'ava'
 import setupBot from '../helpers/setupBot'
 
 test.beforeEach(setupBot)
+test.beforeEach(({ context }) => { context.user = context.bot.createUser() })
 
 test('bot gives a survey', async t => {
-  const { bot, controller } = t.context
-
-  // const user = bot.createUser(userId, roomId)
+  const { bot, controller, user } = t.context
 
   const survey = {
     id: 'foo',
     data: {
-      questions: [{ text: 'things', type: 'text' }]
+      questions: [{ text: 'things', type: 'text', id: 1 }]
     }
   }
-  const roomId = 'My room'
-  const personEmail = 'Randy@Butter.nubs'
-  const recordAnswer =  () => null
+  const recordAnswer = (...args) => console.log('submitted survey', args)
 
-  controller.trigger('survey_started', [bot, { survey, roomId, personEmail, recordAnswer }])
+  controller.trigger(
+    'survey_started',
+    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer }]
+  )
 
   const firstQuestion = await bot.nextResponse()
   t.is(firstQuestion.text, 'things')
+  t.is(firstQuestion.channel, user.channel)
 
-  // user.says('foos')
-  bot.userReplies(personEmail, roomId, 'foos')
+  user.says('foos')
 
   const next = await bot.nextResponse()
   t.is(next.text, 'Thanks for your responses!')
