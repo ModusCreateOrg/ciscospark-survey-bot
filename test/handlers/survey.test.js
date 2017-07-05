@@ -82,3 +82,47 @@ test('bot gives a survey with mulitple choice question', async t => {
   t.true(recordAnswer.calledWith(survey.id, survey.data.questions[0].id, favoriteColor))
   t.true(recordAnswer.calledWith(survey.id, survey.data.questions[1].id, mac))
 })
+
+test('bot requires number of mutiple choice answer', async t => {
+  const { bot, controller, user } = t.context
+
+  const survey = {
+    id: '147',
+    data: {
+      questions: [
+        { text: 'Mac or PC?', type: 'multi', choices: ['Mac', 'PC'], id: 1 }
+      ]
+    }
+  }
+  const recordAnswer = sinon.stub()
+
+  controller.trigger(
+    'survey_started',
+    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer }]
+  )
+
+  const question = await bot.nextResponse()
+  t.is(question.text, 'Mac or PC?\n1. Mac\n2. PC')
+
+  user.says('Dell')
+
+  let next = await bot.nextResponse()
+  t.is(next.text, 'Please enter the number corresponding to your answer.')
+  next = await bot.nextResponse()
+  t.is(next.text, 'Mac or PC?\n1. Mac\n2. PC')
+
+  user.says('3')
+
+  next = await bot.nextResponse()
+  t.is(next.text, 'Please enter the number corresponding to your answer.')
+  next = await bot.nextResponse()
+  t.is(next.text, 'Mac or PC?\n1. Mac\n2. PC')
+
+  const mac = '1'
+  user.says(mac)
+
+  next = await bot.nextResponse()
+  t.is(next.text, 'Thanks for your responses!')
+
+  t.true(recordAnswer.calledWith(survey.id, survey.data.questions[0].id, mac))
+})

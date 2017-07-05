@@ -8,11 +8,22 @@ const addTextQuestion = (convo, question, surveyId, recordAnswer) => {
   })
 }
 
+const isValidAnswer = (question, answer) => {
+  const intVal = parseInt(answer)
+  return intVal > 0 && intVal <= question.choices.length
+}
+
 const addMultipleChoiceQuestion = (convo, question, surveyId, recordAnswer) => {
   const questionChoices = question.choices.map((choice, index) => `${index+1}. ${choice}`)
   const questionText = [question.text, ...questionChoices].join('\n')
   convo.addQuestion(questionText, (response, convo) => {
-    recordAnswer(surveyId, question.id, response.text)
+    const answer = response.text
+    if (isValidAnswer(question, answer)) {
+      recordAnswer(surveyId, question.id, response.text)
+    } else {
+      convo.say('Please enter the number corresponding to your answer.')
+      convo.repeat()
+    }
     convo.next()
   })
 }
@@ -32,11 +43,10 @@ const doSurvey = (bot, { roomId, personEmail, survey, recordAnswer }) => {
       addQuestionFn(convo, question, survey.id, recordAnswer)
     }
 
-    convo.addMessage('Thanks for your responses!')
-
-    // convo.on('end', (convo) => {
-    //   //TODO: record survey completed
-    // })
+    convo.on('end', (convo) => {
+      //TODO: record survey completed
+      bot.say({ user: personEmail, channel: roomId, text: 'Thanks for your responses!' })
+    })
   })
 }
 
