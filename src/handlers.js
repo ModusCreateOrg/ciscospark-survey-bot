@@ -14,7 +14,7 @@ const isValidAnswer = (question, answer) => {
 }
 
 const addMultipleChoiceQuestion = (convo, question, surveyId, recordAnswer) => {
-  const questionChoices = question.choices.map((choice, index) => `${index+1}. ${choice}`)
+  const questionChoices = question.choices.map((choice, index) => `${index+1}. ${choice.text}`)
   const questionText = [question.text, ...questionChoices].join('\n')
   convo.addQuestion(questionText, (response, convo) => {
     const answer = response.text

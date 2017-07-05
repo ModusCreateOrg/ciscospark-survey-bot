@@ -52,7 +52,7 @@ test('bot gives a survey with mulitple choice question', async t => {
     data: {
       questions: [
         { text: 'What is your favorite color?', type: 'text', id: 1 },
-        { text: 'Mac or PC?', type: 'multi', choices: ['Mac', 'PC'], id: 2 }
+        { text: 'Mac or PC?', type: 'multi', choices: [{ text: 'Mac' }, { text: 'PC' }], id: 2 }
       ]
     }
   }
@@ -90,7 +90,7 @@ test('bot requires number of mutiple choice answer', async t => {
     id: '147',
     data: {
       questions: [
-        { text: 'Mac or PC?', type: 'multi', choices: ['Mac', 'PC'], id: 1 }
+        { text: 'Mac or PC?', type: 'multi', choices: [{ text: 'Mac' }, { text: 'PC' }], id: 1 }
       ]
     }
   }
