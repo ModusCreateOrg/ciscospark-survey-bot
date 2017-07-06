@@ -1,0 +1,33 @@
+extends layout.pug
+
+
+block content
+  h1
+    span= survey.data.title
+
+  h2
+    span= survey.data.description
+
+  .content
+    ul.questions
+      each question, index in survey.data.questions
+        .row
+          .columns.large-8
+            - var responses = responsesByQuestion[question.id] || []
+
+            h2 #{index+1}. #{question.text}
+            h3 #{responses.length} responses
+
+            if question.type == 'text'
+              each response in responses
+                .row
+                  .columns.large-10
+                    span= response.response
+
+            if question.type == 'multi'
+              each choice, index in question.choices
+                .row
+                  .columns.large-4
+                    span= choice.text
+                  .columns.large-8
+                    span= responses.filter(response => response.response === `${index + 1}`).length

@@ -69,6 +69,19 @@ export default class {
 
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
+  getSurveyAll = async id => {
+    const [survey, surveyTakers] = await Promise.all([
+      this.getSurvey(id),
+      SurveyTaker.allAsync({ where: { surveyId: id } }),
+    ])
+
+    const surveyResponses = await SurveyResponse.allAsync({
+      where: { surveyTakerId: { in: surveyTakers.map(({ id }) => id) } }
+    })
+
+    return { survey, surveyTakers, surveyResponses }
+  }
+
   saveSurveyResponse = (questionId, response, surveyTakerId) => {
     return SurveyResponse.createAsync({ questionId, response, surveyTakerId })
   }

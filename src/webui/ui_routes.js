@@ -41,6 +41,13 @@ export default (controller, bot) => {
     res.render('edit')
   })
 
+  router.get('/surveys/:id', async (req, res) => {
+    const { survey, surveyTakers, surveyResponses } = await req.actions.getSurveyAll(req.params.id)
+    const responsesByQuestion = groupBy(surveyResponses, 'questionId')
+    Object.assign(res.locals, { survey, responsesByQuestion, surveyTakers })
+    res.render('show')
+  })
+
   router.post('/surveys', async (req, res) => {
     const survey = await req.actions.createSurvey(req.body)
     res.json(survey)
