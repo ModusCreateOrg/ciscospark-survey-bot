@@ -32,7 +32,7 @@ const SurveyTaker = schema.define('SurveyTaker', {
 
 const SurveyResponse = schema.define('SurveyResponse', {
   surveyTakerId: { type: Number, index: true },
-  questionId: { type: Number, index: true },
+  questionId: { type: String, index: true },
   response: { type: String },
 })
 

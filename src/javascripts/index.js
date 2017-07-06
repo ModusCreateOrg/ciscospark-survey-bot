@@ -5,7 +5,7 @@ const newChoice = () => ({
 })
 
 const newQuestion = () => ({
-  // id: uuid(), // TODO
+  id: Math.random().toString(16).substring(2),
   text: '',
   type: questionTypes[0],
   choices: [newChoice()]
