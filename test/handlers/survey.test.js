@@ -40,8 +40,8 @@ test('bot gives a survey', async t => {
   const next = await bot.nextResponse()
   t.is(next.text, 'Thanks for your responses!')
 
-  t.true(recordAnswer.calledWith(survey.id, survey.data.questions[0].id, favoriteColor))
-  t.true(recordAnswer.calledWith(survey.id, survey.data.questions[1].id, favoriteSport))
+  t.true(recordAnswer.calledWith(survey.data.questions[0].id, favoriteColor))
+  t.true(recordAnswer.calledWith(survey.data.questions[1].id, favoriteSport))
 })
 
 test('bot gives a survey with mulitple choice question', async t => {
@@ -79,8 +79,8 @@ test('bot gives a survey with mulitple choice question', async t => {
   const next = await bot.nextResponse()
   t.is(next.text, 'Thanks for your responses!')
 
-  t.true(recordAnswer.calledWith(survey.id, survey.data.questions[0].id, favoriteColor))
-  t.true(recordAnswer.calledWith(survey.id, survey.data.questions[1].id, mac))
+  t.true(recordAnswer.calledWith(survey.data.questions[0].id, favoriteColor))
+  t.true(recordAnswer.calledWith(survey.data.questions[1].id, mac))
 })
 
 test('bot requires number of mutiple choice answer', async t => {
@@ -124,5 +124,5 @@ test('bot requires number of mutiple choice answer', async t => {
   next = await bot.nextResponse()
   t.is(next.text, 'Thanks for your responses!')
 
-  t.true(recordAnswer.calledWith(survey.id, survey.data.questions[0].id, mac))
+  t.true(recordAnswer.calledWith(survey.data.questions[0].id, mac))
 })

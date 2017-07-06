@@ -3,7 +3,7 @@ const handleJoin = (bot, message) =>
 
 const addTextQuestion = (convo, question, surveyId, recordAnswer) => {
   convo.addQuestion(question.text, (response, convo) => {
-    recordAnswer(surveyId, question.id, response.text)
+    recordAnswer(response)
     convo.next()
   })
 }
@@ -19,7 +19,7 @@ const addMultipleChoiceQuestion = (convo, question, surveyId, recordAnswer) => {
   convo.addQuestion(questionText, (response, convo) => {
     const answer = response.text
     if (isValidAnswer(question, answer)) {
-      recordAnswer(surveyId, question.id, response.text)
+      recordAnswer(response)
     } else {
       convo.say('Please enter the number corresponding to your answer.')
       convo.repeat()
@@ -40,7 +40,12 @@ const doSurvey = (bot, { roomId, personEmail, survey, recordAnswer }) => {
           addQuestionFn = addMultipleChoiceQuestion
           break
       }
-      addQuestionFn(convo, question, survey.id, recordAnswer)
+      addQuestionFn(
+        convo,
+        question,
+        survey.id,
+        (response) => recordAnswer(question.id, response.text)
+      )
     }
 
     convo.on('end', (convo) => {
