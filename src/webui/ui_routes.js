@@ -33,12 +33,12 @@ export default (controller, bot) => {
     res.render('new')
   })
 
-  router.get('/surveys/:id', async (req, res) => {
+  router.get('/surveys/:id/edit', async (req, res) => {
     [ res.locals.rooms, res.locals.survey ] = await Promise.all([
       req.actions.listRooms(),
       req.actions.getSurvey(req.params.id)
     ])
-    res.render('show')
+    res.render('edit')
   })
 
   router.post('/surveys', async (req, res) => {
