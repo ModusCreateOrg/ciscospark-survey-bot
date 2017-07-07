@@ -8,6 +8,8 @@ block content
   h2
     span= survey.data.description
 
+  span Created on #{survey.created}
+
   .content
     ul.questions
       each question, index in survey.data.questions

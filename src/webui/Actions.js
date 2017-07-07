@@ -22,6 +22,7 @@ const Survey = schema.define('Survey', {
   userSparkId: { type: String, index: true },
   data:        { type: schema.Json },
   state:       { type: String, default: 'draft' },
+  created:     { type: schema.Date, default: Date.now },
 })
 
 const SurveyTaker = schema.define('SurveyTaker', {
