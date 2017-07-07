@@ -54,12 +54,14 @@ import SparkBot from './SparkBot'
 
 
 export default class {
-  constructor (user, controller, bot) {
+  constructor (user, controller, bot, io) {
     this.userId = user.profile.id
     this.sparkBot = new SparkBot(controller, bot)
 
     const SparkUserClass = user.isLocal ? DummySparkUser : SparkUser
     this.sparkUser = new SparkUserClass(user)
+
+    this.io = io
   }
 
   listSurveys = () => Survey.allAsync({where: { userSparkId: this.userId }})
@@ -84,8 +86,11 @@ export default class {
     return { survey, surveyTakers, surveyResponses }
   }
 
-  saveSurveyResponse = (questionId, response, surveyTakerId) => {
-    return SurveyResponse.createAsync({ questionId, response, surveyTakerId })
+  saveSurveyResponse = async (questionId, response, surveyTakerId) => {
+    await SurveyResponse.createAsync({ questionId, response, surveyTakerId })
+    // TODO: find survey from survey taker and grab user id from survey
+    const userId = 'someId'
+    this.io.to(userId).emit('survey updated', { response, questionId })
   }
 
   saveSurveyCompletion = async (surveyTakerId, surveyId) => {

@@ -36,8 +36,6 @@ const selector = '#survey-form'
 const surveyData = $(selector).data('survey') || { data: newSurvey() }
 const roomData = $(selector).data('rooms')
 
-console.log('roomData', $(selector).data('rooms'))
-
 const save = ({id, survey}) => {
   const [ method, path ] = id ? ['put', `/surveys/${id}`] : ['post', '/surveys']
   return fetchJSON(method, path, survey)

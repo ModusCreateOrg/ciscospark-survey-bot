@@ -18,7 +18,7 @@ const stylesheetsDir = 'src/stylesheets'
 const javascriptsDir = 'src/javascripts'
 
 gulp.task('js', () =>
-  gulp.src(`${javascriptsDir}/*`)
+  gulp.src(`${javascriptsDir}/**/*`)
     .pipe(gulp.dest('public/javascripts'))
 )
 

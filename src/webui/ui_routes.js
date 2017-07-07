@@ -16,11 +16,18 @@ const ensureLoggedIn = (loginPath) => async (req, res, next) => {
   }
 }
 
-export default (controller, bot) => {
+export default (controller, bot, io) => {
+
+  io.on('connection', (socket) => {
+    //...
+    socket.on('join', (id) => socket.join(id))
+  })
+
+
   router.use(ensureLoggedIn('/auth/login'))
 
   router.use(async (req, res, next) => {
-    req.actions = new Actions(req.user, controller, bot)
+    req.actions = new Actions(req.user, controller, bot, io)
     next()
   })
 

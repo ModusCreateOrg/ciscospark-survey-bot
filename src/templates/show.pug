@@ -38,3 +38,6 @@ block content
                     span= choiceResponses.length
                   .columns.large-4
                     span= choiceResponses.map(response => response.taker.userData.personDisplayName).join(', ')
+
+  script(src='/bower/socket.io-client/dist/socket.io.slim.js')
+  script(src='/static/javascripts/surveys/show.js')
