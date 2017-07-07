@@ -23,13 +23,18 @@ block content
             if question.type == 'text'
               each response in responses
                 .row
-                  .columns.large-10
+                  .columns.large-4
+                    span= response.taker.userData.personDisplayName
+                  .columns.large-8
                     span= response.response
 
             if question.type == 'multi'
               each choice, index in question.choices
+                - var choiceResponses = responses.filter(response => response.response === `${index + 1}`)
                 .row
                   .columns.large-4
                     span= choice.text
-                  .columns.large-8
-                    span= responses.filter(response => response.response === `${index + 1}`).length
+                  .columns.large-4
+                    span= choiceResponses.length
+                  .columns.large-4
+                    span= choiceResponses.map(response => response.taker.userData.personDisplayName).join(', ')

@@ -1,5 +1,6 @@
 import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
+import keyBy from 'lodash/keyBy'
 import Actions from './Actions'
 
 const router = AsyncRouter()
@@ -43,8 +44,18 @@ export default (controller, bot) => {
 
   router.get('/surveys/:id', async (req, res) => {
     const { survey, surveyTakers, surveyResponses } = await req.actions.getSurveyAll(req.params.id)
-    const responsesByQuestion = groupBy(surveyResponses, 'questionId')
-    Object.assign(res.locals, { survey, responsesByQuestion, surveyTakers })
+    const takers = keyBy(surveyTakers, 'id')
+    const responsesWithTakers = surveyResponses.map(surveyResponse => {
+      const { questionId, response, id, surveyTakerId } = surveyResponse
+      return {
+        questionId,
+        response,
+        id,
+        taker: takers[surveyTakerId]
+      }
+    })
+    const responsesByQuestion = groupBy(responsesWithTakers, 'questionId')
+    Object.assign(res.locals, { survey, responsesByQuestion })
     res.render('show')
   })
 
