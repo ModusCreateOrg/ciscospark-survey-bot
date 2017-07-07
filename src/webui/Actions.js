@@ -29,6 +29,7 @@ const SurveyTaker = schema.define('SurveyTaker', {
   surveyId: { type: Number, index: true },
   userData: { type: schema.Json },
   userSparkId: { type: String, index: true },
+  isFinished: { type: Boolean, default: false },
 })
 
 const SurveyResponse = schema.define('SurveyResponse', {
@@ -87,6 +88,9 @@ export default class {
     return SurveyResponse.createAsync({ questionId, response, surveyTakerId })
   }
 
+  saveSurveyCompletion = (surveyTakerId) =>
+    SurveyTaker.updateAsync({ id: surveyTakerId }, { isFinished: true })
+
   async updateSurvey (id, attributes) {
     await Survey.updateAsync({ userSparkId: this.userId, id}, attributes)
     return await this.getSurvey(id)
@@ -100,7 +104,10 @@ export default class {
         const surveyTaker = await this.createSurveyTaker(sparkUser, survey.id)
         const { personEmail } = sparkUser
         return this.sparkBot.conductUserSurvey(
-          personEmail, survey, (...args) => this.saveSurveyResponse(...args, surveyTaker.id)
+          personEmail,
+          survey,
+          (...args) => this.saveSurveyResponse(...args, surveyTaker.id),
+          () => this.saveSurveyCompletion(surveyTaker.id)
         )
       })
     )

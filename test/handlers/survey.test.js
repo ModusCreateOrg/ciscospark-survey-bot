@@ -18,10 +18,11 @@ test('bot gives a survey', async t => {
     }
   }
   const recordAnswer = sinon.stub()
+  const recordCompletion = sinon.stub()
 
   controller.trigger(
     'survey_started',
-    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer }]
+    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
   const firstQuestion = await bot.nextResponse()
@@ -42,6 +43,7 @@ test('bot gives a survey', async t => {
 
   t.true(recordAnswer.calledWith(survey.data.questions[0].id, favoriteColor))
   t.true(recordAnswer.calledWith(survey.data.questions[1].id, favoriteSport))
+  t.true(recordCompletion.calledOnce)
 })
 
 test('bot gives a survey with mulitple choice question', async t => {
@@ -57,10 +59,11 @@ test('bot gives a survey with mulitple choice question', async t => {
     }
   }
   const recordAnswer = sinon.stub()
+  const recordCompletion = sinon.stub()
 
   controller.trigger(
     'survey_started',
-    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer }]
+    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
   const firstQuestion = await bot.nextResponse()
@@ -81,6 +84,7 @@ test('bot gives a survey with mulitple choice question', async t => {
 
   t.true(recordAnswer.calledWith(survey.data.questions[0].id, favoriteColor))
   t.true(recordAnswer.calledWith(survey.data.questions[1].id, mac))
+  t.true(recordCompletion.calledOnce)
 })
 
 test('bot requires number of mutiple choice answer', async t => {
@@ -95,10 +99,11 @@ test('bot requires number of mutiple choice answer', async t => {
     }
   }
   const recordAnswer = sinon.stub()
+  const recordCompletion = sinon.stub()
 
   controller.trigger(
     'survey_started',
-    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer }]
+    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
   const question = await bot.nextResponse()
@@ -125,4 +130,5 @@ test('bot requires number of mutiple choice answer', async t => {
   t.is(next.text, 'Thanks for your responses!')
 
   t.true(recordAnswer.calledWith(survey.data.questions[0].id, mac))
+  t.true(recordCompletion.calledOnce)
 })
