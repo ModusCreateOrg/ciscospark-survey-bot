@@ -6,6 +6,14 @@ block content
   a.button.new(href="/surveys/new") + New Survey
 
   .content
+    - var completedSurveys = surveys.complete || []
+    if completedSurveys.length
+      h3 Completed Surveys
+        ul.surveys
+          each survey in completedSurveys
+            li(link-href=`/surveys/${survey.id}`)
+              a.title= survey.data.title
+
     - var activeSurveys = surveys.active || []
     if activeSurveys.length
       h3 Active Surveys
