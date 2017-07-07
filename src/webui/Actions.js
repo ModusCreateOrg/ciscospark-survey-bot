@@ -29,7 +29,7 @@ const SurveyTaker = schema.define('SurveyTaker', {
   surveyId: { type: Number, index: true },
   userData: { type: schema.Json },
   userSparkId: { type: String, index: true },
-  isFinished: { type: Boolean, default: false },
+  isFinished: { type: Boolean, default: false, index: true },
 })
 
 const SurveyResponse = schema.define('SurveyResponse', {
