@@ -35,7 +35,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.20.0",
     "babel-preset-env": "^1.1.8",
-    "botkit": "^0.5.2",
+    "botkit": "^0.5.5",
     "botkit-storage-redis": "^1.1.0",
     "bower": "^1.8.0",
     "caminte": "^0.3.6",
@@ -66,11 +66,13 @@
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-standard": "^2.0.1"
+    "eslint-plugin-standard": "^2.0.1",
+    "sinon": "^2.3.6"
   },
   "ava": {
     "files": [
       "test/**/*.js",
+      "!test/testBot.js",
       "!test/setup.js"
     ],
     "require": [

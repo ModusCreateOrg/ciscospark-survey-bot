@@ -1,5 +1,5 @@
 const gulp = require('gulp')
-const $    = require('gulp-load-plugins')()
+const $ = require('gulp-load-plugins')()
 
 const imagesDir = 'src/images'
 
@@ -11,7 +11,7 @@ gulp.task('images', () =>
 const sassPaths = [
   'bower_components/normalize.scss/sass',
   'bower_components/foundation-sites/scss',
-  'bower_components/motion-ui/src',
+  'bower_components/motion-ui/src'
 ]
 
 const stylesheetsDir = 'src/stylesheets'
@@ -43,7 +43,6 @@ gulp.task('watch-sass', ['sass'], () =>
 gulp.task('watch-js', ['sass'], () =>
   gulp.watch([`${javascriptsDir}/**/*.js`], ['js'])
 )
-
 
 function cleanTask (name, dir) {
   gulp.task(`clean-${name}`, () =>

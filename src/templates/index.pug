@@ -19,5 +19,5 @@ block content
       h3 Draft Surveys
         ul.surveys
           each survey in draftSurveys
-            li(link-href=`/surveys/${survey.id}`)
+            li(link-href=`/surveys/${survey.id}/edit`)
               a.title= survey.data.title

@@ -1,9 +1,40 @@
 extends layout.pug
-include _form.pug
+
 
 block content
+  h1
+    span= survey.data.title
+
   h2
-    span Edit Survey
+    span= survey.data.description
+
+  span Created on #{survey.created}
 
   .content
-    +form(survey)
+    ul.questions
+      each question, index in survey.data.questions
+        .row
+          .columns.large-8
+            - var responses = responsesByQuestion[question.id] || []
+
+            h2 #{index+1}. #{question.text}
+            h3 #{responses.length} responses
+
+            if question.type == 'text'
+              each response in responses
+                .row
+                  .columns.large-4
+                    span= response.taker.userData.personDisplayName
+                  .columns.large-8
+                    span= response.response
+
+            if question.type == 'multi'
+              each choice, index in question.choices
+                - var choiceResponses = responses.filter(response => response.response === `${index + 1}`)
+                .row
+                  .columns.large-4
+                    span= choice.text
+                  .columns.large-4
+                    span= choiceResponses.length
+                  .columns.large-4
+                    span= choiceResponses.map(response => response.taker.userData.personDisplayName).join(', ')

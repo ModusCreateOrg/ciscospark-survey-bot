@@ -22,47 +22,96 @@ const Survey = schema.define('Survey', {
   userSparkId: { type: String, index: true },
   data:        { type: schema.Json },
   state:       { type: String, default: 'draft' },
+  created:     { type: schema.Date, default: Date.now },
 })
 
-promisifyAll(Survey, {
-  // b/c of this: http://bluebirdjs.com/docs/error-explanations.html#error-cannot-promisify-an-api-that-has-normal-methods
-  filter: (name, func, target, passesDefaultFilter) =>
-    passesDefaultFilter && !name.match(/Async$/)
+const SurveyTaker = schema.define('SurveyTaker', {
+  surveyId: { type: Number, index: true },
+  userData: { type: schema.Json },
+  userSparkId: { type: String, index: true },
 })
 
+const SurveyResponse = schema.define('SurveyResponse', {
+  surveyTakerId: { type: Number, index: true },
+  questionId: { type: String, index: true },
+  response: { type: String },
+})
 
-import DummySparkClient from './DummySparkClient'
-import SparkClient from './SparkClient'
+const models = [Survey, SurveyResponse, SurveyTaker]
+for (const model of models) {
+  promisifyAll(model, {
+    // b/c of this: http://bluebirdjs.com/docs/error-explanations.html#error-cannot-promisify-an-api-that-has-normal-methods
+    filter: (name, func, target, passesDefaultFilter) =>
+      passesDefaultFilter && !name.match(/Async$/)
+  })
+}
+
+
+import DummySparkUser from './DummySparkUser'
+import SparkUser from './SparkUser'
+import SparkBot from './SparkBot'
 
 
 export default class {
-  constructor (user) {
+  constructor (user, controller, bot) {
     this.userId = user.profile.id
+    this.sparkBot = new SparkBot(controller, bot)
 
-    const SparkClientClass = user.isLocal ? DummySparkClient : SparkClient
-    this.sparkClient = new SparkClientClass(user)
+    const SparkUserClass = user.isLocal ? DummySparkUser : SparkUser
+    this.sparkUser = new SparkUserClass(user)
   }
 
   listSurveys = () => Survey.allAsync({where: { userSparkId: this.userId }})
 
   createSurvey = data => Survey.createAsync({ userSparkId: this.userId, data })
 
+  createSurveyTaker = (userData, surveyId) =>
+    SurveyTaker.createAsync({ userSparkId: userData.id, userData, surveyId })
+
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
+
+  getSurveyAll = async id => {
+    const [survey, surveyTakers] = await Promise.all([
+      this.getSurvey(id),
+      SurveyTaker.allAsync({ where: { surveyId: id } }),
+    ])
+
+    const surveyResponses = await SurveyResponse.allAsync({
+      where: { surveyTakerId: { in: surveyTakers.map(({ id }) => id) } }
+    })
+
+    return { survey, surveyTakers, surveyResponses }
+  }
+
+  saveSurveyResponse = (questionId, response, surveyTakerId) => {
+    return SurveyResponse.createAsync({ questionId, response, surveyTakerId })
+  }
 
   async updateSurvey (id, attributes) {
     await Survey.updateAsync({ userSparkId: this.userId, id}, attributes)
-    return this.getSurvey(id)
+    return await this.getSurvey(id)
   }
 
-  conductSurvey (id) {
-    return this.updateSurvey(id, { state: 'active' })
+  async conductSurvey (id) {
+    const survey = await this.updateSurvey(id, { state: 'active' })
+    const roomMembers = await this.listRoomMembers(survey.data.roomId)
+    await Promise.all(
+      roomMembers.map(async (sparkUser) => {
+        const surveyTaker = await this.createSurveyTaker(sparkUser, survey.id)
+        const { personEmail } = sparkUser
+        return this.sparkBot.conductUserSurvey(
+          personEmail, survey, (...args) => this.saveSurveyResponse(...args, surveyTaker.id)
+        )
+      })
+    )
+    return survey
   }
 
   listRooms () {
-    return this.sparkClient.listRooms(...arguments)
+    return this.sparkUser.listRooms(...arguments)
   }
 
-  listRoomMembers () {
-    return this.sparkClient
+  listRoomMembers (roomId) {
+    return this.sparkUser.listRoomMembers(roomId)
   }
 }

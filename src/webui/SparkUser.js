@@ -12,24 +12,18 @@ export default class {
 
   _buildSparkClient = () => {
     const spark = CiscoSpark.init({
-      config: {
-        credentials: {
-          client_secret: process.env.SPARK_OAUTH__CLIENT_SECRET,
-          client_id: process.env.SPARK_OAUTH__CLIENT_ID,
-        },
-      },
-    })
-
-    spark.credentials.set({
-      authorization: { // TODO: which of these do we actually need?
-        access_token: this.user.accessToken,
-        refresh_token: this.user.refreshToken,
-        token_type: 'Bearer',
-      },
+      authorization: {
+        access_token: this.user.accessToken
+      }
     })
 
     return spark
   }
 
   listRooms = () => this._sparkClient().rooms.list().then(({items}) => items)
+
+  listRoomMembers = async (roomId) => {
+    const { items } = await this._sparkClient().memberships.list({ roomId })
+    return items
+  }
 }

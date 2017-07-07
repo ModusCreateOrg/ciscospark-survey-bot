@@ -9,7 +9,7 @@ import uiRouter from './ui_routes'
 
 var app = express()
 
-export default (app) => {
+export default (app, controller, bot) => {
   app.set('views', 'src/templates')
   app.set('view engine', 'pug')
   app.use('/bower', express.static('bower_components'))
@@ -19,7 +19,7 @@ export default (app) => {
   app.use(cookieSession({
     name: 'session',
     keys: ['my secret key'], // TODO: put in .env.local
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }))
   app.use(passport.initialize())
   app.use(passport.session())
@@ -27,5 +27,5 @@ export default (app) => {
   app.use(morgan('dev'))
 
   app.use('/auth/', authRouter)
-  app.use('/', uiRouter)
+  app.use('/', uiRouter(controller, bot))
 }

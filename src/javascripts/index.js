@@ -1,20 +1,21 @@
 const questionTypes = ['text', 'multi']
 
 const newChoice = () => ({
-  text: '',
+  text: ''
 })
 
 const newQuestion = () => ({
+  id: Math.random().toString(16).substring(2),
   text: '',
   type: questionTypes[0],
-  choices: [newChoice()],
+  choices: [newChoice()]
 })
 
 const newSurvey = () => ({
   title: '',
   description: '',
   questions: [newQuestion()],
-  roomId: null,
+  roomId: null
 })
 
 const fetchJSON = (method, url, json) =>
@@ -25,7 +26,7 @@ const fetchJSON = (method, url, json) =>
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
-    },
+    }
   }).then((response) => {
     if (!response.ok) throw new Error(response.statusText)
     return response.json()
@@ -52,7 +53,7 @@ const surveyForm = new Vue({
     questionTypes,
     id: surveyData.id,
     survey: surveyData.data,
-    rooms: roomData,
+    rooms: roomData
   },
   methods: {
     addQuestion: function () {
@@ -75,7 +76,6 @@ const surveyForm = new Vue({
     }
   }
 })
-
 
 $(document).on('click', '[link-href]', function () {
   window.location = $(this).attr('link-href')

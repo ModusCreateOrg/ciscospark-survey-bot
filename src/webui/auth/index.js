@@ -4,7 +4,6 @@ import passport from 'passport'
 import { router as localRouter } from './local'
 import { router as sparkRouter } from './spark'
 
-
 passport.serializeUser((user, done) => {
   done(null, JSON.stringify(user))
 })
@@ -16,7 +15,6 @@ passport.deserializeUser((user, done) => {
     done(e)
   }
 })
-
 
 const router = express.Router()
 
@@ -32,6 +30,5 @@ router.get('/logout', (req, res) => {
 router.get('/login', (req, res) => {
   res.render('login')
 })
-
 
 export default router

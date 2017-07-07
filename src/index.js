@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-const {promisify} = require('util');
+const {promisify} = require('util')
 import controller from './controller'
 import handlers from './handlers'
 import attachHandlers from './attachHandlers'
@@ -11,5 +11,5 @@ attachHandlers(controller, handlers)
 const bot = controller.spawn({})
 
 startServer(controller, bot)
-  .then(startWebUI)
+  .then((webServer) => startWebUI(webServer, controller, bot))
   .catch(console.error)
