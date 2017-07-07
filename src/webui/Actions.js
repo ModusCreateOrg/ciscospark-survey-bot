@@ -88,8 +88,13 @@ export default class {
     return SurveyResponse.createAsync({ questionId, response, surveyTakerId })
   }
 
-  saveSurveyCompletion = (surveyTakerId) =>
-    SurveyTaker.updateAsync({ id: surveyTakerId }, { isFinished: true })
+  saveSurveyCompletion = async (surveyTakerId, surveyId) => {
+    await SurveyTaker.updateAsync({ id: surveyTakerId }, { isFinished: true })
+    const unfinished = await SurveyTaker.countAsync({ surveyId, isFinished: false })
+    if (unfinished === 0) {
+      await this.updateSurvey(surveyId, { state: 'complete' })
+    }
+  }
 
   async updateSurvey (id, attributes) {
     await Survey.updateAsync({ userSparkId: this.userId, id}, attributes)
@@ -107,7 +112,7 @@ export default class {
           personEmail,
           survey,
           (...args) => this.saveSurveyResponse(...args, surveyTaker.id),
-          () => this.saveSurveyCompletion(surveyTaker.id)
+          () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
         )
       })
     )
