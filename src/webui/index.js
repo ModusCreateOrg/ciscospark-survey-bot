@@ -7,7 +7,7 @@ import passport from 'passport'
 import authRouter from './auth'
 import uiRouter from './ui_routes'
 
-var app = express()
+import SocketIO from 'socket.io'
 
 export default (app, controller, bot) => {
   app.set('views', 'src/templates')
@@ -27,5 +27,6 @@ export default (app, controller, bot) => {
   app.use(morgan('dev'))
 
   app.use('/auth/', authRouter)
-  app.use('/', uiRouter(controller, bot))
+
+  app.use('/', uiRouter(controller, bot, SocketIO(controller.httpserver)))
 }

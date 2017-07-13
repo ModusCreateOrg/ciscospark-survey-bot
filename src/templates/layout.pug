@@ -3,6 +3,9 @@ html(lang='en')
   head
     title Survey Bot
     link(href='/static/stylesheets/index.css' type='text/css' rel='stylesheet')
+    script(src="/bower/jquery/dist/jquery.min.js")
+    script(src="/bower/vue/dist/vue.min.js")
+    script(src='/static/javascripts/index.js')
 
   body
     header.main-header.top-bar
@@ -24,8 +27,3 @@ html(lang='en')
       .small-12.small-centered.medium-10.large-8.columns
         section.content-box
           block content
-
-  //- TODO: change this to bower_components to be less confusing
-  script(src="/bower/jquery/dist/jquery.min.js")
-  script(src="/bower/vue/dist/vue.min.js")
-  script(src="/static/javascripts/index.js")

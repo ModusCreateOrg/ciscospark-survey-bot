@@ -23,12 +23,14 @@ const Survey = schema.define('Survey', {
   data:        { type: schema.Json },
   state:       { type: String, default: 'draft' },
   created:     { type: schema.Date, default: Date.now },
+  token:       { type: String, default: uuid },
 })
 
 const SurveyTaker = schema.define('SurveyTaker', {
   surveyId: { type: Number, index: true },
   userData: { type: schema.Json },
   userSparkId: { type: String, index: true },
+  isFinished: { type: Boolean, default: false, index: true },
 })
 
 const SurveyResponse = schema.define('SurveyResponse', {
@@ -53,12 +55,14 @@ import SparkBot from './SparkBot'
 
 
 export default class {
-  constructor (user, controller, bot) {
+  constructor (user, controller, bot, io) {
     this.userId = user.profile.id
     this.sparkBot = new SparkBot(controller, bot)
 
     const SparkUserClass = user.isLocal ? DummySparkUser : SparkUser
     this.sparkUser = new SparkUserClass(user)
+
+    this.io = io
   }
 
   listSurveys = () => Survey.allAsync({where: { userSparkId: this.userId }})
@@ -71,20 +75,26 @@ export default class {
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
   getSurveyAll = async id => {
-    const [survey, surveyTakers] = await Promise.all([
-      this.getSurvey(id),
-      SurveyTaker.allAsync({ where: { surveyId: id } }),
-    ])
+    const surveyTakers = await SurveyTaker.allAsync({ where: { surveyId: id } })
 
     const surveyResponses = await SurveyResponse.allAsync({
       where: { surveyTakerId: { in: surveyTakers.map(({ id }) => id) } }
     })
 
-    return { survey, surveyTakers, surveyResponses }
+    return { surveyTakers, surveyResponses }
   }
 
-  saveSurveyResponse = (questionId, response, surveyTakerId) => {
-    return SurveyResponse.createAsync({ questionId, response, surveyTakerId })
+  saveSurveyResponse = async (questionId, response, surveyToken, surveyTakerId) => {
+    await SurveyResponse.createAsync({ questionId, response, surveyTakerId })
+    this.io.to(surveyToken).emit('survey updated')
+  }
+
+  saveSurveyCompletion = async (surveyTakerId, surveyId) => {
+    await SurveyTaker.updateAsync({ id: surveyTakerId }, { isFinished: true })
+    const unfinished = await SurveyTaker.countAsync({ surveyId, isFinished: false })
+    if (unfinished === 0) {
+      await this.updateSurvey(surveyId, { state: 'complete' })
+    }
   }
 
   async updateSurvey (id, attributes) {
@@ -100,7 +110,10 @@ export default class {
         const surveyTaker = await this.createSurveyTaker(sparkUser, survey.id)
         const { personEmail } = sparkUser
         return this.sparkBot.conductUserSurvey(
-          personEmail, survey, (...args) => this.saveSurveyResponse(...args, surveyTaker.id)
+          personEmail,
+          survey,
+          (...args) => this.saveSurveyResponse(...args, survey.token, surveyTaker.id),
+          () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
         )
       })
     )

@@ -1,40 +1,44 @@
 extends layout.pug
 
-
 block content
-  h1
-    span= survey.data.title
+  p
+    button#clear-responses Clear
+    button#restore-responses Restore
 
-  h2
-    span= survey.data.description
+  #survey(
+    data-survey=JSON.stringify(survey)
+    data-responses-url=`/surveys/${survey.id}/responses`
+    data-subscription-token=survey.token
+  )
+    h1
+      span {{survey.data.title}}
+    h2
+      span {{survey.data.description}}
 
-  span Created on #{survey.created}
+    span Created on {{survey.created}}
 
-  .content
-    ul.questions
-      each question, index in survey.data.questions
-        .row
+    .content
+      ul.questions
+        li.row(v-for="[question, responses], index in questionAndResponses()")
           .columns.large-8
-            - var responses = responsesByQuestion[question.id] || []
+            h2 {{index+1}}. {{question.text}}
+            h3 {{responses.length}} responses
 
-            h2 #{index+1}. #{question.text}
-            h3 #{responses.length} responses
+            .responses(v-if="question.type == 'text'")
+              .row(v-for="response in responses")
+                .columns.large-4
+                  span {{response.taker.userData.personDisplayName}}
+                .columns.large-8
+                  span {{response.response}}
 
-            if question.type == 'text'
-              each response in responses
-                .row
-                  .columns.large-4
-                    span= response.taker.userData.personDisplayName
-                  .columns.large-8
-                    span= response.response
+            .responses(v-if="question.type == 'multi'")
+              .row(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
+                .columns.large-4
+                  span {{choice.text}}
+                .columns.large-4
+                  span {{choiceResponses.length}}
+                .columns.large-4
+                  span(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
 
-            if question.type == 'multi'
-              each choice, index in question.choices
-                - var choiceResponses = responses.filter(response => response.response === `${index + 1}`)
-                .row
-                  .columns.large-4
-                    span= choice.text
-                  .columns.large-4
-                    span= choiceResponses.length
-                  .columns.large-4
-                    span= choiceResponses.map(response => response.taker.userData.personDisplayName).join(', ')
+  script(src='/bower/socket.io-client/dist/socket.io.slim.js')
+  script(src='/static/javascripts/surveys/show.js')

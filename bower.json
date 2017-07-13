@@ -1,7 +1,9 @@
 {
   "name": "foundation-sites-template",
   "version": "1.0.0",
-  "authors": ["ZURB <foundation@zurb.com>"],
+  "authors": [
+    "ZURB <foundation@zurb.com>"
+  ],
   "description": "Basic template for a new Foundation for Sites project.",
   "main": "index.html",
   "license": "MIT",
@@ -9,8 +11,15 @@
   "dependencies": {
     "foundation-sites": "~6.3.0",
     "motion-ui": "~1.2.2",
-    "vue": "^2.3.3"
+    "vue": "^2.3.3",
+    "socket.io-client": "^2.0.3"
   },
-  "ignore": ["**/.*", "node_modules", "bower_components", "test", "tests"],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
   "private": true
 }

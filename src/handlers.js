@@ -28,7 +28,7 @@ const addMultipleChoiceQuestion = (convo, question, surveyId, recordAnswer) => {
   })
 }
 
-const doSurvey = (bot, { roomId, personEmail, survey, recordAnswer }) => {
+const doSurvey = (bot, { roomId, personEmail, survey, recordAnswer, recordCompletion }) => {
   bot.startConversation({ user: personEmail, channel: roomId }, (err, convo) => {
     for (const question of survey.data.questions) {
       let addQuestionFn = addTextQuestion
@@ -49,7 +49,7 @@ const doSurvey = (bot, { roomId, personEmail, survey, recordAnswer }) => {
     }
 
     convo.on('end', (convo) => {
-      //TODO: record survey completed
+      recordCompletion()
       bot.say({ user: personEmail, channel: roomId, text: 'Thanks for your responses!' })
     })
   })

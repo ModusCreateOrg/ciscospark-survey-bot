@@ -1,7 +1,5 @@
 mixin form(survey)
-  //pre=JSON.stringify(rooms)
   #survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
-
     .row
       .survey-title.columns.medium-8
         label Survey title:
@@ -51,3 +49,5 @@ mixin form(survey)
     div.button-group
       button(type="button" class="secondary button" @click="saveDraft") Save Draft
       button(type="button" class="primary button" @click="conduct") Conduct Survey
+
+  script(src="/static/javascripts/surveys/edit.js")
