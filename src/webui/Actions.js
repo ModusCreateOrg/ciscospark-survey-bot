@@ -23,6 +23,7 @@ const Survey = schema.define('Survey', {
   data:        { type: schema.Json },
   state:       { type: String, default: 'draft' },
   created:     { type: schema.Date, default: Date.now },
+  token:       { type: String, default: uuid },
 })
 
 const SurveyTaker = schema.define('SurveyTaker', {
@@ -111,7 +112,7 @@ export default class {
         return this.sparkBot.conductUserSurvey(
           personEmail,
           survey,
-          (...args) => this.saveSurveyResponse(...args, survey.id, surveyTaker.id),
+          (...args) => this.saveSurveyResponse(...args, survey.token, surveyTaker.id),
           () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
         )
       })

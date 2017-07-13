@@ -8,7 +8,7 @@ block content
   #survey(
     data-survey=JSON.stringify(survey)
     data-responses-url=`/surveys/${survey.id}/responses`
-    data-subscription-token=survey.id
+    data-subscription-token=survey.token
   )
     h1
       span {{survey.data.title}}
