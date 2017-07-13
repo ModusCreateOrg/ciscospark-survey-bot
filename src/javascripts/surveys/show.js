@@ -1,19 +1,17 @@
 const userId = 'someId'
 
-socket = io('/')
-socket.on('connect', () => socket.emit('join', userId))
-socket.on('survey updated', (data) => console.log('SHOULD get this', data))
-
 const selector = '#survey'
-const survey = $(selector).data('survey')
-const responsesByQuestion = $(selector).data('responsesByQuestion')
+const $surveyEl = $(selector)
+const survey = $surveyEl.data('survey')
+const surveyResponsesUrl = $surveyEl.data('responsesUrl')
+const surveyToken = $surveyEl.data('subscriptionToken')
 
 const surveyResults = new Vue({
   el: selector,
   data: {
     id: survey.id,
+    responsesByQuestion: {},
     survey,
-    responsesByQuestion
   },
   methods: {
     questionAndResponses: function() {
@@ -27,4 +25,28 @@ const surveyResults = new Vue({
       )
     }
   }
+})
+
+const fetchResponses = async () => {
+  setResponses(await fetchJSON('GET', surveyResponsesUrl))
+}
+
+const setResponses = data => {
+  surveyResults.$data.responsesByQuestion = data
+}
+
+window.surveyResults = surveyResults
+$('#clear-responses').click(() => setResponses({}))
+$('#restore-responses').click(fetchResponses)
+
+fetchResponses()
+
+
+socket = io('/')
+
+socket.on('connect', () => socket.emit('subscribe:survey', surveyToken))
+
+socket.on('survey updated', () => {
+  console.log('survey updated')
+  fetchResponses()
 })

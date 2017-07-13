@@ -19,10 +19,11 @@ const ensureLoggedIn = (loginPath) => async (req, res, next) => {
 export default (controller, bot, io) => {
 
   io.on('connection', (socket) => {
-    //...
-    socket.on('join', (id) => socket.join(id))
+    socket.on('subscribe:survey', (token) => {
+      console.log('EVENT subscribe:survey', token)
+      socket.join(token)
+    })
   })
-
 
   router.use(ensureLoggedIn('/auth/login'))
 
@@ -50,7 +51,12 @@ export default (controller, bot, io) => {
   })
 
   router.get('/surveys/:id', async (req, res) => {
-    const { survey, surveyTakers, surveyResponses } = await req.actions.getSurveyAll(req.params.id)
+    res.locals.survey = await req.actions.getSurvey(req.params.id)
+    res.render('show')
+  })
+
+  router.get('/surveys/:id/responses', async (req, res) => {
+    const { surveyTakers, surveyResponses } = await req.actions.getSurveyAll(req.params.id)
     const takers = keyBy(surveyTakers, 'id')
     const responsesWithTakers = surveyResponses.map(surveyResponse => {
       const { questionId, response, id, surveyTakerId } = surveyResponse
@@ -62,8 +68,7 @@ export default (controller, bot, io) => {
       }
     })
     const responsesByQuestion = groupBy(responsesWithTakers, 'questionId')
-    Object.assign(res.locals, { survey, responsesByQuestion })
-    res.render('show')
+    res.json(responsesByQuestion)
   })
 
   router.post('/surveys', async (req, res) => {

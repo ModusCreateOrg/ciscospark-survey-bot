@@ -74,23 +74,18 @@ export default class {
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
   getSurveyAll = async id => {
-    const [survey, surveyTakers] = await Promise.all([
-      this.getSurvey(id),
-      SurveyTaker.allAsync({ where: { surveyId: id } }),
-    ])
+    const surveyTakers = await SurveyTaker.allAsync({ where: { surveyId: id } })
 
     const surveyResponses = await SurveyResponse.allAsync({
       where: { surveyTakerId: { in: surveyTakers.map(({ id }) => id) } }
     })
 
-    return { survey, surveyTakers, surveyResponses }
+    return { surveyTakers, surveyResponses }
   }
 
-  saveSurveyResponse = async (questionId, response, surveyTakerId) => {
+  saveSurveyResponse = async (questionId, response, surveyToken, surveyTakerId) => {
     await SurveyResponse.createAsync({ questionId, response, surveyTakerId })
-    // TODO: find survey from survey taker and grab user id from survey
-    const userId = 'someId'
-    this.io.to(userId).emit('survey updated', { response, questionId })
+    this.io.to(surveyToken).emit('survey updated')
   }
 
   saveSurveyCompletion = async (surveyTakerId, surveyId) => {
@@ -116,7 +111,7 @@ export default class {
         return this.sparkBot.conductUserSurvey(
           personEmail,
           survey,
-          (...args) => this.saveSurveyResponse(...args, surveyTaker.id),
+          (...args) => this.saveSurveyResponse(...args, survey.id, surveyTaker.id),
           () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
         )
       })

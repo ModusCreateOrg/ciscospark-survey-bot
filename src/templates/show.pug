@@ -1,8 +1,15 @@
 extends layout.pug
 
-
 block content
-  #survey(data-survey=JSON.stringify(survey) data-responses-by-question=JSON.stringify(responsesByQuestion))
+  p
+    button#clear-responses Clear
+    button#restore-responses Restore
+
+  #survey(
+    data-survey=JSON.stringify(survey)
+    data-responses-url=`/surveys/${survey.id}/responses`
+    data-subscription-token=survey.id
+  )
     h1
       span {{survey.data.title}}
     h2

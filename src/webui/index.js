@@ -28,6 +28,5 @@ export default (app, controller, bot) => {
 
   app.use('/auth/', authRouter)
 
-  const io = SocketIO(controller.httpserver)
-  app.use('/', uiRouter(controller, bot, io))
+  app.use('/', uiRouter(controller, bot, SocketIO(controller.httpserver)))
 }
