@@ -1,3 +1,5 @@
+const { groupBy, map, fromPairs } = _
+
 const selector = '#survey'
 const $surveyEl = $(selector)
 const survey = $surveyEl.data('survey')
@@ -27,17 +29,11 @@ const surveyResults = new Vue({
       )
     },
     pieChartData: function (question, responses) {
-      const dataAsMap = {}
-      for (const response of responses) {
-        const answerText = question.choices[response.response - 1].text
-        dataAsMap[answerText] = dataAsMap[answerText] || 0
-        dataAsMap[answerText] += 1
-      }
-      const pieChartData = []
-      for (const answerText in dataAsMap) {
-        pieChartData.push([answerText, dataAsMap[answerText]])
-      }
-      return pieChartData
+      const defaultGroups = fromPairs(question.choices.map(({text}) => [text, []]))
+      const responsesGrouped = groupBy(responses, (response) => question.choices[response.response - 1].text)
+      const responsesWithDefaults = Object.assign({}, defaultGroups, responsesGrouped)
+
+      return map(responsesWithDefaults, (value, key) => [key, value.length])
     },
   }
 })
