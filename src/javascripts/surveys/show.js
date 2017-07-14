@@ -15,13 +15,10 @@ const surveyResults = new Vue({
   },
   methods: {
     questionAndResponses: function () {
-      return this.survey.data.questions.map(question => {
-        const responses = this.responsesByQuestion[question.id] || []
-        return {
-          question,
-          responses,
-        }
-      })
+      return this.survey.data.questions.map(question => ({
+        question,
+        responses: this.responsesByQuestion[question.id] || []
+      }))
     },
     responsesFor: function (question, responses) {
       return question.choices.map( (choice, index) =>
