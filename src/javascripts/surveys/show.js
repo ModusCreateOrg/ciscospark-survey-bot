@@ -27,19 +27,16 @@ const surveyResults = new Vue({
       )
     },
     pieChartData: function (question, responses) {
-      console.log({question, responses})
       const dataAsMap = {}
       for (const response of responses) {
         const answerText = question.choices[response.response - 1].text
         dataAsMap[answerText] = dataAsMap[answerText] || 0
         dataAsMap[answerText] += 1
       }
-      console.log(dataAsMap)
       const pieChartData = []
       for (const answerText in dataAsMap) {
         pieChartData.push([answerText, dataAsMap[answerText]])
       }
-      console.log(pieChartData)
       return pieChartData
     },
   }
