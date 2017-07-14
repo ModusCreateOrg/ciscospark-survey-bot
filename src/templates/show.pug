@@ -19,7 +19,7 @@ block content
 
     .content
       ul.questions
-        li.row(v-for="[question, responses], index in questionAndResponses()")
+        li.row(v-for="{ question, responses }, index in questionAndResponses()")
           .columns.large-8
             h2 {{index+1}}. {{question.text}}
             h3 {{responses.length}} responses
@@ -32,6 +32,8 @@ block content
                   span {{response.response}}
 
             .responses(v-if="question.type == 'multi'")
+              pie-chart(:data="pieChartData(question, responses)")
+
               .row(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
                 .columns.large-4
                   span {{choice.text}}
@@ -39,6 +41,10 @@ block content
                   span {{choiceResponses.length}}
                 .columns.large-4
                   span(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
+
+  script(src='/bower/chart.js/dist/Chart.bundle.min.js')
+  script(src='/bower/chartkick/chartkick.js')
+  script(src='/bower/vue-chartkick/dist/vue-chartkick.min.js')
 
   script(src='/bower/socket.io-client/dist/socket.io.slim.js')
   script(src='/static/javascripts/surveys/show.js')

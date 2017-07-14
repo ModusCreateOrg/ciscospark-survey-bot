@@ -1,5 +1,3 @@
-const userId = 'someId'
-
 const selector = '#survey'
 const $surveyEl = $(selector)
 const survey = $surveyEl.data('survey')
@@ -14,16 +12,36 @@ const surveyResults = new Vue({
     survey,
   },
   methods: {
-    questionAndResponses: function() {
-      return this.survey.data.questions.map(question =>
-        [question, this.responsesByQuestion[question.id] || []]
-      )
+    questionAndResponses: function () {
+      return this.survey.data.questions.map(question => {
+        const responses = this.responsesByQuestion[question.id] || []
+        return {
+          question,
+          responses,
+        }
+      })
     },
-    responsesFor: function(question, responses) {
+    responsesFor: function (question, responses) {
       return question.choices.map( (choice, index) =>
         [choice, responses.filter(({response}) => response === `${index + 1}`)]
       )
-    }
+    },
+    pieChartData: function (question, responses) {
+      console.log({question, responses})
+      const dataAsMap = {}
+      for (const response of responses) {
+        const answerText = question.choices[response.response - 1].text
+        dataAsMap[answerText] = dataAsMap[answerText] || 0
+        dataAsMap[answerText] += 1
+      }
+      console.log(dataAsMap)
+      const pieChartData = []
+      for (const answerText in dataAsMap) {
+        pieChartData.push([answerText, dataAsMap[answerText]])
+      }
+      console.log(pieChartData)
+      return pieChartData
+    },
   }
 })
 
