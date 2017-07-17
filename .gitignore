@@ -2,6 +2,8 @@
 lib
 dump.rdb
 public
+.DS_Store
+
 
 #### Standard Node stuff:
 
