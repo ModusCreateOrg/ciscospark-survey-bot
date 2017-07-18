@@ -7,9 +7,7 @@ mixin form(survey)
 
       .survey-room.columns.medium-4
         label Survey room:
-        select(v-model="survey.roomId" required=true)
-          option(disabled selected value="") Choose a Spark room
-          option(v-for="room in rooms" v-bind:value="room.id") {{room.title}}
+        input.rooms(type="text" :value="roomName()" required=true @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput")
 
     .survey-description
       label Description
@@ -50,4 +48,6 @@ mixin form(survey)
       button(type="button" class="secondary button" @click="saveDraft") Save Draft
       button(type="button" class="primary button" @click="conduct") Conduct Survey
 
-  script(src="/static/javascripts/surveys/edit.js")
+  link(href="/bower/awesomplete/awesomplete.css" rel="stylesheet")
+  script(src='/bower/awesomplete/awesomplete.min.js')
+  script(src='/static/javascripts/surveys/form.js')
