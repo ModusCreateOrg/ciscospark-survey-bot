@@ -120,11 +120,7 @@ export default class {
     return survey
   }
 
-  listRooms () {
-    return this.sparkUser.listRooms(...arguments)
-  }
+  listRooms = () => this.sparkUser.listRooms()
 
-  listRoomMembers (roomId) {
-    return this.sparkUser.listRoomMembers(roomId)
-  }
+  listRoomMembers = (roomId) => this.sparkUser.listRoomMembers(roomId)
 }
