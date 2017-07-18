@@ -4,7 +4,7 @@
   "description": "Bot for taking surveys",
   "main": "lib/index.js",
   "engines": {
-    "node": "~8.0"
+    "node": "8.1.4"
   },
   "scripts": {
     "prod": "node lib/index.js",
