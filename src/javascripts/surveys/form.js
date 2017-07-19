@@ -37,6 +37,15 @@ const surveyForm = new Vue({
     survey: surveyData.data,
     rooms: roomData
   },
+  mounted: function () {
+    const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
+
+    new Awesomplete(this.$refs.roomsInput, {
+      list,
+      minChars: 0,
+      maxItems: 20,
+    })
+  },
   methods: {
     addQuestion: function () {
       this.survey.questions.push(newQuestion())
@@ -55,6 +64,20 @@ const surveyForm = new Vue({
       const survey = await save(this)
       await conduct(survey)
       // window.location = '/'
+    },
+    _setRoomId: function (roomId) {
+      this.survey.roomId = null
+      setTimeout(() => { this.survey.roomId = roomId }, 0)
+    },
+    roomSelected: function (event) {
+      this._setRoomId(event.text.value)
+    },
+    roomSelectionCancel: function (event) {
+      this._setRoomId(this.survey.roomId)
+    },
+    roomName: function () {
+      const room = this.rooms.filter(({id}) => id === this.survey.roomId)[0]
+      return room ? room.title : ''
     }
   }
 })
