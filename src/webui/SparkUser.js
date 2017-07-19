@@ -10,17 +10,13 @@ export default class {
     return this.__sparkClient
   }
 
-  _buildSparkClient = () => {
-    const spark = CiscoSpark.init({
-      authorization: {
-        access_token: this.user.accessToken
-      }
-    })
+  _buildSparkClient = () => CiscoSpark.init({
+    authorization: {
+      access_token: this.user.accessToken
+    }
+  })
 
-    return spark
-  }
-
-  listRooms = () => this._sparkClient().rooms.list().then(({items}) => items)
+  listRooms = () => this._sparkClient().rooms.list({ type: 'group' }).then(({items}) => items)
 
   listRoomMembers = async (roomId) => {
     const { items } = await this._sparkClient().memberships.list({ roomId })
