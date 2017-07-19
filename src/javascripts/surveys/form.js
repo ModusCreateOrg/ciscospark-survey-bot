@@ -38,7 +38,7 @@ const surveyForm = new Vue({
     rooms: roomData
   },
   mounted: function () {
-    const list = this.$data.rooms.map(({id, title}) => ({ label: title, value: id }))
+    const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
 
     new Awesomplete(this.$refs.roomsInput, {
       list,
