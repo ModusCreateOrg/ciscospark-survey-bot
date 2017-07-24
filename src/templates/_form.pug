@@ -13,13 +13,13 @@ mixin form(survey)
       label Description
       textarea(v-model.trim="survey.description" placeholder="Describe your survey")
 
-    h3 Questions
+    h4 Questions
     ul.questions
       li.question(v-for="question in survey.questions")
         .row
           .columns.medium-7
             label Question:
-            input(type='text' v-model.trim="question.text")
+            input(type='text' v-model.trim="question.text" placeholder="Enter your question")
 
           .columns.medium-3
             label Type:
@@ -44,9 +44,11 @@ mixin form(survey)
       button(type="button" class="small secondary button" @click="addQuestion") &#43; question
 
     br
-    div.button-group
-      button(type="button" class="secondary button" @click="saveDraft") Save Draft
-      button(type="button" class="primary button" @click="conduct") Conduct Survey
+
+    button(type="button" class="secondary button" @click="saveDraft") Save Draft
+    a.button.expanded(@click="conduct") Conduct Survey
+
+
 
   link(href="/bower/awesomplete/awesomplete.css" rel="stylesheet")
   script(src='/bower/awesomplete/awesomplete.min.js')

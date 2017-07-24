@@ -39,7 +39,7 @@ block content
 
           .responses(v-if="question.type == 'multi'")
             .row
-              .columns.large-6
+              .columns.medium-6
                 .question__answers
                   .question__subtitle Results
                     em  ({{responses.length}} responses)
@@ -47,13 +47,13 @@ block content
                     .question__choice {{choice.text}}
                       span.label  {{choiceResponses.length}}
                       div.question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
-              .columns.large-6
+              .columns.medium-6
                 .question__chart
                   pie-chart(:data="pieChartData(question, responses)", legend="bottom", :donut="true")
 
           .responses(v-if="question.type == 'text'")
             .row
-              .columns.large-12
+              .columns.medium-12
                 .question__answers
                   .question__subtitle Results
                     em  ({{responses.length}} responses)

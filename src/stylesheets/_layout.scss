@@ -4,6 +4,31 @@ body {
   color: $dark-gray;
 }
 
+
+input[type="text"],
+textarea,
+select {
+  border-bottom: 2px solid #dadada;
+
+  &:focus {
+    border-bottom: 2px solid #2b72bb;
+  }
+}
+
+
+label {
+  font-size: 0.85rem;
+}
+
+a {
+  color: #2b72bb;
+}
+
+.button,
+.button.primary {
+  background-color: #2b72bb;
+}
+
 .main-header {
   text-align: center;
   padding: 1rem;
@@ -116,7 +141,8 @@ ul.questions {
     margin: 0 0 2rem 0;
     padding: 1rem 1rem 0rem;
     border: 1px solid $light-gray;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
+    // box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
+    border-radius: 2px;
   }
 
   ol.choices {
@@ -142,7 +168,7 @@ ul.breadcrumbs {
   &__title {
     border-bottom: 1px solid #dadada;
     padding-bottom: 10px;
-    padding-top: 10px;
+    padding-top: 20px;
     margin-bottom: 8px;
   }
 
@@ -176,11 +202,11 @@ ul.breadcrumbs {
   }
 
   &__chart {
-    // float: right;
+    float: right;
   }
 
   &__answers {
-    // float: left;
+    float: left;
   }
 }
 
