@@ -35,7 +35,7 @@ mixin form(survey)
             li.choice(v-for="choice in question.choices")
               .row
                 .question-choice.columns.medium-9
-                  input(type='text' v-model.trim="choice.text")
+                  input(type='text' v-model.trim="choice.text" placeholder="Enter answer option")
                 div.columns.medium-3
                   button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)") &#8722; remove
           button(type="button" class="tiny secondary button" @click="addChoice(question)") &#43; choice
