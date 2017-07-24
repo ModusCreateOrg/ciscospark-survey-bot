@@ -105,18 +105,19 @@ export default class {
   async conductSurvey (id) {
     const survey = await this.updateSurvey(id, { state: 'active' })
     const roomMembers = await this.listRoomMembers(survey.data.roomId)
-    await Promise.all(
-      roomMembers.map(async (sparkUser) => {
-        const surveyTaker = await this.createSurveyTaker(sparkUser, survey.id)
-        const { personEmail } = sparkUser
-        return this.sparkBot.conductUserSurvey(
-          personEmail,
-          survey,
-          (...args) => this.saveSurveyResponse(...args, survey.token, surveyTaker.id),
-          () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
-        )
-      })
-    )
+
+    // Not async because Spark API client can't handle multiple async requests
+    for (const sparkUser of roomMembers) {
+      const surveyTaker = await this.createSurveyTaker(sparkUser, survey.id)
+      const { personEmail } = sparkUser
+      await this.sparkBot.conductUserSurvey(
+        personEmail,
+        survey,
+        (...args) => this.saveSurveyResponse(...args, survey.token, surveyTaker.id),
+        () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
+      )
+    }
+
     return survey
   }
 
