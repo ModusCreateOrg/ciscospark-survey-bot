@@ -28,33 +28,41 @@ block content
     div.secondary.button-group.float-right
       a#clear-responses.button Clear
       a#restore-responses.button Restore
+    br
 
 
 
     .content
-      ul.questions
-        li.row(v-for="{ question, responses }, index in questionAndResponses()")
-          .columns.large-8
-            h2 {{index+1}}. {{question.text}}
-            p {{responses.length}} responses
+      .questions
+        span(v-for="{ question, responses }, index in questionAndResponses()")
+          .question__title {{index+1}}. {{question.text}}
 
-            .responses(v-if="question.type == 'text'")
-              .row(v-for="response in responses")
-                .columns.large-4
-                  span {{response.taker.userData.personDisplayName}}
-                .columns.large-8
-                  span {{response.response}}
+          .responses(v-if="question.type == 'multi'")
+            .row
+              .columns.large-6
+                .question__answers
+                  .question__subtitle Results
+                    em  ({{responses.length}} responses)
+                  span(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
+                    .question__choice {{choice.text}}
+                      span.label  {{choiceResponses.length}}
+                      div.question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
+              .columns.large-6
+                .question__chart
+                  pie-chart(:data="pieChartData(question, responses)", legend="bottom", :donut="true")
 
-            .responses(v-if="question.type == 'multi'")
-              pie-chart(:data="pieChartData(question, responses)")
+          .responses(v-if="question.type == 'text'")
+            .row
+              .columns.large-12
+                .question__answers
+                  .question__subtitle Results
+                    em  ({{responses.length}} responses)
+                    span(v-for="response in responses")
+                      .question__choice
+                        blockquote {{response.response}}
+                          footer.question__person {{response.taker.userData.personDisplayName}}
 
-              .row(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
-                .columns.large-4
-                  span {{choice.text}}
-                .columns.large-4
-                  span {{choiceResponses.length}}
-                .columns.large-4
-                  span(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
+
 
   script(src='/bower/chart.js/dist/Chart.bundle.min.js')
   script(src='/bower/chartkick/chartkick.js')
