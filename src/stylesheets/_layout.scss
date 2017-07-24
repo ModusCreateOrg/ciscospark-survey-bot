@@ -119,6 +119,11 @@ a {
 
 .content {
   text-align: left;
+
+  ul {
+    margin-left: 0px;
+  }
+
 }
 
 ul {
@@ -254,3 +259,30 @@ ul.breadcrumbs {
     top: -2px;
   }
 }
+
+
+.surveys__header {
+  padding: 0.5rem;
+  border-bottom: dotted 1px #DDDDDD;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+
+.surveys__title {
+  background-color: #FFFFFF;
+
+  li {
+    list-style: none;
+    padding-left: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    &:hover {
+      background-color: #F6F6F6;
+
+    }
+  }
+}
+

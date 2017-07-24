@@ -1,31 +1,35 @@
 extends layout.pug
 
 block content
-  h2 Dashboard
+
+  nav(aria-label="You are here:" role="navigation")
+    ul.breadcrumbs
+      li
+        span Dashboard
 
   a.button.new(href="/surveys/new") + New Survey
 
   .content
-    - var completedSurveys = surveys.complete || []
-    if completedSurveys.length
-      h3 Completed Surveys
-        ul.surveys
-          each survey in completedSurveys
-            li(link-href=`/surveys/${survey.id}`)
-              a.title= survey.data.title
-
     - var activeSurveys = surveys.active || []
     if activeSurveys.length
-      h3 Active Surveys
-        ul.surveys
-          each survey in activeSurveys
-            li(link-href=`/surveys/${survey.id}`)
-              a.title= survey.data.title
+      .surveys__header Active Surveys
+      ul.surveys__title
+        each survey in activeSurveys
+          li(link-href=`/surveys/${survey.id}`)
+            a.title= survey.data.title
 
     - var draftSurveys = surveys.draft || []
     if draftSurveys.length
-      h3 Draft Surveys
-        ul.surveys
-          each survey in draftSurveys
-            li(link-href=`/surveys/${survey.id}/edit`)
-              a.title= survey.data.title
+      .surveys__header Draft Surveys
+      ul.surveys__title
+        each survey in draftSurveys
+          li(link-href=`/surveys/${survey.id}/edit`)
+            a.title= survey.data.title
+
+    - var completedSurveys = surveys.complete || []
+    if completedSurveys.length
+      .surveys__header Completed Surveys
+      ul.surveys__title
+        each survey in completedSurveys
+          li(link-href=`/surveys/${survey.id}`)
+            a.title= survey.data.title
