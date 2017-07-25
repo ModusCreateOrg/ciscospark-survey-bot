@@ -16,7 +16,11 @@ passport.use(new CiscoSparkStrategy(sparkOauthConfig, (accessToken, refreshToken
 }))
 
 router.get('/', passport.authenticate('cisco-spark', {
-  scope: ['spark:all']
+  scope: [
+    'spark:rooms_read',       // required by SparkUser for letting you choose a room to survey
+    'spark:memberships_read', // required by SparkUser for knowing who is in a room
+    'spark:people_read',      // required by passport for fetching user info (name, avatar, etc...)
+  ]
 }))
 
 router.get('/callback', passport.authenticate('cisco-spark', {

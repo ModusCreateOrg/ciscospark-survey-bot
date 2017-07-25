@@ -16,8 +16,10 @@ export default class {
     }
   })
 
+  // requires scope spark:rooms_read
   listRooms = () => this._sparkClient().rooms.list({ type: 'group' }).then(({items}) => items)
 
+  // requires scope spark:memberships_read
   listRoomMembers = async (roomId) => {
     const { items } = await this._sparkClient().memberships.list({ roomId })
     return items
