@@ -1,9 +1,9 @@
 mixin form(survey)
-  #survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
+  form#survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
     .row
       .survey-title.columns.medium-8
         label Survey title
-          input(type='text' v-model.trim="survey.title" placeholder="Enter a title for your survey")
+          input(type='text' v-model.trim="survey.title" placeholder="Enter a title for your survey" required=true)
 
       .survey-room.columns.medium-4
         label Survey room

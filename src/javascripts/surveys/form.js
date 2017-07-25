@@ -56,11 +56,19 @@ const surveyForm = new Vue({
     remove: function (collection, item) {
       collection.splice(collection.indexOf(item), 1)
     },
+    _validate: function () {
+      this.$el.reportValidity()
+      return this.$el.checkValidity()
+    },
     saveDraft: async function () {
+      if (!this._validate()) return
+
       await save(this)
       // window.location = '/'
     },
     conduct: async function () {
+      if (!this._validate()) return
+
       const survey = await save(this)
       await conduct(survey)
       // window.location = '/'
