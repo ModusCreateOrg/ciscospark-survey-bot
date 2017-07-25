@@ -1,5 +1,6 @@
 import express from 'express'
 import passport from 'passport'
+import * as env from '../../env'
 
 import { router as localRouter } from './local'
 import { router as sparkRouter } from './spark'
@@ -18,9 +19,16 @@ passport.deserializeUser((user, done) => {
 
 const router = express.Router()
 
+router.use((req, res, next) => {
+  res.locals.env = env
+  next()
+})
+
 router.use('/spark', sparkRouter)
 
-router.use('/local', localRouter) // TODO: make this only happen in dev
+if (env.allowDevLogin) {
+  router.use('/local', localRouter)
+}
 
 router.get('/logout', (req, res) => {
   req.logout()

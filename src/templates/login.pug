@@ -9,10 +9,11 @@ block content
         img(src="/static/images/spark-logo-white.png")
         | Login with Cisco Spark
 
-    .or or
+    if env.allowDevLogin
+      .or or
 
-    form.dev(action="/auth/local" method="POST")
-      h2 Dev Login
-      input(type="text" name="username" required=true placeholder="Your name")
-      input(name="password" type="hidden" value='just need something here')
-      button.button Submit
+      form.dev(action="/auth/local" method="POST")
+        h2 Dev Login
+        input(type="text" name="username" required=true placeholder="Your name")
+        input(name="password" type="hidden" value='just need something here')
+        button.button Submit
