@@ -2,24 +2,24 @@ mixin form(survey)
   #survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
     .row
       .survey-title.columns.medium-8
-        label Survey title:
-          input(type='text' v-model.trim="survey.title")
+        label Survey title
+          input(type='text' v-model.trim="survey.title" placeholder="Enter a title for your survey")
 
       .survey-room.columns.medium-4
-        label Survey room:
-        input.rooms(type="text" :value="roomName()" required=true @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput")
+        label Survey room
+        input.rooms(type="text" :value="roomName()" required=true @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter room name")
 
     .survey-description
       label Description
-      textarea(v-model.trim="survey.description")
+      textarea(v-model.trim="survey.description" placeholder="Describe your survey")
 
-    h3 Questions
+    h4 Questions
     ul.questions
       li.question(v-for="question in survey.questions")
         .row
           .columns.medium-7
             label Question:
-            input(type='text' v-model.trim="question.text")
+            input(type='text' v-model.trim="question.text" placeholder="Enter your question")
 
           .columns.medium-3
             label Type:
@@ -35,7 +35,7 @@ mixin form(survey)
             li.choice(v-for="choice in question.choices")
               .row
                 .question-choice.columns.medium-9
-                  input(type='text' v-model.trim="choice.text")
+                  input(type='text' v-model.trim="choice.text" placeholder="Enter answer option")
                 div.columns.medium-3
                   button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)") &#8722; remove
           button(type="button" class="tiny secondary button" @click="addChoice(question)") &#43; choice
@@ -44,9 +44,11 @@ mixin form(survey)
       button(type="button" class="small secondary button" @click="addQuestion") &#43; question
 
     br
-    div.button-group
-      button(type="button" class="secondary button" @click="saveDraft") Save Draft
-      button(type="button" class="primary button" @click="conduct") Conduct Survey
+
+    button(type="button" class="secondary button" @click="saveDraft") Save Draft
+    a.button.expanded(@click="conduct") Conduct Survey
+
+
 
   link(href="/bower/awesomplete/awesomplete.css" rel="stylesheet")
   script(src='/bower/awesomplete/awesomplete.min.js')

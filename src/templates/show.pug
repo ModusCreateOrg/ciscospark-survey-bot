@@ -1,46 +1,68 @@
 extends layout.pug
 
 block content
-  p
-    button#clear-responses Clear
-    button#restore-responses Restore
 
   #survey(
     data-survey=JSON.stringify(survey)
     data-responses-url=`/surveys/${survey.id}/responses`
     data-subscription-token=survey.token
   )
+
+    nav(aria-label="You are here:" role="navigation")
+      ul.breadcrumbs
+        li
+          a(href="https://sparksurvey.ngrok.io/") Dashboard
+        li
+          span {{survey.data.title}}
+
     h1
       span {{survey.data.title}}
-    h2
-      span {{survey.data.description}}
 
-    span Created on {{survey.created}}
+    p {{survey.data.description}}
+
+    h6
+      em Created on {{survey.created}}
+
+
+
+    div.secondary.button-group.float-right
+      a#clear-responses.button Clear
+      a#restore-responses.button Restore
+    br
+
+
 
     .content
-      ul.questions
-        li.row(v-for="{ question, responses }, index in questionAndResponses()")
-          .columns.large-8
-            h2 {{index+1}}. {{question.text}}
-            h3 {{responses.length}} responses
+      .questions
+        span(v-for="{ question, responses }, index in questionAndResponses()")
+          .question__title {{index+1}}. {{question.text}}
 
-            .responses(v-if="question.type == 'text'")
-              .row(v-for="response in responses")
-                .columns.large-4
-                  span {{response.taker.userData.personDisplayName}}
-                .columns.large-8
-                  span {{response.response}}
+          .responses(v-if="question.type == 'multi'")
+            .row
+              .columns.medium-6
+                .question__answers
+                  .question__subtitle Results
+                    em  ({{responses.length}} responses)
+                  span(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
+                    .question__choice {{choice.text}}
+                      span.label  {{choiceResponses.length}}
+                      div.question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
+              .columns.medium-6
+                .question__chart
+                  pie-chart(:data="pieChartData(question, responses)", legend="bottom", :donut="true")
 
-            .responses(v-if="question.type == 'multi'")
-              pie-chart(:data="pieChartData(question, responses)")
+          .responses(v-if="question.type == 'text'")
+            .row
+              .columns.medium-12
+                .question__answers
+                  .question__subtitle Results
+                    em  ({{responses.length}} responses)
+                    span(v-for="response in responses")
+                      .question__choice
+                        blockquote {{response.response}}
+                          footer.question__person {{response.taker.userData.personDisplayName}}
 
-              .row(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
-                .columns.large-4
-                  span {{choice.text}}
-                .columns.large-4
-                  span {{choiceResponses.length}}
-                .columns.large-4
-                  span(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
+
 
   script(src='/bower/chart.js/dist/Chart.bundle.min.js')
   script(src='/bower/chartkick/chartkick.js')
