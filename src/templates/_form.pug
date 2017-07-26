@@ -29,7 +29,9 @@ mixin form(survey)
           .columns.medium-2
             template(v-if="questionIdx >= 1")
               label &nbsp;
-              button(type="button" class="alert small button remove-button float-right" @click="remove(survey.questions, question)") &#8722; remove
+              button(type="button" class="hollow button alert small remove-button" @click="remove(survey.questions, question)")
+                |
+                i.fa.fa-close
 
         .multi-options(v-if="question.type === 'multi'")
           ol.choices
@@ -38,22 +40,29 @@ mixin form(survey)
                 .question-choice.columns.medium-9
                   input(type='text' v-model.trim="choice.text" :placeholder="`Option ${choiceIdx+1}`" required)
                 div.columns.medium-3(v-if="choiceIdx >= 2")
-                  button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)")
+                  button(type="button" class="hollow button alert tiny remove-button" @click="remove(survey.questions, question)")
+                    |
                     i.fa.fa-close
-                    | remove
-          button(type="button" class="tiny secondary button" @click="addChoice(question)") &#43; choice
+
+          button(type="button" class="small secondary button" @click="addChoice(question)")
+            i.fa.fa-plus
+            |  Add Option
 
     div
-      button(type="button" class="small secondary button" @click="addQuestion") &#43; question
+      button(type="button" class="small secondary button expanded" @click="addQuestion")
+        i.fa.fa-plus
+        |  Add Question
 
     br
-
-    button(type="button" class="secondary button" @click="saveDraft" :disabled="isConducting") Save Draft
-    a.button.expanded(@click="conduct" :disabled="isConducting")
-      template(v-if="!isConducting")
-        | Conduct Survey
-      template(v-else=true)
-        | Conducting...
+    br
+    .button-group.expanded
+      button(type="button" class="secondary button hollow expanded" @click="saveDraft" :disabled="isConducting") Save Draft
+      a.button.expanded(@click="conduct" :disabled="isConducting")
+        template(v-if="!isConducting")
+          | Conduct Survey &nbsp;
+          i.fa.fa-arrow-right
+        template(v-else=true)
+          | Conducting...
 
 
 
