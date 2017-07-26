@@ -35,7 +35,8 @@ const surveyForm = new Vue({
     questionTypes,
     id: surveyData.id,
     survey: surveyData.data,
-    rooms: roomData
+    rooms: roomData,
+    isConducting: false
   },
   mounted: function () {
     const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
@@ -70,6 +71,8 @@ const surveyForm = new Vue({
       if (!this._validate()) return
 
       const survey = await save(this)
+
+      this.isConducting = true
       await conduct(survey)
       window.location = '/'
     },

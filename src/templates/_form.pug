@@ -45,8 +45,12 @@ mixin form(survey)
 
     br
 
-    button(type="button" class="secondary button" @click="saveDraft") Save Draft
-    a.button.expanded(@click="conduct") Conduct Survey
+    button(type="button" class="secondary button" @click="saveDraft" :disabled="isConducting") Save Draft
+    a.button.expanded(@click="conduct" :disabled="isConducting")
+      template(v-if="!isConducting")
+        | Conduct Survey
+      template(v-else=true)
+        | Conducting...
 
 
 
