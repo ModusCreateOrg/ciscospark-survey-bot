@@ -37,7 +37,7 @@ block content
                       div.question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
               .columns.medium-6
                 .question__chart(v-if="responses.length")
-                  pie-chart(:data="pieChartData(question, responses)", legend="bottom", :donut="true")
+                  pie-chart(:data="pieChartData(question, responses)" legend="bottom" donut="true")
 
           .responses(v-if="question.type == 'text'")
             .row
