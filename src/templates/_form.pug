@@ -1,5 +1,5 @@
 mixin form(survey)
-  #survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
+  form#survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
     .row
       .survey-title.columns.medium-8
         label Survey title
@@ -11,7 +11,7 @@ mixin form(survey)
 
     .survey-description
       label Description
-      textarea(v-model.trim="survey.description" placeholder="Describe your survey")
+      textarea(v-model.trim="survey.description" placeholder="Describe your survey" required=true)
 
     h4 Questions
     ul.questions
@@ -32,12 +32,14 @@ mixin form(survey)
 
         .multi-options(v-if="question.type === 'multi'")
           ol.choices
-            li.choice(v-for="choice in question.choices")
+            li.choice(v-for="choice, idx in question.choices")
               .row
                 .question-choice.columns.medium-9
-                  input(type='text' v-model.trim="choice.text" placeholder="Enter answer option")
-                div.columns.medium-3
-                  button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)") &#8722; remove
+                  input(type='text' v-model.trim="choice.text" :placeholder="`Option ${idx}`")
+                div.columns.medium-3(v-if="idx >= 2")
+                  button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)")
+                    i.fa.fa-close
+                    | remove
           button(type="button" class="tiny secondary button" @click="addChoice(question)") &#43; choice
 
     div

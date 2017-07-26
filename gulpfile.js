@@ -36,6 +36,11 @@ gulp.task('sass', () =>
     .pipe(gulp.dest('public/stylesheets'))
 )
 
+gulp.task('fonts', () =>
+  gulp.src('./bower_components/components-font-awesome/fonts/**.*')
+    .pipe(gulp.dest('public/fonts'))
+)
+
 gulp.task('watch-sass', ['sass'], () =>
   gulp.watch([`${stylesheetsDir}/**/*.scss`], ['sass'])
 )
@@ -54,10 +59,11 @@ function cleanTask (name, dir) {
 cleanTask('js', 'public/javascripts/*')
 cleanTask('sass', 'public/stylesheets/*')
 cleanTask('images', 'public/images/*')
+cleanTask('fonts', 'public/fonts/*')
 cleanTask('transpiled', 'lib/*')
 
-gulp.task('clean', ['clean-js', 'clean-sass', 'clean-images', 'clean-transpiled'])
+gulp.task('clean', ['clean-js', 'clean-sass', 'clean-images', 'clean-fonts', 'clean-transpiled'])
 
-gulp.task('build', ['images', 'js', 'sass'])
+gulp.task('build', ['images', 'js', 'sass', 'fonts'])
 
 gulp.task('default', ['build', 'watch-js', 'watch-sass'])
