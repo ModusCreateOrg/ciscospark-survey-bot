@@ -8,7 +8,7 @@ const newQuestion = () => ({
   id: Math.random().toString(16).substring(2),
   text: '',
   type: questionTypes[0],
-  choices: [newChoice()]
+  choices: [newChoice(), newChoice()]
 })
 
 const newSurvey = () => ({
