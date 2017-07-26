@@ -3,23 +3,23 @@ mixin form(survey)
     .row
       .survey-title.columns.medium-8
         label Survey title
-          input(type='text' v-model.trim="survey.title" placeholder="Enter a title for your survey" required=true)
+          input(type='text' v-model.trim="survey.title" placeholder="Enter a title for your survey" required)
 
       .survey-room.columns.medium-4
         label Survey room
-        input.rooms(type="text" :value="survey.room.title" required=true @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter room name")
+        input.rooms(type="text" :value="survey.room.title" required @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter room name")
 
     .survey-description
       label Description
-      textarea(v-model.trim="survey.description" placeholder="Describe your survey" required=true)
+      textarea(v-model.trim="survey.description" placeholder="Describe your survey")
 
     h4 Questions
     ul.questions
-      li.question(v-for="question in survey.questions")
+      li.question(v-for="question, questionIdx in survey.questions")
         .row
           .columns.medium-7
-            label Question:
-            input(type='text' v-model.trim="question.text" placeholder="Enter your question" required=true)
+            label Question {{questionIdx+1}}:
+            input(type='text' v-model.trim="question.text" placeholder="Enter your question" required)
 
           .columns.medium-3
             label Type:
@@ -27,16 +27,17 @@ mixin form(survey)
               option(v-for="type in questionTypes") {{type}}
 
           .columns.medium-2
-            label &nbsp;
-            button(type="button" class="alert small button remove-button float-right" @click="remove(survey.questions, question)") &#8722; remove
+            template(v-if="questionIdx >= 1")
+              label &nbsp;
+              button(type="button" class="alert small button remove-button float-right" @click="remove(survey.questions, question)") &#8722; remove
 
         .multi-options(v-if="question.type === 'multi'")
           ol.choices
-            li.choice(v-for="choice, idx in question.choices")
+            li.choice(v-for="choice, choiceIdx in question.choices")
               .row
                 .question-choice.columns.medium-9
-                  input(type='text' v-model.trim="choice.text" :placeholder="`Option ${idx}`" required=true)
-                div.columns.medium-3(v-if="idx >= 2")
+                  input(type='text' v-model.trim="choice.text" :placeholder="`Option ${choiceIdx+1}`" required)
+                div.columns.medium-3(v-if="choiceIdx >= 2")
                   button(type="button" class="alert tiny button float-right" @click="remove(question.choices, choice)")
                     i.fa.fa-close
                     | remove
