@@ -20,10 +20,6 @@ block content
 
     p {{survey.data.description}}
 
-    h6
-      em Created on {{survey.created}}
-
-
     .content
       .questions
         span(v-for="{ question, responses }, index in questionAndResponses()")
