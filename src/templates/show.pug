@@ -24,14 +24,6 @@ block content
       em Created on {{survey.created}}
 
 
-
-    div.secondary.button-group.float-right
-      a#clear-responses.button Clear
-      a#restore-responses.button Restore
-    br
-
-
-
     .content
       .questions
         span(v-for="{ question, responses }, index in questionAndResponses()")
