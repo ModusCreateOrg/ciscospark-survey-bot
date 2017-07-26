@@ -74,7 +74,7 @@ const surveyForm = new Vue({
 
       this.isConducting = true
       await conduct(survey)
-      window.location = '/'
+      window.location = `/surveys/${survey.id}`
     },
     _setRoom: function (room) {
       this.survey.room = {}
