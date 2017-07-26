@@ -5,16 +5,17 @@ export default class {
   }
 
   conductUserSurvey = async (personEmail, survey, recordAnswer, recordCompletion) => {
-    const room = await this.controller.api.rooms.create({
+    const roomForSurvey = await this.controller.api.rooms.create({
       title: survey.data.title
     })
+
     await this.controller.api.memberships.create({
-      roomId: room.id,
+      roomId: roomForSurvey.id,
       personEmail
     })
 
     this.controller.trigger('survey_started', [this.bot, {
-      roomId: room.id,
+      roomForSurvey,
       personEmail,
       survey,
       recordAnswer,

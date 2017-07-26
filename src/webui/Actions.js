@@ -104,7 +104,7 @@ export default class {
 
   async conductSurvey (id) {
     const survey = await this.updateSurvey(id, { state: 'active' })
-    const roomMembers = await this.listRoomMembers(survey.data.roomId)
+    const roomMembers = await this.listRoomMembers(survey.data.room.id)
 
     // Not async because Spark API client can't handle multiple async requests
     for (const sparkUser of roomMembers) {

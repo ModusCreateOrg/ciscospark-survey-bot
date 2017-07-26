@@ -15,7 +15,7 @@ const newSurvey = () => ({
   title: '',
   description: '',
   questions: [newQuestion()],
-  roomId: null
+  room: {}
 })
 
 const selector = '#survey-form'
@@ -64,28 +64,24 @@ const surveyForm = new Vue({
       if (!this._validate()) return
 
       await save(this)
-      // window.location = '/'
+      window.location = '/'
     },
     conduct: async function () {
       if (!this._validate()) return
 
       const survey = await save(this)
       await conduct(survey)
-      // window.location = '/'
+      window.location = '/'
     },
-    _setRoomId: function (roomId) {
-      this.survey.roomId = null
-      setTimeout(() => { this.survey.roomId = roomId }, 0)
+    _setRoom: function (room) {
+      this.survey.room = {}
+      setTimeout(() => { this.survey.room = room }, 0)
     },
-    roomSelected: function (event) {
-      this._setRoomId(event.text.value)
+    roomSelected: function ({text: {value, label}}) {
+      this._setRoom({title: label, id: value})
     },
     roomSelectionCancel: function (event) {
-      this._setRoomId(this.survey.roomId)
+      this._setRoom(this.survey.room)
     },
-    roomName: function () {
-      const room = this.rooms.filter(({id}) => id === this.survey.roomId)[0]
-      return room ? room.title : ''
-    }
   }
 })

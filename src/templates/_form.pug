@@ -7,7 +7,7 @@ mixin form(survey)
 
       .survey-room.columns.medium-4
         label Survey room
-        input.rooms(type="text" :value="roomName()" required=true @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter room name")
+        input.rooms(type="text" :value="survey.room.title" required=true @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter room name")
 
     .survey-description
       label Description
