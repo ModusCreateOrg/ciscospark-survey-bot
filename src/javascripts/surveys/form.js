@@ -1,90 +1,92 @@
-const questionTypes = ['text', 'multi']
+(function() {
+  const questionTypes = ['text', 'multi']
 
-const newChoice = () => ({
-  text: ''
-})
+  const newChoice = () => ({
+    text: ''
+  })
 
-const newQuestion = () => ({
-  id: Math.random().toString(16).substring(2),
-  text: '',
-  type: questionTypes[0],
-  choices: [newChoice(), newChoice()]
-})
+  const newQuestion = () => ({
+    id: Math.random().toString(16).substring(2),
+    text: '',
+    type: questionTypes[0],
+    choices: [newChoice(), newChoice()]
+  })
 
-const newSurvey = () => ({
-  title: '',
-  description: '',
-  questions: [newQuestion()],
-  room: {}
-})
+  const newSurvey = () => ({
+    title: '',
+    description: '',
+    questions: [newQuestion()],
+    room: {}
+  })
 
-const selector = '#survey-form'
-const surveyData = $(selector).data('survey') || { data: newSurvey() }
-const roomData = $(selector).data('rooms')
+  const selector = '#survey-form'
+  const surveyData = $(selector).data('survey') || { data: newSurvey() }
+  const roomData = $(selector).data('rooms')
 
-const save = ({id, survey}) => {
-  const [ method, path ] = id ? ['put', `/surveys/${id}`] : ['post', '/surveys']
-  return fetchJSON(method, path, survey)
-}
-
-const conduct = ({id}) => fetchJSON('POST', `/surveys/${id}/conduct`)
-
-const surveyForm = new Vue({
-  el: selector,
-  data: {
-    questionTypes,
-    id: surveyData.id,
-    survey: surveyData.data,
-    rooms: roomData,
-    isConducting: false
-  },
-  mounted: function () {
-    const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
-
-    new Awesomplete(this.$refs.roomsInput, {
-      list,
-      minChars: 0,
-      maxItems: 20,
-    })
-  },
-  methods: {
-    addQuestion: function () {
-      this.survey.questions.push(newQuestion())
-    },
-    addChoice: function (question) {
-      question.choices.push(newChoice())
-    },
-    remove: function (collection, item) {
-      collection.splice(collection.indexOf(item), 1)
-    },
-    _validate: function () {
-      this.$el.reportValidity()
-      return this.$el.checkValidity()
-    },
-    saveDraft: async function () {
-      if (!this._validate()) return
-
-      await save(this)
-      window.location = '/'
-    },
-    conduct: async function () {
-      if (!this._validate()) return
-
-      const survey = await save(this)
-
-      this.isConducting = true
-      await conduct(survey)
-      window.location = `/surveys/${survey.id}`
-    },
-    _setRoom: function (room) {
-      this.survey.room = {}
-      setTimeout(() => { this.survey.room = room }, 0)
-    },
-    roomSelected: function ({text: {value, label}}) {
-      this._setRoom({title: label, id: value})
-    },
-    roomSelectionCancel: function (event) {
-      this._setRoom(this.survey.room)
-    },
+  const save = ({id, survey}) => {
+    const [ method, path ] = id ? ['put', `/surveys/${id}`] : ['post', '/surveys']
+    return fetchJSON(method, path, survey)
   }
-})
+
+  const conduct = ({id}) => fetchJSON('POST', `/surveys/${id}/conduct`)
+
+  const surveyForm = new Vue({
+    el: selector,
+    data: {
+      questionTypes,
+      id: surveyData.id,
+      survey: surveyData.data,
+      rooms: roomData,
+      isConducting: false
+    },
+    mounted: function () {
+      const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
+
+      new Awesomplete(this.$refs.roomsInput, {
+        list,
+        minChars: 0,
+        maxItems: 20,
+      })
+    },
+    methods: {
+      addQuestion: function () {
+        this.survey.questions.push(newQuestion())
+      },
+      addChoice: function (question) {
+        question.choices.push(newChoice())
+      },
+      remove: function (collection, item) {
+        collection.splice(collection.indexOf(item), 1)
+      },
+      _validate: function () {
+        this.$el.reportValidity()
+        return this.$el.checkValidity()
+      },
+      saveDraft: async function () {
+        if (!this._validate()) return
+
+        await save(this)
+        window.location = '/'
+      },
+      conduct: async function () {
+        if (!this._validate()) return
+
+        const survey = await save(this)
+
+        this.isConducting = true
+        await conduct(survey)
+        window.location = `/surveys/${survey.id}`
+      },
+      _setRoom: function (room) {
+        this.survey.room = {}
+        setTimeout(() => { this.survey.room = room }, 0)
+      },
+      roomSelected: function ({text: {value, label}}) {
+        this._setRoom({title: label, id: value})
+      },
+      roomSelectionCancel: function (event) {
+        this._setRoom(this.survey.room)
+      },
+    }
+  })
+})()
