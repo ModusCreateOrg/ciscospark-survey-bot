@@ -42,7 +42,7 @@ mixin form(survey)
                   input(type='text' v-model.trim="choice.text" :placeholder="`Option ${choiceIdx+1}`" required)
                 .columns.medium-3(v-if="choiceIdx >= 2")
 
-                  button.hollow.button.alert.tiny.remove-button(type="button" @click="remove(survey.questions, question)")
+                  button.hollow.button.alert.tiny.remove-button(type="button" @click="remove(question.choices, choice)")
                     |
                     i.fa.fa-close
           button.small.secondary.button(type="button" @click="addChoice(question)")
