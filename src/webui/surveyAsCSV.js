@@ -1,7 +1,6 @@
 import json2csv from 'json2csv'
 import promisify from 'promisify-node'
 import flatMap from 'lodash/flatMap'
-import fromPairs from 'lodash/fromPairs'
 
 const json2csvAsync = promisify(json2csv)
 
