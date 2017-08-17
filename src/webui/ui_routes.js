@@ -52,15 +52,25 @@ export default (controller, bot, io) => {
     res.render('edit')
   })
 
-  const renderSurveyAsJSON = (req) =>
-    req.actions.getSurveyAndAllResponses(req.params.id).then(surveyAsJSON)
+  const withDownloadHeaders = contentType => async (req, res, next) => {
+    if (req.query.download) {
+      res.header('Content-Disposition', `attachment`)
+      if (contentType) {
+        res.header('Content-Type', contentType)
+      }
+    }
 
-  router.get('/surveys/:id.json', async (req, res) => {
+    next()
+  }
+
+  const renderSurveyAsJSON = ({actions, params: { id }}) =>
+    actions.getSurveyAndAllResponses(id).then(surveyAsJSON)
+
+  router.get('/surveys/:id/:title.json', withDownloadHeaders(), async (req, res) => {
     res.json(await renderSurveyAsJSON(req))
   })
 
-  router.get('/surveys/:id.csv', async (req, res) => {
-    res.header('Content-Type', 'text/plain') // todo: make it csv
+  router.get('/surveys/:id/:title.csv', withDownloadHeaders('text/csv'), async (req, res) => {
     res.send(await surveyAsCSV(await renderSurveyAsJSON(req)))
   })
 

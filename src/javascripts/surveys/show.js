@@ -2,11 +2,13 @@
   const selector = '#survey'
   const $surveyEl = $(selector)
   const surveyUrl = $surveyEl.data('surveyUrl')
+  const surveyId = $surveyEl.data('id')
   const surveyToken = $surveyEl.data('subscriptionToken')
 
   const surveyResults = new Vue({
     el: selector,
     data: {
+      id: surveyId,
       survey: {},
     },
     methods: {

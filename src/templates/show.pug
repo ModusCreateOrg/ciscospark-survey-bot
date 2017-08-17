@@ -3,7 +3,8 @@ extends layout.pug
 block content
 
   #survey(
-    data-survey-url=`/surveys/${survey.id}.json`
+    data-id=survey.id
+    data-survey-url=`/surveys/${survey.id}/survey.json`
     data-subscription-token=survey.token
   )
 
@@ -15,9 +16,9 @@ block content
     h1 {{survey.title}}
 
     .export-link
-      a(href=`/surveys/${survey.id}.csv`) Export as CSV
+      a(target='_blank' :href='`/surveys/${id}/${survey.title}.csv?download=1`') Export as CSV
     .export-link
-      a(href=`/surveys/${survey.id}.json`) Export as JSON
+      a(target='_blank' :href='`/surveys/${id}/${survey.title}.json?download=1`') Export as JSON
 
     p {{survey.description}}
 
