@@ -23,34 +23,32 @@ block content
     p {{survey.data.description}}
 
     .content
-      .questions
-        span(v-for="{ question, responses }, index in questionAndResponses()")
-          .question__title {{index+1}}. {{question.text}}
+      .questions(v-for="{ question, responses }, index in questionAndResponses()")
+        .question__title {{index+1}}. {{question.text}}
 
-          .responses(v-if="question.type === 'multi'")
-            .row
-              .columns.medium-6
-                .question__answers
-                  .question__subtitle Results
-                    em  ({{responses.length}} responses)
-                  span(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
-                    .question__choice {{choice.text}}
-                      span.label  {{choiceResponses.length}}
-                      div.question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
-              .columns.medium-6
-                .question__chart(v-if="responses.length")
-                  pie-chart(:data="pieChartData(question, responses)" legend="bottom" donut="true")
+        .responses(v-if="question.type === 'multi'")
+          .row
+            .columns.medium-6
+              .question__answers
+                .question__subtitle
+                  | Results
+                  em  ({{responses.length}} responses)
+                .question__choice(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
+                  | {{choice.text}}
+                  span.label  {{choiceResponses.length}}
+                  .question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
+            .columns.medium-6
+              .question__chart(v-if="responses.length")
+                pie-chart(:data="pieChartData(question, responses)" legend="bottom" donut="true")
 
-          .responses(v-if="question.type === 'text'")
-            .row
-              .columns.medium-12
-                .question__answers
-                  .question__subtitle Results
-                    em  ({{responses.length}} responses)
-                    span(v-for="response in responses")
-                      .question__choice
-                        blockquote {{response.response}}
-                          footer.question__person {{response.taker.userData.personDisplayName}}
+        .responses(v-if="question.type === 'text'")
+          .row: .columns.medium-12: .question__answers
+            .question__subtitle
+              | Results
+              em  ({{responses.length}} responses)
+              .question__choice(v-for="response in responses")
+                blockquote {{response.response}}
+                  footer.question__person {{response.taker.userData.personDisplayName}}
 
 
 
