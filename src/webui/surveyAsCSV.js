@@ -6,15 +6,13 @@ import fromPairs from 'lodash/fromPairs'
 const json2csvAsync = promisify(json2csv)
 
 export const surveyAsCSVAsJSON = ({ questions, surveyTakers }) => {
-  const nameForEmail = fromPairs(surveyTakers.map(({email, name}) => [email, name]))
-
   return flatMap(questions, ({text: questionText, type, responses}) =>
     responses.map(({text, surveyTakerEmail}) => ({
       'question': questionText,
       'question.type': type,
       'response':  text,
       'person.email': surveyTakerEmail,
-      'person.name': nameForEmail[surveyTakerEmail],
+      'person.name': surveyTakers[surveyTakerEmail].name,
     }))
   )
 }

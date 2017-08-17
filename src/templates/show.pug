@@ -3,52 +3,51 @@ extends layout.pug
 block content
 
   #survey(
-    data-survey=JSON.stringify(survey)
-    data-responses-url=`/surveys/${survey.id}/responses`
+    data-survey-url=`/surveys/${survey.id}.json`
     data-subscription-token=survey.token
   )
 
     nav(aria-label="You are here:" role="navigation")
       ul.breadcrumbs
         li: a(href="/") Dashboard
-        li {{survey.data.title}}
+        li {{survey.title}}
 
-    h1 {{survey.data.title}}
+    h1 {{survey.title}}
 
     .export-link
       a(href=`/surveys/${survey.id}.csv`) Export as CSV
     .export-link
       a(href=`/surveys/${survey.id}.json`) Export as JSON
 
-    p {{survey.data.description}}
+    p {{survey.description}}
 
     .content
-      .questions(v-for="{ question, responses }, index in questionAndResponses()")
+      .questions(v-for="question, index in survey.questions")
         .question__title {{index+1}}. {{question.text}}
 
         .responses(v-if="question.type === 'multi'")
           .row
+            .columns.medium-6: .question__answers
+              .question__subtitle
+                | Results
+                em  ({{question.responses.length}} responses)
+              .question__choice(v-for="[choice, _, choiceResponses] in responsesByChoice(question)")
+                | {{choice}}
+                span.label  {{choiceResponses.length}}
+                .question__person(v-for="{ surveyTakerEmail } in choiceResponses")
+                  | {{survey.surveyTakers[surveyTakerEmail].name}}
             .columns.medium-6
-              .question__answers
-                .question__subtitle
-                  | Results
-                  em  ({{responses.length}} responses)
-                .question__choice(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
-                  | {{choice.text}}
-                  span.label  {{choiceResponses.length}}
-                  .question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
-            .columns.medium-6
-              .question__chart(v-if="responses.length")
-                pie-chart(:data="pieChartData(question, responses)" legend="bottom" donut="true")
+              .question__chart(v-if="question.responses.length")
+                pie-chart(:data="responsesByChoice(question)" legend="bottom" donut="true")
 
         .responses(v-if="question.type === 'text'")
           .row: .columns.medium-12: .question__answers
             .question__subtitle
               | Results
-              em  ({{responses.length}} responses)
-              .question__choice(v-for="response in responses")
-                blockquote {{response.response}}
-                  footer.question__person {{response.taker.userData.personDisplayName}}
+              em  ({{question.responses.length}} responses)
+              .question__choice(v-for="{ text, surveyTakerEmail } in question.responses")
+                blockquote {{text}}
+                  footer.question__person {{survey.surveyTakers[surveyTakerEmail].name}}
 
 
 

@@ -68,22 +68,6 @@ export default (controller, bot, io) => {
     res.render('show')
   })
 
-  router.get('/surveys/:id/responses', async (req, res) => {
-    const { surveyTakers, surveyResponses } = await req.actions.getSurveyAll(req.params.id)
-    const takers = keyBy(surveyTakers, 'id')
-    const responsesWithTakers = surveyResponses.map(surveyResponse => {
-      const { questionId, response, id, surveyTakerId } = surveyResponse
-      return {
-        questionId,
-        response,
-        id,
-        taker: takers[surveyTakerId]
-      }
-    })
-    const responsesByQuestion = groupBy(responsesWithTakers, 'questionId')
-    res.json(responsesByQuestion)
-  })
-
   router.post('/surveys', async (req, res) => {
     const survey = await req.actions.createSurvey(req.body)
     res.json(survey)
