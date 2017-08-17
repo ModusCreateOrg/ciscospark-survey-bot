@@ -25,19 +25,14 @@ const jsonQuestions = (questions, surveyResponses, surveyTakers) => {
   })
 }
 
-const jsonSurveyTakers = (surveyTakers, surveyResponses) => {
-  const uniqSurveyTakerIds = uniq(map(surveyResponses, 'surveyTakerId'))
-  const uniqSurveyTakers = surveyTakers.filter(({id}) => includes(uniqSurveyTakerIds, id))
-
-  return fromPairs(
-    uniqSurveyTakers.map(({id, userData: {personId, personEmail, personDisplayName}}) =>
-      [personEmail, {name: personDisplayName}]
-    )
+const jsonSurveyTakers = (surveyTakers) => fromPairs(
+  surveyTakers.map(({userData}) =>
+    [userData.personEmail, {name: userData.personDisplayName}]
   )
-}
+)
 
 export default ({ survey, surveyTakers, surveyResponses }) => ({
   ...survey.data,
-  surveyTakers: jsonSurveyTakers(surveyTakers, surveyResponses),
+  surveyTakers: jsonSurveyTakers(surveyTakers),
   questions: jsonQuestions(survey.data.questions, surveyResponses, surveyTakers),
 })
