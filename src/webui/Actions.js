@@ -75,8 +75,7 @@ export default class {
 
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
-  // todo: rename this to getSurveyAndResponses or something
-  async getSurveyAll (id) {
+  async getSurveyTakersAndResponses (id) {
     const surveyTakers = await SurveyTaker.allAsync({ where: { surveyId: id } })
 
     const surveyResponses = await SurveyResponse.allAsync({
@@ -89,7 +88,7 @@ export default class {
   async getSurveyAndAllResponses (id) {
     const [survey, { surveyTakers, surveyResponses }] = await Promise.all([
       this.getSurvey(id),
-      this.getSurveyAll(id),
+      this.getSurveyTakersAndResponses(id),
     ])
 
     return { survey, surveyTakers, surveyResponses }
