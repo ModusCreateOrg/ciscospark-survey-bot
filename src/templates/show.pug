@@ -10,13 +10,10 @@ block content
 
     nav(aria-label="You are here:" role="navigation")
       ul.breadcrumbs
-        li
-          a(href="/") Dashboard
-        li
-          span {{survey.data.title}}
+        li: a(href="/") Dashboard
+        li {{survey.data.title}}
 
-    h1
-      span {{survey.data.title}}
+    h1 {{survey.data.title}}
 
     .export-link
       a(href=`/surveys/${survey.id}.csv`) Export as CSV
@@ -30,7 +27,7 @@ block content
         span(v-for="{ question, responses }, index in questionAndResponses()")
           .question__title {{index+1}}. {{question.text}}
 
-          .responses(v-if="question.type == 'multi'")
+          .responses(v-if="question.type === 'multi'")
             .row
               .columns.medium-6
                 .question__answers
@@ -44,7 +41,7 @@ block content
                 .question__chart(v-if="responses.length")
                   pie-chart(:data="pieChartData(question, responses)" legend="bottom" donut="true")
 
-          .responses(v-if="question.type == 'text'")
+          .responses(v-if="question.type === 'text'")
             .row
               .columns.medium-12
                 .question__answers
