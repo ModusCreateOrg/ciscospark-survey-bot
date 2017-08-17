@@ -1,4 +1,3 @@
-import find from 'lodash/find'
 import fromPairs from 'lodash/fromPairs'
 import includes from 'lodash/includes'
 import map from 'lodash/map'
