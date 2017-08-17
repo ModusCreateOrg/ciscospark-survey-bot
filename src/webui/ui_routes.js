@@ -2,6 +2,8 @@ import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
 import keyBy from 'lodash/keyBy'
 import Actions from './Actions'
+import surveyAsCSV from './surveyAsCSV'
+import surveyAsJSON from './surveyAsJSON'
 
 const router = AsyncRouter()
 
@@ -32,8 +34,7 @@ export default (controller, bot, io) => {
     next()
   })
 
-  router.get('/', async (req, res) => {
-    res.locals.surveys = groupBy(await req.actions.listSurveys(), 'state')
+  router.get('/', async (req, res) => { res.locals.surveys = groupBy(await req.actions.listSurveys(), 'state')
     res.render('index')
   })
 
@@ -48,6 +49,18 @@ export default (controller, bot, io) => {
       req.actions.getSurvey(req.params.id)
     ])
     res.render('edit')
+  })
+
+  const renderSurveyAsJSON = (req) =>
+    req.actions.getSurveyAndAllResponses(req.params.id).then(surveyAsJSON)
+
+  router.get('/surveys/:id.json', async (req, res) => {
+    res.json(await renderSurveyAsJSON(req))
+  })
+
+  router.get('/surveys/:id.csv', async (req, res) => {
+    res.header('Content-Type', 'text/plain') // todo: make it csv
+    res.send(await surveyAsCSV(await renderSurveyAsJSON(req)))
   })
 
   router.get('/surveys/:id', async (req, res) => {

@@ -18,6 +18,11 @@ block content
     h1
       span {{survey.data.title}}
 
+    .export-link
+      a(href=`/surveys/${survey.id}.csv`) Export as CSV
+    .export-link
+      a(href=`/surveys/${survey.id}.json`) Export as JSON
+
     p {{survey.data.description}}
 
     .content
