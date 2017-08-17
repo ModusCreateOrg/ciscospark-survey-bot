@@ -3,15 +3,10 @@ import includes from 'lodash/includes'
 import map from 'lodash/map'
 import uniq from 'lodash/uniq'
 
-const jsonResponseText = (question, responseText) =>
+const jsonResponseText = (question, {response: responseText}) =>
   question.type === 'multi'
     ? question.choices[parseInt(responseText) - 1].text
     : responseText
-
-const jsonResponse = (question, {response, surveyTakerId}, surveryTakersIdToEmail) => ({
-  text: jsonResponseText(question, response),
-  surveyTakerEmail: surveryTakersIdToEmail[surveyTakerId],
-})
 
 const jsonQuestions = (questions, surveyResponses, surveyTakers) => {
   const surveryTakersIdToEmail = fromPairs(surveyTakers.map(({id, userData: {personEmail}}) => [id, personEmail]))
@@ -19,7 +14,10 @@ const jsonQuestions = (questions, surveyResponses, surveyTakers) => {
   return questions.map(question => {
     const responses = surveyResponses
       .filter(({questionId}) => questionId === question.id)
-      .map(response => jsonResponse(question, response, surveryTakersIdToEmail))
+      .map(response => ({
+        text: jsonResponseText(question, response),
+        surveyTakerEmail: surveryTakersIdToEmail[response.surveyTakerId],
+      }))
 
     const choices = map(question.choices, 'text')
 
