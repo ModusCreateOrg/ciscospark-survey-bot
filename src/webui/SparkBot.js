@@ -4,7 +4,7 @@ export default class {
     this.bot = bot
   }
 
-  conductUserSurvey = async (personEmail, survey, recordAnswer, recordCompletion) => {
+  async conductUserSurvey (personEmail, survey, recordAnswer, recordCompletion) {
     const roomForSurvey = await this.controller.api.rooms.create({
       title: survey.data.title
     })
@@ -19,7 +19,10 @@ export default class {
       personEmail,
       survey,
       recordAnswer,
-      recordCompletion,
+      recordCompletion: () => {
+        recordCompletion()
+        setTimeout(() => this.controller.api.rooms.remove(roomForSurvey), 10000)
+      },
     }])
   }
 }
