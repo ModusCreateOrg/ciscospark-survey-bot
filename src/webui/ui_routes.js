@@ -34,7 +34,8 @@ export default (controller, bot, io) => {
     next()
   })
 
-  router.get('/', async (req, res) => { res.locals.surveys = groupBy(await req.actions.listSurveys(), 'state')
+  router.get('/', async (req, res) => {
+    res.locals.surveys = groupBy(await req.actions.listSurveys(), 'state')
     res.render('index')
   })
 
