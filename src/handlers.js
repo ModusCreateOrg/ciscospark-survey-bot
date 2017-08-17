@@ -84,7 +84,10 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
 
     convo.on('end', (convo) => {
       recordCompletion()
-      bot.say({ text: 'All done. Thanks for taking this survey!', ...messageBase })
+      bot.say({
+        text: 'All done. Thanks for taking this survey! I\'ll remove this space in a few seconds so as not to clutter up your list of Spark spaces.',
+        ...messageBase,
+      })
     })
   })
 }
