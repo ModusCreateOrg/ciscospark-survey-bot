@@ -39,6 +39,8 @@ mixin form(survey)
 
         .multi-options(v-if="question.type === 'multi'")
           template(v-if="choices = question.choices")
+            // ☝️ HACK: for some reason, question.choices is not available inside the `draggable`. But `choices` is...
+
             draggable.choices(v-model="choices" element="ol" :options="choiceSortOptions" @start="dragChoiceStart(choices)" @end="dragChoiceEnd")
               li.choice(v-for="choice, choiceIdx in choices")
                 .row
