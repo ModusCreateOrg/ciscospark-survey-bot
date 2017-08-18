@@ -37,7 +37,13 @@
       id: surveyData.id,
       survey: surveyData.data,
       rooms: roomData,
-      isConducting: false
+      isConducting: false,
+      questionSortOptions: {
+        handle: '.question-sort-handle',
+      },
+      choiceSortOptions: {
+        handle: '.choice-sort-handle',
+      },
     },
     mounted: function () {
       const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
@@ -52,11 +58,24 @@
       addQuestion: function () {
         this.survey.questions.push(newQuestion())
       },
-      addChoice: function (question) {
-        question.choices.push(newChoice())
+      addChoice: function (choices) {
+        choices.push(newChoice())
       },
-      remove: function (collection, item) {
-        collection.splice(collection.indexOf(item), 1)
+      removeQuestion: function () {
+        this._remove(...arguments, '.question', 1, () => this.addQuestion())
+      },
+      removeChoice: function (choices, choice, event) {
+        this._remove(choices, choice, event, '.choice', 2, () => this.addChoice(choices))
+      },
+      _remove: function (collection, item, event, selector, minNumberOfElements, addNewItem) {
+        $el = $(event.target).parents(selector)
+        $el.slideUp(() => {
+          $el.show() // otherwise collection.splice removes the wrong element
+          collection.splice(collection.indexOf(item), 1)
+          if (collection.length < minNumberOfElements) {
+            setTimeout(addNewItem, 500)
+          }
+        })
       },
       _validate: function () {
         this.$el.reportValidity()
@@ -87,6 +106,27 @@
       roomSelectionCancel: function (event) {
         this._setRoom(this.survey.room)
       },
+
+      // HACK: reorder them, because vue.draggable isn't doing it itself
+      dragChoiceEnd: function ({newIndex, oldIndex}) {
+        const choices = this.draggingChoices
+
+        const element = choices[oldIndex]
+        choices.splice(oldIndex, 1)
+        choices.splice(newIndex, 0, element)
+      },
+      // HACK: because dragChoiceEnd, when taking `choices` as an argument,
+      // can't reorder them by modifying the array, but it can if it modifies
+      // this array
+      dragChoiceStart: function (choices) {
+        this.draggingChoices = choices
+      },
     }
   })
+
+  // HACK: kick vue.draggable
+  setTimeout(() => {
+    surveyForm.survey.questions.push(newQuestion())
+    surveyForm.survey.questions.pop()
+  }, 0)
 })()
