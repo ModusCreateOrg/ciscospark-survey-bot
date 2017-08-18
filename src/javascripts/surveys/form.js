@@ -124,7 +124,7 @@
     }
   })
 
-  // Hack to kick vue.draggable
+  // HACK: kick vue.draggable
   setTimeout(() => {
     surveyForm.survey.questions.push(newQuestion())
     surveyForm.survey.questions.pop()
