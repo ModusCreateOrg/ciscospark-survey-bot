@@ -14,7 +14,7 @@ mixin form(survey)
       textarea(v-model.trim="survey.description" placeholder="Describe your survey")
 
     h4 Questions
-    draggable.questions(v-model="survey.questions" element="ul" :options="questionSortOptions" @start="draggingQuestion=true" @end="draggingQuestion=false")
+    draggable.questions(v-model="survey.questions" element="ul" :options="questionSortOptions")
       li.question(v-for="question, questionIdx in survey.questions")
         .row
           .columns.medium-7
