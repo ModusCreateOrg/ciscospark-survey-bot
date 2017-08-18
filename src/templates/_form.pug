@@ -32,7 +32,7 @@ mixin form(survey)
               span.hollow.button.small.question-sort-handle
                 |
                 i.fa.fa-bars
-
+              | &nbsp;
               button.hollow.button.alert.small.remove-button(type="button" @click="removeQuestion(survey.questions, question, $event)")
                 |
                 i.fa.fa-close
@@ -48,6 +48,7 @@ mixin form(survey)
                     span.hollow.button.small.choice-sort-handle
                       |
                       i.fa.fa-bars
+                    | &nbsp;
                     button.hollow.button.alert.tiny.remove-button(type="button" @click="removeChoice(choices, choice, $event)")
                       |
                       i.fa.fa-close
