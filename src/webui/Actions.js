@@ -2,6 +2,7 @@ import { Schema } from 'caminte'
 import { promisifyAll } from 'bluebird'
 import redisUrl from 'redis-url'
 import uuid from 'uuid/v4'
+import map from 'lodash/map'
 
 const redisOptions = () => {
   const {
@@ -74,14 +75,23 @@ export default class {
 
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
-  getSurveyAll = async id => {
+  async getSurveyTakersAndResponses (id) {
     const surveyTakers = await SurveyTaker.allAsync({ where: { surveyId: id } })
 
     const surveyResponses = await SurveyResponse.allAsync({
-      where: { surveyTakerId: { in: surveyTakers.map(({ id }) => id) } }
+      where: { surveyTakerId: { in: map(surveyTakers, 'id') } }
     })
 
     return { surveyTakers, surveyResponses }
+  }
+
+  async getSurveyAndAllResponses (id) {
+    const [survey, { surveyTakers, surveyResponses }] = await Promise.all([
+      this.getSurvey(id),
+      this.getSurveyTakersAndResponses(id),
+    ])
+
+    return { survey, surveyTakers, surveyResponses }
   }
 
   saveSurveyResponse = async (questionId, response, surveyToken, surveyTakerId) => {

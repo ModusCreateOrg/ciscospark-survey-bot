@@ -3,59 +3,59 @@ extends layout.pug
 block content
 
   #survey(
-    data-survey=JSON.stringify(survey)
-    data-responses-url=`/surveys/${survey.id}/responses`
+    data-id=survey.id
+    data-survey-url=`/surveys/${survey.id}/survey.json`
     data-subscription-token=survey.token
   )
 
     nav(aria-label="You are here:" role="navigation")
       ul.breadcrumbs
-        li
-          a(href="/") Dashboard
-        li
-          span {{survey.data.title}}
+        li: a(href="/") Dashboard
+        li {{survey.title}}
 
-    h1
-      span {{survey.data.title}}
+    h1 {{survey.title}}
 
-    p {{survey.data.description}}
+    .export-links
+      | Export as
+      a(target='_blank' :href='`/surveys/${id}/${survey.title}.csv?download=1`')  CSV
+      |  |
+      a(target='_blank' :href='`/surveys/${id}/${survey.title}.json?download=1`')  JSON
+
+    p {{survey.description}}
 
     .content
-      .questions
-        span(v-for="{ question, responses }, index in questionAndResponses()")
-          .question__title {{index+1}}. {{question.text}}
+      .questions(v-for="question, index in survey.questions")
+        .question__title {{index+1}}. {{question.text}}
 
-          .responses(v-if="question.type == 'multi'")
-            .row
-              .columns.medium-6
-                .question__answers
-                  .question__subtitle Results
-                    em  ({{responses.length}} responses)
-                  span(v-for="[choice, choiceResponses] in responsesFor(question, responses)")
-                    .question__choice {{choice.text}}
-                      span.label  {{choiceResponses.length}}
-                      div.question__person(v-for="response in choiceResponses") {{response.taker.userData.personDisplayName}}
-              .columns.medium-6
-                .question__chart(v-if="responses.length")
-                  pie-chart(:data="pieChartData(question, responses)" legend="bottom" donut="true")
+        .responses(v-if="question.type === 'multi'")
+          .row
+            .columns.medium-6: .question__answers
+              .question__subtitle
+                | Results
+                em  ({{question.responses.length}} responses)
+              .question__choice(v-for="[choice, _, choiceResponses] in responsesByChoice(question)")
+                | {{choice}}
+                span.label  {{choiceResponses.length}}
+                .question__person(v-for="{ surveyTakerEmail } in choiceResponses")
+                  | {{survey.surveyTakers[surveyTakerEmail].name}}
+            .columns.medium-6
+              .question__chart(v-if="question.responses.length")
+                pie-chart(:data="responsesByChoice(question)" legend="bottom" donut="true")
 
-          .responses(v-if="question.type == 'text'")
-            .row
-              .columns.medium-12
-                .question__answers
-                  .question__subtitle Results
-                    em  ({{responses.length}} responses)
-                    span(v-for="response in responses")
-                      .question__choice
-                        blockquote {{response.response}}
-                          footer.question__person {{response.taker.userData.personDisplayName}}
+        .responses(v-if="question.type === 'text'")
+          .row: .columns.medium-12: .question__answers
+            .question__subtitle
+              | Results
+              em  ({{question.responses.length}} responses)
+              .question__choice(v-for="{ text, surveyTakerEmail } in question.responses")
+                blockquote {{text}}
+                  footer.question__person {{survey.surveyTakers[surveyTakerEmail].name}}
 
 
 
   script(src='/bower/chart.js/dist/Chart.bundle.min.js')
   script(src='/bower/chartkick/chartkick.js')
   script(src='/bower/vue-chartkick/dist/vue-chartkick.min.js')
-  script(src='/bower/lodash/dist/lodash.min.js')
 
   script(src='/bower/socket.io-client/dist/socket.io.slim.js')
   script(src='/static/javascripts/surveys/show.js')

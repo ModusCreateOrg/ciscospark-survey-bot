@@ -2,6 +2,8 @@ import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
 import keyBy from 'lodash/keyBy'
 import Actions from './Actions'
+import surveyAsCSV from './surveyAsCSV'
+import surveyAsJSON from './surveyAsJSON'
 
 const router = AsyncRouter()
 
@@ -50,25 +52,31 @@ export default (controller, bot, io) => {
     res.render('edit')
   })
 
+  const withDownloadHeaders = contentType => async (req, res, next) => {
+    if (req.query.download) {
+      res.header('Content-Disposition', `attachment`)
+      if (contentType) {
+        res.header('Content-Type', contentType)
+      }
+    }
+
+    next()
+  }
+
+  const renderSurveyAsJSON = ({actions, params: { id }}) =>
+    actions.getSurveyAndAllResponses(id).then(surveyAsJSON)
+
+  router.get('/surveys/:id/:title.json', withDownloadHeaders(), async (req, res) => {
+    res.json(await renderSurveyAsJSON(req))
+  })
+
+  router.get('/surveys/:id/:title.csv', withDownloadHeaders('text/csv'), async (req, res) => {
+    res.send(await surveyAsCSV(await renderSurveyAsJSON(req)))
+  })
+
   router.get('/surveys/:id', async (req, res) => {
     res.locals.survey = await req.actions.getSurvey(req.params.id)
     res.render('show')
-  })
-
-  router.get('/surveys/:id/responses', async (req, res) => {
-    const { surveyTakers, surveyResponses } = await req.actions.getSurveyAll(req.params.id)
-    const takers = keyBy(surveyTakers, 'id')
-    const responsesWithTakers = surveyResponses.map(surveyResponse => {
-      const { questionId, response, id, surveyTakerId } = surveyResponse
-      return {
-        questionId,
-        response,
-        id,
-        taker: takers[surveyTakerId]
-      }
-    })
-    const responsesByQuestion = groupBy(responsesWithTakers, 'questionId')
-    res.json(responsesByQuestion)
   })
 
   router.post('/surveys', async (req, res) => {
