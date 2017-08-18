@@ -106,17 +106,21 @@
       roomSelectionCancel: function (event) {
         this._setRoom(this.survey.room)
       },
-      dragChoiceStart: function (choices) {
-        this.draggingChoices = choices
-      },
+
+      // HACK: reorder them, because vue.draggable isn't doing it itself
       dragChoiceEnd: function ({newIndex, oldIndex}) {
         const choices = this.draggingChoices
 
-        // HACK: reorder them, because vue.draggable isn't doing it itself
         const element = choices[oldIndex]
         choices.splice(oldIndex, 1)
         choices.splice(newIndex, 0, element)
-      }
+      },
+      // HACK: because dragChoiceEnd, when taking `choices` as an argument,
+      // can't reorder them by modifying the array, but it can if it modifies
+      // this array
+      dragChoiceStart: function (choices) {
+        this.draggingChoices = choices
+      },
     }
   })
 
