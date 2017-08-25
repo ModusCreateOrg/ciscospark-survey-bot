@@ -138,14 +138,7 @@
           .filter(({address}) => address)
 
         this.survey.emailAddressesText = this.survey.emailAddresses
-          .map(({name, address}) => {
-            console.log({name, address})
-            if (name) {
-              return `${name} <${address}>`
-            } else {
-              return `${address}`
-            }
-          })
+          .map(({name, address}) => name ? `${name} <${address}>` : address)
           .join(', ')
 
         this._kickEmailAddressesField()

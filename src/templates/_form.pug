@@ -9,9 +9,10 @@ mixin form(survey)
         label Who
           select(v-model="survey.whoType")
             option(value='space') Everyone in a Space
-            option(value='email') By email addresses
+            option(value='email') Email addresses
 
       .survey-who.columns.medium-8
+        // use `v-show` because awesomplete doesn't work with `v-if`
         label(v-show="who('space')") Space
           input.rooms(type="text" :value="survey.room.title" :required="who('space')" @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter room name" name="")
         label(v-show="who('email')") Email Addresses
