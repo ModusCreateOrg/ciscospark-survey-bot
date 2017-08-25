@@ -16,7 +16,8 @@
     title: '',
     description: '',
     questions: [newQuestion()],
-    room: {}
+    room: {},
+    whoType: 'space',
   })
 
   const selector = '#survey-form'
@@ -44,6 +45,7 @@
       choiceSortOptions: {
         handle: '.choice-sort-handle',
       },
+      emailAddresses: '',
     },
     mounted: function () {
       const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
@@ -78,8 +80,7 @@
         })
       },
       _validate: function () {
-        this.$el.reportValidity()
-        return this.$el.checkValidity()
+        return this.$el.reportValidity()
       },
       saveDraft: async function () {
         if (!this._validate()) return
@@ -121,7 +122,33 @@
       dragChoiceStart: function (choices) {
         this.draggingChoices = choices
       },
-    }
+      who: function (whoType) {
+        return this.survey.whoType === whoType
+      },
+      // HACK: Vue won't updated the text field when the model changes without this
+      _kickEmailAddressesField: function () {
+        const original = this.survey.description
+        this.survey.description += " "
+        this.survey.description = original
+      },
+      normalizeEmailAddresses: function () {
+        this.survey.emailAddresses = window['emailjs-addressparser']
+          .parse(this.survey.emailAddresses)
+          .filter(({address}) => address)
+          .map( ({name, address}) => {
+            console.log({name, address})
+            if (name) {
+              return `${name} <${address}>`
+            } else {
+              return `${address}`
+            }
+          })
+          .join(', ')
+
+
+        this._kickEmailAddressesField()
+      }
+    },
   })
 
   // HACK: kick vue.draggable
