@@ -114,7 +114,13 @@ export default class {
 
   async conductSurvey (id) {
     const survey = await this.updateSurvey(id, { state: 'active' })
-    const roomMembers = await this.listRoomMembers(survey.data.room.id)
+    const roomMembers = survey.data.whoType === 'space'
+      ? await this.listRoomMembers(survey.data.room.id)
+      : survey.data.emailAddresses.map(({name, address}) => ({
+        id: address,
+        personEmail: address,
+        personDisplayName: name || address,
+      }))
 
     // Not async because Spark API client can't handle multiple async requests
     for (const sparkUser of roomMembers) {

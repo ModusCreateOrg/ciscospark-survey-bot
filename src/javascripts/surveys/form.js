@@ -45,7 +45,8 @@
       choiceSortOptions: {
         handle: '.choice-sort-handle',
       },
-      emailAddresses: '',
+      emailAddresses: [],
+      emailAddressesText: '',
     },
     mounted: function () {
       const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
@@ -131,11 +132,13 @@
         this.survey.description += " "
         this.survey.description = original
       },
-      normalizeEmailAddresses: function () {
+      parseEmailAddresses: function () {
         this.survey.emailAddresses = window['emailjs-addressparser']
-          .parse(this.survey.emailAddresses)
+          .parse(this.survey.emailAddressesText)
           .filter(({address}) => address)
-          .map( ({name, address}) => {
+
+        this.survey.emailAddressesText = this.survey.emailAddresses
+          .map(({name, address}) => {
             console.log({name, address})
             if (name) {
               return `${name} <${address}>`
@@ -144,7 +147,6 @@
             }
           })
           .join(', ')
-
 
         this._kickEmailAddressesField()
       }
