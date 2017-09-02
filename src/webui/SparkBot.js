@@ -22,7 +22,7 @@ export default class {
       recordCompletion: () => {
         recordCompletion()
         setTimeout(() => this.controller.api.rooms.remove(roomForSurvey), 10000)
-      },
+      }
     }])
   }
 }

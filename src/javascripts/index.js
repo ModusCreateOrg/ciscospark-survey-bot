@@ -1,4 +1,4 @@
-(function() {
+(function () {
   window.fetchJSON = (method, url, json) =>
     fetch(url, {
       method,

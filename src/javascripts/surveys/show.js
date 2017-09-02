@@ -1,4 +1,4 @@
-(function() {
+(function () {
   const selector = '#survey'
   const $surveyEl = $(selector)
   const surveyUrl = $surveyEl.data('surveyUrl')
@@ -9,7 +9,7 @@
     el: selector,
     data: {
       id: surveyId,
-      survey: {},
+      survey: {}
     },
     methods: {
       responsesByChoice: function ({choices, responses}) {
@@ -17,7 +17,7 @@
           const choiceResponses = responses.filter(({text}) => text === choice)
           return [choice, choiceResponses.length, choiceResponses]
         })
-      },
+      }
     }
   })
 

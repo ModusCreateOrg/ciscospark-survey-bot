@@ -19,7 +19,6 @@ const ensureLoggedIn = (loginPath) => async (req, res, next) => {
 }
 
 export default (controller, bot, io) => {
-
   io.on('connection', (socket) => {
     socket.on('subscribe:survey', (token) => {
       console.log('EVENT subscribe:survey', token)

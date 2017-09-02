@@ -11,7 +11,6 @@ export default (configuration = {}) => {
     next()
   })
 
-
   // this needs the "function" cruft to be a "constructor function" :(
   testBotkit.defineBot(function (botkit, config) {
     const bot = {

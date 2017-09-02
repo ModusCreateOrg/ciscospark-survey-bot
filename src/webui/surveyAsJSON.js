@@ -16,7 +16,7 @@ const jsonQuestions = (questions, surveyResponses, surveyTakers) => {
       .filter(({questionId}) => questionId === question.id)
       .map(response => ({
         text: jsonResponseText(question, response),
-        surveyTakerEmail: surveryTakersIdToEmail[response.surveyTakerId],
+        surveyTakerEmail: surveryTakersIdToEmail[response.surveyTakerId]
       }))
 
     const choices = map(question.choices, 'text')
@@ -34,5 +34,5 @@ const jsonSurveyTakers = (surveyTakers) => fromPairs(
 export default ({ survey, surveyTakers, surveyResponses }) => ({
   ...survey.data,
   surveyTakers: jsonSurveyTakers(surveyTakers),
-  questions: jsonQuestions(survey.data.questions, surveyResponses, surveyTakers),
+  questions: jsonQuestions(survey.data.questions, surveyResponses, surveyTakers)
 })

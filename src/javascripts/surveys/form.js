@@ -1,4 +1,4 @@
-(function() {
+(function () {
   const questionTypes = ['text', 'multi']
 
   const newChoice = () => ({
@@ -17,7 +17,7 @@
     description: '',
     questions: [newQuestion()],
     room: {},
-    whoType: 'space',
+    whoType: 'space'
   })
 
   const selector = '#survey-form'
@@ -40,13 +40,13 @@
       rooms: roomData,
       isConducting: false,
       questionSortOptions: {
-        handle: '.question-sort-handle',
+        handle: '.question-sort-handle'
       },
       choiceSortOptions: {
-        handle: '.choice-sort-handle',
+        handle: '.choice-sort-handle'
       },
       emailAddresses: [],
-      emailAddressesText: '',
+      emailAddressesText: ''
     },
     mounted: function () {
       const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
@@ -54,7 +54,7 @@
       new Awesomplete(this.$refs.roomsInput, {
         list,
         minChars: 0,
-        maxItems: 20,
+        maxItems: 20
       })
     },
     methods: {
@@ -129,7 +129,7 @@
       // HACK: Vue won't updated the text field when the model changes without this
       _kickEmailAddressesField: function () {
         const original = this.survey.description
-        this.survey.description += " "
+        this.survey.description += ' '
         this.survey.description = original
       },
       parseEmailAddresses: function () {
@@ -143,7 +143,7 @@
 
         this._kickEmailAddressesField()
       }
-    },
+    }
   })
 
   // HACK: kick vue.draggable
