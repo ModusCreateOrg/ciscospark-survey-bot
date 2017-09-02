@@ -46,10 +46,10 @@ const addMultipleChoiceQuestion = (convo, questionText, {choices}, recordAnswer)
   })
 }
 
-const introText = ({surveyorName, roomName, surveyTitle}) => `
+const introText = ({surveyorName, surveyTitle}) => `
   **${surveyTitle}**
 
-  Hi! I'm your friendly neighborhood survey bot.  ${surveyorName} asked me to survey everyone in the *${roomName}* space. The title of this survey is *${surveyTitle}*. Thanks in advance for participating!
+  Hi! I'm your friendly neighborhood survey bot.  ${surveyorName} asked me to give you this survey titled *${surveyTitle}*. Thanks in advance for participating!
 
   ––––––––––––––––––––––––––––––––––––––––––––––––––––
 
@@ -72,7 +72,6 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
         // Combine intro and first question because separate messages don't format as well
         questionText += introText({
           surveyorName: 'Someone',
-          roomName: survey.data.room.title,
           surveyTitle: survey.data.title,
         })
       }
