@@ -18,6 +18,7 @@ passport.use(new CiscoSparkStrategy(sparkOauthConfig, (accessToken, refreshToken
 router.get('/', passport.authenticate('cisco-spark', {
   scope: [
     'spark:rooms_read',       // required by SparkUser for letting you choose a room to survey
+    'spark:teams_read',       // required by SparkUser for letting you choose a team room to survey
     'spark:memberships_read', // required by SparkUser for knowing who is in a room
     'spark:people_read'       // required by passport for fetching user info (name, avatar, etc...)
   ]
