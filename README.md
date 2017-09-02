@@ -25,9 +25,9 @@ A self-hosted Cisco Spark bot for taking surveys.
 
 ## Setup & Configuration
 
-1. [Create a *new user*] on Cisco Spark to be the bot. Admittedly, it's untraditional to use a user account, but because of the way the bot works, it needs to be a user and cannot be a bot or an integration.
+1. [Create a *new user*](https://web.ciscospark.com/) on Cisco Spark to be the bot. Admittedly, it's untraditional to use a user account, but because of the way the bot works, it needs to be a user and cannot be a bot or an integration.
 
-2. As that new user, [create an integration].
+2. As that new user, [create an integration](https://developer.ciscospark.com/add-integration.html).
 
 3. Set the following environment variables. If developing locally, you can put these in the `.env` or `.env.local` files:
 
