@@ -6,19 +6,19 @@ A self-hosted Cisco Spark bot for taking surveys.
 
 <!-- [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy) -->
 
-# Features
+## Features
 
-Create surveys through a web-based user interface.
+### Create surveys through a web-based user interface.
 
-[ screenshot of creating a survey ]
+![Screenshot of creating a new survey](https://user-images.githubusercontent.com/9061/29992153-c486f476-8f62-11e7-843e-2df724b8f47c.png)
 
-Conducts surveys via Cisco Spark.
+### Conducts surveys via Cisco Spark.
 
-[ screenshot of spark survey ]
+![Screenshot of survey being conducted](https://user-images.githubusercontent.com/9061/29992198-cf2c46be-8f63-11e7-950e-8f419f0d1254.png)
 
-Watch survey results update in real-time.
+### Watch survey results update in real-time.
 
-[ screenshot of results page ]
+![Screenshot of results](https://user-images.githubusercontent.com/9061/29992267-835d3066-8f65-11e7-80c3-b724ce3d4dfb.png)
 
 <!-- how does one do this 👇 ? -->
 <!-- ![example use](https://user-images.githubusercontent.com/1062277/27293924-d3e1b5b2-54e5-11e7-8243-5fc8fa1cdd3a.png) -->
