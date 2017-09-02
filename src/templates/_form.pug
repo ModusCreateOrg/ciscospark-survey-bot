@@ -14,7 +14,7 @@ mixin form(survey)
       .survey-who.columns.medium-8
         // use `v-show` because awesomplete doesn't work with `v-if`
         label(v-show="who('space')") Space
-          input.rooms(type="text" :value="survey.room.title" :required="who('space')" @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter room name" name="")
+          input.rooms(type="text" :value="survey.room.title" :required="who('space')" @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter space name" name="")
         label(v-show="who('email')") Email Addresses
           input.emails(type="text" v-model="survey.emailAddressesText" :required="who('email')" placeholder="Enter email addresses" @blur="parseEmailAddresses")
 
