@@ -24,7 +24,13 @@ export default class {
   listTeamRoom = ({id}) =>
     this._sparkClient().rooms.list({ type: 'group', teamId: id })
 
-  listRooms = async () => (await this.listTeamRooms()).concat(await this.listNonTeamRooms())
+  listRooms = async () => {
+    const teamRooms = await this.listTeamRooms()
+    const nonTeamRooms = await this.listNonTeamRooms()
+    const combined = teamRooms.concat(nonTeamRooms)
+
+    return uniqBy(combined, 'id')
+  }
 
   listTeamRooms = async () => {
     const rooms = []
@@ -33,7 +39,7 @@ export default class {
       const {items} = await this.listTeamRoom(team)
       rooms.push(...items)
     }
-    return uniqBy(rooms, 'id')
+    return rooms
   }
 
   // requires scope spark:rooms_read
