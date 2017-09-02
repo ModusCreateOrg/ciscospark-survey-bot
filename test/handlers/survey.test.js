@@ -22,24 +22,27 @@ test('bot gives a survey', async t => {
 
   controller.trigger(
     'survey_started',
-    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer, recordCompletion }]
+    [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
   const firstQuestion = await bot.nextResponse()
-  t.is(firstQuestion.text, 'What is your favorite color?')
   t.is(firstQuestion.channel, user.channel)
+  t.regex(firstQuestion.text, /Hi!/)
+  t.regex(firstQuestion.text, /Question 1 of 2/)
+  t.regex(firstQuestion.text, /What is your favorite color\?/)
 
   const favoriteColor = 'blue'
   user.says(favoriteColor)
 
   const secondQuestion = await bot.nextResponse()
-  t.is(secondQuestion.text, 'What is your favorite sport?')
+  t.regex(secondQuestion.text, /Question 2 of 2/)
+  t.regex(secondQuestion.text, /What is your favorite sport\?/)
 
   const favoriteSport = 'fuß'
   user.says(favoriteSport)
 
   const next = await bot.nextResponse()
-  t.is(next.text, 'Thanks for your responses!')
+  t.regex(next.text, /Thanks/)
 
   t.true(recordAnswer.calledWith(survey.data.questions[0].id, favoriteColor))
   t.true(recordAnswer.calledWith(survey.data.questions[1].id, favoriteSport))
@@ -63,24 +66,28 @@ test('bot gives a survey with mulitple choice question', async t => {
 
   controller.trigger(
     'survey_started',
-    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer, recordCompletion }]
+    [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
   const firstQuestion = await bot.nextResponse()
-  t.is(firstQuestion.text, 'What is your favorite color?')
   t.is(firstQuestion.channel, user.channel)
+  t.regex(firstQuestion.text, /What is your favorite color?/)
 
   const favoriteColor = 'blue'
   user.says(favoriteColor)
 
   const secondQuestion = await bot.nextResponse()
-  t.is(secondQuestion.text, 'Mac or PC?\n1. Mac\n2. PC')
+  t.regex(secondQuestion.text, /Mac or PC\?/)
+
+  const secondQuestionOptions = await bot.nextResponse()
+  t.regex(secondQuestionOptions.text, /1. Mac/)
+  t.regex(secondQuestionOptions.text, /2. PC/)
 
   const mac = '1'
   user.says(mac)
 
   const next = await bot.nextResponse()
-  t.is(next.text, 'Thanks for your responses!')
+  t.regex(next.text, /Thanks/)
 
   t.true(recordAnswer.calledWith(survey.data.questions[0].id, favoriteColor))
   t.true(recordAnswer.calledWith(survey.data.questions[1].id, mac))
@@ -103,31 +110,37 @@ test('bot requires number of mutiple choice answer', async t => {
 
   controller.trigger(
     'survey_started',
-    [bot, { survey, roomId: user.channel, personEmail: user.id, recordAnswer, recordCompletion }]
+    [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
   const question = await bot.nextResponse()
-  t.is(question.text, 'Mac or PC?\n1. Mac\n2. PC')
+  t.regex(question.text, /Mac or PC\?/)
+
+  const questionOptions = await bot.nextResponse()
+  t.regex(questionOptions.text, /1. Mac/)
+  t.regex(questionOptions.text, /2. PC/)
 
   user.says('Dell')
 
   let next = await bot.nextResponse()
-  t.is(next.text, 'Please enter the number corresponding to your answer.')
+  t.regex(next.text, /Sorry/)
   next = await bot.nextResponse()
-  t.is(next.text, 'Mac or PC?\n1. Mac\n2. PC')
+  t.regex(next.text, /1. Mac/)
+  t.regex(next.text, /2. PC/)
 
   user.says('3')
 
   next = await bot.nextResponse()
-  t.is(next.text, 'Please enter the number corresponding to your answer.')
+  t.regex(next.text, /Sorry/)
   next = await bot.nextResponse()
-  t.is(next.text, 'Mac or PC?\n1. Mac\n2. PC')
+  t.regex(next.text, /1. Mac/)
+  t.regex(next.text, /2. PC/)
 
   const mac = '1'
   user.says(mac)
 
   next = await bot.nextResponse()
-  t.is(next.text, 'Thanks for your responses!')
+  t.regex(next.text, /Thanks/)
 
   t.true(recordAnswer.calledWith(survey.data.questions[0].id, mac))
   t.true(recordCompletion.calledOnce)
