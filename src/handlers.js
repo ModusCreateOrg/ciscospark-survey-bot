@@ -49,7 +49,7 @@ const addMultipleChoiceQuestion = (convo, questionText, {choices}, recordAnswer)
 const introText = ({surveyorName, roomName, surveyTitle}) => `
   **${surveyTitle}**
 
-  Hi! I'm your friendly neighborhood survey bot.  ${surveyorName} asked me to survey everyone in the *${roomName}* room. The title of this survey is *${surveyTitle}*. Thanks in advance for participating!
+  Hi! I'm your friendly neighborhood survey bot.  ${surveyorName} asked me to survey everyone in the *${roomName}* space. The title of this survey is *${surveyTitle}*. Thanks in advance for participating!
 
   ––––––––––––––––––––––––––––––––––––––––––––––––––––
 
