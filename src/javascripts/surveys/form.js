@@ -1,3 +1,6 @@
+/* eslint-env browser */
+/* global $ Vue Awesomplete fetchJSON */
+
 (function () {
   const questionTypes = ['text', 'multi']
 
@@ -51,7 +54,7 @@
     mounted: function () {
       const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
 
-      new Awesomplete(this.$refs.roomsInput, {
+      new Awesomplete(this.$refs.roomsInput, { // eslint-disable-line no-new
         list,
         minChars: 0,
         maxItems: 20
@@ -71,7 +74,7 @@
         this._remove(choices, choice, event, '.choice', 2, () => this.addChoice(choices))
       },
       _remove: function (collection, item, event, selector, minNumberOfElements, addNewItem) {
-        $el = $(event.target).parents(selector)
+        const $el = $(event.target).parents(selector)
         $el.slideUp(() => {
           $el.show() // otherwise collection.splice removes the wrong element
           collection.splice(collection.indexOf(item), 1)

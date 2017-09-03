@@ -59,6 +59,8 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
   const messageBase = { user: personEmail, channel: roomForSurvey.id }
 
   bot.startConversation(messageBase, (err, convo) => {
+    if (err) { console.error(err) }
+
     const questions = survey.data.questions
     const questionEntries = questions.entries()
 

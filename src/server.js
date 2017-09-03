@@ -1,12 +1,12 @@
-import { promisify } from 'util'
 import http from 'http'
 import express from 'express'
 import bodyParser from 'body-parser'
+import path from 'path'
 
 const setupWebserverCopied = (controller, port, cb) => {
-  var static_dir = __dirname + '/public'
+  let staticDir = path.join(__dirname, '/public')
   if (controller.config && controller.config.webserver && controller.config.webserver.static_dir) {
-    static_dir = controller.config.webserver.static_dir
+    staticDir = controller.config.webserver.static_dir
   }
 
   controller.config.port = port
@@ -14,7 +14,7 @@ const setupWebserverCopied = (controller, port, cb) => {
   controller.webserver = express()
   controller.webserver.use(bodyParser.json())
   controller.webserver.use(bodyParser.urlencoded({ extended: true }))
-  controller.webserver.use(express.static(static_dir))
+  controller.webserver.use(express.static(staticDir))
 
   controller.httpserver = http.createServer(controller.webserver)
 

@@ -1,7 +1,5 @@
 import fromPairs from 'lodash/fromPairs'
-import includes from 'lodash/includes'
 import map from 'lodash/map'
-import uniq from 'lodash/uniq'
 
 const jsonResponseText = (question, {response: responseText}) =>
   question.type === 'multi'

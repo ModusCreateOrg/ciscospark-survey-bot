@@ -1,3 +1,6 @@
+/* eslint-env browser */
+/* global $ Vue fetchJSON io */
+
 (function () {
   const selector = '#survey'
   const $surveyEl = $(selector)
@@ -27,7 +30,7 @@
 
   fetchResponses()
 
-  socket = io('/')
+  const socket = io('/')
   socket.on('connect', () => socket.emit('subscribe:survey', surveyToken))
   socket.on('survey updated', fetchResponses)
 })()

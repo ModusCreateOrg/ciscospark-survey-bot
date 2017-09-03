@@ -1,6 +1,5 @@
 import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
-import keyBy from 'lodash/keyBy'
 import Actions from './Actions'
 import surveyAsCSV from './surveyAsCSV'
 import surveyAsJSON from './surveyAsJSON'
