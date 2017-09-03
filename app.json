@@ -1,7 +1,7 @@
 {
   "name": "Survey Bot for Cicso Spark",
   "description": "Cisco Spark bot for for conducting surveys",
-  "repository": "https://github.com/promptworks/ciscospark-jira",
+  "repository": "https://github.com/promptworks/ciscospark-survey-bot",
   "addons": ["heroku-redis"],
   "env": {
     "PUBLIC_ADDRESS": {
