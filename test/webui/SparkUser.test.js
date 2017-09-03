@@ -33,7 +33,6 @@ test('listRooms gets all the rooms the user is in, or is in their team', async t
   t.deepEqual(roomIds, uniqueRoomIds)
 })
 
-
 const assertSeesMembers = async (t, roomId) => {
   const { sparkUser } = t.context
 
