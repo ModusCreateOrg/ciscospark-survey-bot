@@ -1,9 +1,9 @@
 const u = str =>
   str
     .trim()
-    .split("\n")
-    .map( s => s.trim() )
-    .join("\n")
+    .split('\n')
+    .map(s => s.trim())
+    .join('\n')
 
 const formatQuestion = (text, idx, total) => u(`
   **Question ${idx} of ${total}**
@@ -24,7 +24,7 @@ const isValidAnswer = (choices, answer) => {
 }
 
 const choiceListText = choices =>
-  choices.map((choice, i) => `${i+1}. ${choice.text}`).join('\n')
+  choices.map((choice, i) => `${i + 1}. ${choice.text}`).join('\n')
 
 const addMultipleChoiceQuestion = (convo, questionText, {choices}, recordAnswer) => {
   convo.addMessage(questionText)
@@ -59,6 +59,7 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
   const messageBase = { user: personEmail, channel: roomForSurvey.id }
 
   bot.startConversation(messageBase, (err, convo) => {
+    if (err) { console.error(err) }
 
     const questions = survey.data.questions
     const questionEntries = questions.entries()
@@ -72,11 +73,11 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
         // Combine intro and first question because separate messages don't format as well
         questionText += introText({
           surveyorName: 'Someone',
-          surveyTitle: survey.data.title,
+          surveyTitle: survey.data.title
         })
       }
 
-      questionText += formatQuestion(question.text, idx+1, questions.length)
+      questionText += formatQuestion(question.text, idx + 1, questions.length)
       const addQuestionFn = question.type === 'multi' ? addMultipleChoiceQuestion : addTextQuestion
       addQuestionFn(convo, questionText, question, ({text}) => recordAnswer(question.id, text))
     }
@@ -85,7 +86,7 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
       recordCompletion()
       bot.say({
         text: 'All done. Thanks for taking this survey! I\'ll remove this space in a few seconds so as not to clutter up your list of Spark spaces.',
-        ...messageBase,
+        ...messageBase
       })
     })
   })

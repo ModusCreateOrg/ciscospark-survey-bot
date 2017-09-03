@@ -8,36 +8,36 @@ const redisOptions = () => {
   const {
     port,
     hostname: host,
-    password,
+    password
   } = redisUrl.parse(process.env.REDIS_URL)
 
   return {
     port,
     host,
-    password,
+    password
   }
 }
 const schema = new Schema('redis', redisOptions())
 
 const Survey = schema.define('Survey', {
   userSparkId: { type: String, index: true },
-  data:        { type: schema.Json },
-  state:       { type: String, default: 'draft' },
-  created:     { type: schema.Date, default: Date.now },
-  token:       { type: String, default: uuid },
+  data: { type: schema.Json },
+  state: { type: String, default: 'draft' },
+  created: { type: schema.Date, default: Date.now },
+  token: { type: String, default: uuid }
 })
 
 const SurveyTaker = schema.define('SurveyTaker', {
   surveyId: { type: Number, index: true },
   userData: { type: schema.Json },
   userSparkId: { type: String, index: true },
-  isFinished: { type: Boolean, default: false, index: true },
+  isFinished: { type: Boolean, default: false, index: true }
 })
 
 const SurveyResponse = schema.define('SurveyResponse', {
   surveyTakerId: { type: Number, index: true },
   questionId: { type: String, index: true },
-  response: { type: String },
+  response: { type: String }
 })
 
 const models = [Survey, SurveyResponse, SurveyTaker]
@@ -49,11 +49,9 @@ for (const model of models) {
   })
 }
 
-
 import DummySparkUser from './DummySparkUser'
 import SparkUser from './SparkUser'
 import SparkBot from './SparkBot'
-
 
 export default class {
   constructor (user, controller, bot, io) {
@@ -88,7 +86,7 @@ export default class {
   async getSurveyAndAllResponses (id) {
     const [survey, { surveyTakers, surveyResponses }] = await Promise.all([
       this.getSurvey(id),
-      this.getSurveyTakersAndResponses(id),
+      this.getSurveyTakersAndResponses(id)
     ])
 
     return { survey, surveyTakers, surveyResponses }
@@ -108,7 +106,7 @@ export default class {
   }
 
   async updateSurvey (id, attributes) {
-    await Survey.updateAsync({ userSparkId: this.userId, id}, attributes)
+    await Survey.updateAsync({ userSparkId: this.userId, id }, attributes)
     return await this.getSurvey(id)
   }
 
@@ -119,7 +117,7 @@ export default class {
       : survey.data.emailAddresses.map(({name, address}) => ({
         id: address,
         personEmail: address,
-        personDisplayName: name || address,
+        personDisplayName: name || address
       }))
 
     // Not async because Spark API client can't handle multiple async requests

@@ -1,6 +1,5 @@
 import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
-import keyBy from 'lodash/keyBy'
 import Actions from './Actions'
 import surveyAsCSV from './surveyAsCSV'
 import surveyAsJSON from './surveyAsJSON'
@@ -19,7 +18,6 @@ const ensureLoggedIn = (loginPath) => async (req, res, next) => {
 }
 
 export default (controller, bot, io) => {
-
   io.on('connection', (socket) => {
     socket.on('subscribe:survey', (token) => {
       console.log('EVENT subscribe:survey', token)

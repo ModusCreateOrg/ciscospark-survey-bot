@@ -30,7 +30,7 @@
   "dependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.22.1",
-    "babel-eslint": "^7.1.1",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.20.0",
@@ -67,6 +67,7 @@
     "concurrently": "^3.3.0",
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-class-property": "^1.0.6",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "sinon": "^2.3.6"

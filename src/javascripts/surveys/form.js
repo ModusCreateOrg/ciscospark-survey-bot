@@ -1,4 +1,7 @@
-(function() {
+/* eslint-env browser */
+/* global $ Vue Awesomplete fetchJSON */
+
+(function () {
   const questionTypes = ['text', 'multi']
 
   const newChoice = () => ({
@@ -17,7 +20,7 @@
     description: '',
     questions: [newQuestion()],
     room: {},
-    whoType: 'space',
+    whoType: 'space'
   })
 
   const selector = '#survey-form'
@@ -40,21 +43,21 @@
       rooms: roomData,
       isConducting: false,
       questionSortOptions: {
-        handle: '.question-sort-handle',
+        handle: '.question-sort-handle'
       },
       choiceSortOptions: {
-        handle: '.choice-sort-handle',
+        handle: '.choice-sort-handle'
       },
       emailAddresses: [],
-      emailAddressesText: '',
+      emailAddressesText: ''
     },
     mounted: function () {
       const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
 
-      new Awesomplete(this.$refs.roomsInput, {
+      new Awesomplete(this.$refs.roomsInput, { // eslint-disable-line no-new
         list,
         minChars: 0,
-        maxItems: 20,
+        maxItems: 20
       })
     },
     methods: {
@@ -71,7 +74,7 @@
         this._remove(choices, choice, event, '.choice', 2, () => this.addChoice(choices))
       },
       _remove: function (collection, item, event, selector, minNumberOfElements, addNewItem) {
-        $el = $(event.target).parents(selector)
+        const $el = $(event.target).parents(selector)
         $el.slideUp(() => {
           $el.show() // otherwise collection.splice removes the wrong element
           collection.splice(collection.indexOf(item), 1)
@@ -129,7 +132,7 @@
       // HACK: Vue won't updated the text field when the model changes without this
       _kickEmailAddressesField: function () {
         const original = this.survey.description
-        this.survey.description += " "
+        this.survey.description += ' '
         this.survey.description = original
       },
       parseEmailAddresses: function () {
@@ -143,7 +146,7 @@
 
         this._kickEmailAddressesField()
       }
-    },
+    }
   })
 
   // HACK: kick vue.draggable

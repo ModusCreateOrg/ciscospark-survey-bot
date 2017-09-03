@@ -1,10 +1,12 @@
 {
     "extends": "standard",
+    "parser": "babel-eslint",
     "plugins": [
         "standard",
+        "class-property",
         "promise"
     ],
     "rules": {
-      "no-unused-vars": ["error", { "varsIgnorePattern": "^_$" }]
+      "class-property/class-property-semicolon": 0
     }
 }

@@ -9,14 +9,13 @@ export const surveyAsCSVAsJSON = ({ questions, surveyTakers }) => {
     responses.map(({text, surveyTakerEmail}) => ({
       'question': questionText,
       'question.type': type,
-      'response':  text,
+      'response': text,
       'person.email': surveyTakerEmail,
-      'person.name': surveyTakers[surveyTakerEmail].name,
+      'person.name': surveyTakers[surveyTakerEmail].name
     }))
   )
 }
 
-
 export default (data) => json2csvAsync({
-  data: surveyAsCSVAsJSON(data),
+  data: surveyAsCSVAsJSON(data)
 })

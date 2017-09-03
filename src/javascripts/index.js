@@ -1,4 +1,7 @@
-(function() {
+/* eslint-env browser */
+/* global $ */
+
+(function () {
   window.fetchJSON = (method, url, json) =>
     fetch(url, {
       method,
