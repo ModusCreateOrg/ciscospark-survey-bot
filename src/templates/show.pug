@@ -33,14 +33,14 @@ block content
               .question__subtitle
                 | Results
                 em  ({{question.responses.length}} responses)
-              .question__choice(v-for="[choice, _, choiceResponses] in responsesByChoice(question)")
+              .question__choice(v-for="[choice, _, choiceResponses] in question.responsesByChoice")
                 | {{choice}}
                 span.label  {{choiceResponses.length}}
                 .question__person(v-for="{ surveyTakerEmail } in choiceResponses")
                   | {{survey.surveyTakers[surveyTakerEmail].name}}
             .columns.medium-6
               .question__chart(v-if="question.responses.length")
-                pie-chart(:data="responsesByChoice(question)" legend="bottom" donut="true")
+                pie-chart(:data="question.responsesByChoice" legend="bottom" donut="true")
 
         .responses(v-if="question.type === 'text'")
           .row: .columns.medium-12: .question__answers

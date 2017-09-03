@@ -13,14 +13,6 @@
     data: {
       id: surveyId,
       survey: {}
-    },
-    methods: {
-      responsesByChoice: function ({choices, responses}) {
-        return choices.map(choice => {
-          const choiceResponses = responses.filter(({text}) => text === choice)
-          return [choice, choiceResponses.length, choiceResponses]
-        })
-      }
     }
   })
 

@@ -19,7 +19,12 @@ const jsonQuestions = (questions, surveyResponses, surveyTakers) => {
 
     const choices = map(question.choices, 'text')
 
-    return { ...question, responses, choices }
+    const responsesByChoice = choices.map(choice => {
+      const choiceResponses = responses.filter(({text}) => text === choice)
+      return [choice, choiceResponses.length, choiceResponses]
+    })
+
+    return { ...question, responses, choices, responsesByChoice }
   })
 }
 

@@ -77,8 +77,9 @@ export default (controller, bot, io) => {
     res.render('show')
   })
 
-  router.get('/surveys/:id/chart/:questionId.html', async (req, res) => {
-    res.locals.survey = await req.actions.getSurvey(req.params.id)
+  router.get('/surveys/:id/chart/:questionIdx.html', async (req, res) => {
+    const survey = await renderSurveyAsJSON(req)
+    res.locals.responses = survey.questions[req.params.questionIdx].responsesByChoice
     res.render('chart')
   })
 
