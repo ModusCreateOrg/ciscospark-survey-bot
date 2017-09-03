@@ -29,6 +29,7 @@ export default class {
       lastActivity: '2017-05-31T15:59:44.614Z',
       creatorId: 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zZGMxZDAzYS1iYTNiLTQwMmYtODU1Ni00YWI1ZDhlNDViYjA',
       created: '2017-05-24T17:30:50.940Z',
+      teamName: undefined
     },
     {
       id: 'Y2lzY29zcGFyazovL3VzL1JPT00vYzBkYTIwZjAtMzRjMi0xMWU3LWI1NzQtNmQwM2QwYjI4MGVm',
