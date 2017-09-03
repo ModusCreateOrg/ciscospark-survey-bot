@@ -1,56 +1,48 @@
 import CiscoSpark from 'ciscospark'
 import uniqBy from 'lodash/uniqBy'
-import map from 'lodash/map'
-
-const flatMapInSeries = async (items, cb) => {
-  const collection = []
-  for (const item of items) {
-    collection.push(...await cb(item))
-  }
-  return collection
-}
+import flatten from 'lodash/flatten'
 
 export default class {
   constructor (user) {
     this.user = user
   }
 
-  _sparkClient = () => {
-    this.__sparkClient = this.__sparkClient || this._buildSparkClient()
-    return this.__sparkClient
-  }
-
-  _buildSparkClient = () => CiscoSpark.init({
+  _sparkClient = () => CiscoSpark.init({
     authorization: {
       access_token: this.user.accessToken
     }
   })
 
   // requires scope spark:teams_read
-  listTeams = async () => (await this._sparkClient().teams.list()).items
+  listTeams = () => this._list('teams')
 
   // requires scope spark:rooms_read
-  listRoomsInTeam = async ({id}) =>
-    (await this._sparkClient().rooms.list({ type: 'group', teamId: id })).items
+  listRoomsInTeam = ({id}) => this._list('rooms', { type: 'group', teamId: id })
 
   // requires scope spark:rooms_read
-  listNonTeamRooms = async () =>
-    (await this._sparkClient().rooms.list({ type: 'group' })).items
+  listNonTeamRooms = () => this._list('rooms', { type: 'group' })
 
   // requires scope spark:memberships_read
-  listRoomMembers = async roomId => {
-    const { items } = await this._sparkClient().memberships.list({ roomId })
-    return items
+  listRoomMembers = roomId => this._list('memberships', { roomId })
+
+  _list = async (resource, args = {}) =>
+    (await this._sparkClient()[resource].list(args)).items
+
+
+  _listTeamRooms = async () => {
+    const teams = await this.listTeams()
+    return flatten(await Promise.all(teams.map(async team =>
+      (await this.listRoomsInTeam(team)).map(room => ({
+        ...room, teamName: team.name
+      })
+    ))))
   }
 
   listRooms = async () => {
-    const teams = await this.listTeams()
-    const teamRooms = await flatMapInSeries(teams, async team =>
-      map(await this.listRoomsInTeam(team), room => ({
-        ...room, teamName: team.name
-      })
-    ))
-    const nonTeamRooms = await this.listNonTeamRooms()
+    const [teamRooms, nonTeamRooms] = await Promise.all([
+      this._listTeamRooms(),
+      this.listNonTeamRooms()
+    ])
     return uniqBy(teamRooms.concat(nonTeamRooms), 'id')
   }
 }
