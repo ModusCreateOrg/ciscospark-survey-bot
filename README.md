@@ -1,10 +1,10 @@
 # Survey Bot for Cisco Spark
 
-<!-- [![CircleCI](https://circleci.com/gh/promptworks/ciscospark-jira.svg?style=svg)](https://circleci.com/gh/promptworks/ciscospark-jira) -->
+[![CircleCI](https://circleci.com/gh/promptworks/ciscospark-survey-bot.svg?style=svg)](https://circleci.com/gh/promptworks/ciscospark-survey-bot)
 
 A self-hosted Cisco Spark bot for taking surveys.
 
-<!-- [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy) -->
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## Features
 
@@ -19,9 +19,6 @@ A self-hosted Cisco Spark bot for taking surveys.
 ### Watch survey results update in real-time.
 
 ![Screenshot of results](https://user-images.githubusercontent.com/9061/29992267-835d3066-8f65-11e7-80c3-b724ce3d4dfb.png)
-
-<!-- how does one do this 👇 ? -->
-<!-- ![example use](https://user-images.githubusercontent.com/1062277/27293924-d3e1b5b2-54e5-11e7-8243-5fc8fa1cdd3a.png) -->
 
 ## Setup & Configuration
 
