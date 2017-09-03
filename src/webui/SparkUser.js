@@ -1,5 +1,14 @@
 import CiscoSpark from 'ciscospark'
 import uniqBy from 'lodash/uniqBy'
+import map from 'lodash/map'
+
+const flatMapInSeries = async (items, cb) => {
+  const collection = []
+  for (const item of items) {
+    collection.push(...await cb(item))
+  }
+  return collection
+}
 
 export default class {
   constructor (user) {
@@ -18,36 +27,30 @@ export default class {
   })
 
   // requires scope spark:teams_read
-  listTeams = () => this._sparkClient().teams.list().then(({items}) => items)
+  listTeams = async () => (await this._sparkClient().teams.list()).items
 
   // requires scope spark:rooms_read
-  listRoomsInTeam = ({id}) =>
-    this._sparkClient().rooms.list({ type: 'group', teamId: id })
-
-  listRooms = async () => {
-    const teamRooms = await this.listRoomsInTeams()
-    const nonTeamRooms = await this.listNonTeamRooms()
-    const combined = teamRooms.concat(nonTeamRooms)
-
-    return uniqBy(combined, 'id')
-  }
-
-  listRoomsInTeams = async () => {
-    const rooms = []
-    // Needs to be serial, because the spark client can't do it in parallel
-    for (const team of await this.listTeams()) {
-      const {items} = await this.listRoomsInTeam(team)
-      rooms.push(...items)
-    }
-    return rooms
-  }
+  listRoomsInTeam = async ({id}) =>
+    (await this._sparkClient().rooms.list({ type: 'group', teamId: id })).items
 
   // requires scope spark:rooms_read
-  listNonTeamRooms = () => this._sparkClient().rooms.list({ type: 'group' }).then(({items}) => items)
+  listNonTeamRooms = async () =>
+    (await this._sparkClient().rooms.list({ type: 'group' })).items
 
   // requires scope spark:memberships_read
-  listRoomMembers = async (roomId) => {
+  listRoomMembers = async roomId => {
     const { items } = await this._sparkClient().memberships.list({ roomId })
     return items
+  }
+
+  listRooms = async () => {
+    const teams = await this.listTeams()
+    const teamRooms = await flatMapInSeries(teams, async team =>
+      map(await this.listRoomsInTeam(team), room => ({
+        ...room, teamName: team.name
+      })
+    ))
+    const nonTeamRooms = await this.listNonTeamRooms()
+    return uniqBy(teamRooms.concat(nonTeamRooms), 'id')
   }
 }

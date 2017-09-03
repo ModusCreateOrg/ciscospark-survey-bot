@@ -1,8 +1,8 @@
 import test from 'ava'
 
-import map from 'lodash/map'
-import includes from 'lodash/includes'
 import every from 'lodash/every'
+import keyBy from 'lodash/keyBy'
+import map from 'lodash/map'
 import uniq from 'lodash/uniq'
 
 import SparkUser from '../../src/webui/SparkUser'
@@ -23,12 +23,13 @@ test('listRooms gets all the rooms the user is in, or is in their team', async t
   const { sparkUser } = t.context
 
   const rooms = await sparkUser.listRooms()
+
+  const roomsById = keyBy(rooms, 'id')
+  t.truthy(roomsById[ROOMS.teamGeneral].teamName === 'Survey Bot Test Suite Team')
+  t.truthy(roomsById[ROOMS.notInTeam].teamName === undefined)
+  t.truthy(roomsById[ROOMS.inTeamButUserNotInRoom].teamName === 'Survey Bot Test Suite Team 3')
+
   const roomIds = map(rooms, 'id')
-
-  t.true(includes(roomIds, ROOMS.teamGeneral))
-  t.true(includes(roomIds, ROOMS.notInTeam))
-  t.true(includes(roomIds, ROOMS.inTeamButUserNotInRoom))
-
   const uniqueRoomIds = uniq(roomIds)
   t.deepEqual(roomIds, uniqueRoomIds)
 })

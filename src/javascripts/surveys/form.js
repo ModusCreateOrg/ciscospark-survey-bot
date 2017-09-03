@@ -52,7 +52,13 @@
       emailAddressesText: ''
     },
     mounted: function () {
-      const list = this.rooms.map(({id, title}) => ({ label: title, value: id }))
+      const list = this.rooms.map(({id, title, teamName}) => {
+        const label = teamName
+          ? `${teamName} / ${title}`
+          : title
+
+        return { label, value: id }
+      })
 
       new Awesomplete(this.$refs.roomsInput, { // eslint-disable-line no-new
         list,
