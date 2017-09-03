@@ -2,6 +2,9 @@ import CiscoSpark from 'ciscospark'
 import uniqBy from 'lodash/uniqBy'
 import flatten from 'lodash/flatten'
 
+const asyncFlatMap = async (...args) => flatten(await asyncMap(...args))
+const asyncMap = (items, cb) => Promise.all(items.map(cb))
+
 export default class {
   constructor (user) {
     this.user = user
@@ -28,19 +31,15 @@ export default class {
   _list = async (resource, args = {}) =>
     (await this._sparkClient()[resource].list(args)).items
 
-
-  _listTeamRooms = async () => {
-    const teams = await this.listTeams()
-    return flatten(await Promise.all(teams.map(async team =>
-      (await this.listRoomsInTeam(team)).map(room => ({
-        ...room, teamName: team.name
-      })
-    ))))
-  }
+  listTeamRooms = async () => asyncFlatMap(await this.listTeams(), async team =>
+    (await this.listRoomsInTeam(team)).map(room => ({
+      ...room, teamName: team.name
+    }))
+  )
 
   listRooms = async () => {
     const [teamRooms, nonTeamRooms] = await Promise.all([
-      this._listTeamRooms(),
+      this.listTeamRooms(),
       this.listNonTeamRooms()
     ])
     return uniqBy(teamRooms.concat(nonTeamRooms), 'id')
