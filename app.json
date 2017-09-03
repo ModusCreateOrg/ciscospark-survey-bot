@@ -1,0 +1,30 @@
+{
+  "name": "Survey Bot for Cicso Spark",
+  "description": "Cisco Spark bot for for conducting surveys",
+  "repository": "https://github.com/promptworks/ciscospark-jira",
+  "addons": ["heroku-redis"],
+  "env": {
+    "PUBLIC_ADDRESS": {
+      "description": "The address at which your bot can be reached. The public address of your Heroku app will be 'https://<App Name>.herokuapp.com",
+      "required": true
+    },
+    "ACCESS_TOKEN": {
+      "description": "The bot's access token from Cisco Spark. Create a new bot account at https://developer.ciscospark.com/add-bot.html if you do not have one.",
+      "required": true
+    },
+    "SPARK_SECRET": {
+      "description": "A secret for validating that incoming webhooks originate from Cisco Spark.",
+      "required": true
+    },
+    "SPARK_OAUTH__CLIENT_ID": {
+      "description": "The client id of the *integration* for this bot",
+      "required": true
+    },
+    "SPARK_OAUTH__CLIENT_SECRET": {
+      "description": "The client secret of the *integration* for this bot",
+      "required": true
+    }
+  },
+  "logo": "https://node-js-sample.herokuapp.com/node.svg",
+  "keywords": ["spark", "cisco", "ciscospark", "bot", "botkit", "survey", "poll"]
+}
