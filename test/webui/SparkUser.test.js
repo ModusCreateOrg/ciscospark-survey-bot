@@ -3,6 +3,7 @@ import test from 'ava'
 import map from 'lodash/map'
 import includes from 'lodash/includes'
 import every from 'lodash/every'
+import uniq from 'lodash/uniq'
 
 import SparkUser from '../../src/webui/SparkUser'
 
@@ -27,6 +28,9 @@ test('listRooms gets all the rooms the user is in, or is in their team', async t
   t.true(includes(roomIds, ROOMS.teamGeneral))
   t.true(includes(roomIds, ROOMS.notInTeam))
   t.true(includes(roomIds, ROOMS.inTeamButUserNotInRoom))
+
+  const uniqueRoomIds = uniq(roomIds)
+  t.deepEqual(roomIds, uniqueRoomIds)
 })
 
 
