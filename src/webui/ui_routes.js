@@ -1,8 +1,18 @@
 import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
+
 import Actions from './Actions'
 import surveyAsCSV from './surveyAsCSV'
 import surveyAsJSON from './surveyAsJSON'
+
+import { Readable } from 'stream'
+import escapeHTML from 'escape-html'
+import phantom from 'phantom-render-stream'
+import stringStream from 'string-to-stream'
+import Jimp from 'jimp'
+import streamToArray from 'stream-to-array'
+import isBuffer from 'lodash'
+import promisify from 'promisify-node'
 
 const router = AsyncRouter()
 
@@ -77,10 +87,57 @@ export default (controller, bot, io) => {
     res.render('show')
   })
 
-  router.get('/surveys/:id/chart/:questionIdx.html', async (req, res) => {
+  const renderPhantom = phantom()
+
+  router.get('/surveys/:id/chart/:questionIdx.png', async (req, res) => {
     const survey = await renderSurveyAsJSON(req)
-    res.locals.responses = survey.questions[req.params.questionIdx].responsesByChoice
-    res.render('chart')
+    const responses = survey.questions[req.params.questionIdx].responsesByChoice
+
+    const scripts = [
+      'bower_components/vue/dist/vue.min.js',
+      'bower_components/chart.js/dist/Chart.bundle.min.js',
+      'bower_components/chartkick/chartkick.js',
+      'bower_components/vue-chartkick/dist/vue-chartkick.min.js'
+    ]
+
+    const html = `
+      <body style='background: white'>
+      <div id=chart>
+        <pie-chart :data="${escapeHTML(JSON.stringify(responses))}" legend=bottom donut></pie-chart>
+      </div>
+      <script>new Vue({el: '#chart'})</script>
+      </body>
+    `
+
+    const stream = stringStream(html).pipe(renderPhantom({
+      injectJs: scripts,
+      width: 700,
+      height: 500,
+    }))
+
+    const parts = await streamToArray(stream)
+    const buffer = Buffer.concat(parts.map(part => isBuffer(part) ? part : Buffer.from(part)))
+
+    let image = await Jimp.read(buffer)
+    const autocropped = image.clone().autocrop()
+    const { width: wCropped, height: hCropped } = autocropped.bitmap
+    const wOrig = image.bitmap.width
+
+    const lrBorder = 20
+    const bottomBorder = 30
+    image = image.crop(
+      (wOrig - wCropped) / 2 - lrBorder,
+      0,
+      wCropped + lrBorder * 2,
+      hCropped + bottomBorder,
+    )
+
+    const croppedBuffer = await promisify(image.getBuffer).call(image, 'image/bmp')
+
+    res.writeHead(200, { 'Content-Type': 'image/png' })
+
+    res.write(croppedBuffer,'binary');
+    res.end(null, 'binary');
   })
 
   router.post('/surveys', async (req, res) => {
