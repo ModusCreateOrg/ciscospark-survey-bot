@@ -20,8 +20,12 @@ const jsonQuestions = (questions, surveyResponses, surveyTakers) => {
     const choices = map(question.choices, 'text')
 
     const responsesByChoice = choices.map(choice => {
-      const choiceResponses = responses.filter(({text}) => text === choice)
-      return [choice, choiceResponses.length, choiceResponses]
+      const choosers = responses
+        .filter(({text}) => text === choice)
+        .map(({surveyTakerEmail}) => surveyTakerEmail)
+
+      // Yes, choosers.length is redundant info, but this format can be fed straight into the charting library
+      return [choice, choosers.length, choosers]
     })
 
     return { ...question, responses, choices, responsesByChoice }

@@ -1,9 +1,4 @@
-const u = str =>
-  str
-    .trim()
-    .split('\n')
-    .map(s => s.trim())
-    .join('\n')
+import u from './helpers/unindent'
 
 const formatQuestion = (text, idx, total) => u(`
   **Question ${idx} of ${total}**
@@ -55,7 +50,7 @@ const introText = ({surveyorName, surveyTitle}) => `
 
 `
 
-const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordCompletion }) => {
+export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordCompletion }) => {
   const messageBase = { user: personEmail, channel: roomForSurvey.id }
 
   bot.startConversation(messageBase, (err, convo) => {
@@ -66,8 +61,6 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
 
     for (const [idx, question] of questionEntries) {
       let questionText = ''
-
-      console.log(survey.data)
 
       if (idx === 0) {
         // Combine intro and first question because separate messages don't format as well
@@ -90,8 +83,4 @@ const doSurvey = (bot, { roomForSurvey, personEmail, survey, recordAnswer, recor
       })
     })
   })
-}
-
-export default {
-  doSurvey
 }

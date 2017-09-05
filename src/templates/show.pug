@@ -36,7 +36,7 @@ block content
               .question__choice(v-for="[choice, _, choiceResponses] in question.responsesByChoice")
                 | {{choice}}
                 span.label  {{choiceResponses.length}}
-                .question__person(v-for="{ surveyTakerEmail } in choiceResponses")
+                .question__person(v-for="surveyTakerEmail in choiceResponses")
                   | {{survey.surveyTakers[surveyTakerEmail].name}}
             .columns.medium-6
               .question__chart(v-if="question.responses.length")
