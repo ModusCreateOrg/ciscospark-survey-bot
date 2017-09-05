@@ -5,16 +5,9 @@ import Actions from './Actions'
 import surveyAsCSV from './surveyAsCSV'
 import surveyAsJSON from './surveyAsJSON'
 
-import { Readable } from 'stream'
-import escapeHTML from 'escape-html'
-import phantom from 'phantom-render-stream'
-import stringStream from 'string-to-stream'
-import Jimp from 'jimp'
-import streamToArray from 'stream-to-array'
-import isBuffer from 'lodash'
-import promisify from 'promisify-node'
-
 const router = AsyncRouter()
+
+import renderChart from './renderChart'
 
 // Needs to be async because we are using AsyncRouter
 const ensureLoggedIn = (loginPath) => async (req, res, next) => {
@@ -87,8 +80,6 @@ export default (controller, bot, io) => {
     res.render('show')
   })
 
-  const renderPhantom = phantom()
-
   router.post('/surveys/:id/share', async (req, res) => {
     req.actions.shareResults(await renderSurveyAsJSON(req))
     res.json({ result: 'success' })
@@ -98,48 +89,9 @@ export default (controller, bot, io) => {
     const survey = await renderSurveyAsJSON(req)
     const responses = survey.questions[req.params.questionIdx].responsesByChoice
 
-    const scripts = [
-      'bower_components/vue/dist/vue.min.js',
-      'bower_components/chart.js/dist/Chart.bundle.min.js',
-      'bower_components/chartkick/chartkick.js',
-      'bower_components/vue-chartkick/dist/vue-chartkick.min.js'
-    ]
+    const croppedBuffer = await renderChart(responses)
 
-    const html = `
-      <body style='background: white'>
-      <div id=chart>
-        <pie-chart :data="${escapeHTML(JSON.stringify(responses))}" legend=bottom donut></pie-chart>
-      </div>
-      <script>new Vue({el: '#chart'})</script>
-      </body>
-    `
-
-    const stream = stringStream(html).pipe(renderPhantom({
-      injectJs: scripts,
-      width: 700,
-      height: 500,
-    }))
-
-    const parts = await streamToArray(stream)
-    const buffer = Buffer.concat(parts.map(part => isBuffer(part) ? part : Buffer.from(part)))
-
-    let image = await Jimp.read(buffer)
-    const autocropped = image.clone().autocrop()
-    const { width: wCropped, height: hCropped } = autocropped.bitmap
-    const wOrig = image.bitmap.width
-
-    const lrBorder = 20
-    const bottomBorder = 30
-    image = image.crop(
-      (wOrig - wCropped) / 2 - lrBorder,
-      0,
-      wCropped + lrBorder * 2,
-      hCropped + bottomBorder,
-    )
-
-    const croppedBuffer = await promisify(image.getBuffer).call(image, 'image/bmp')
-
-    res.writeHead(200, { 'Content-Type': 'image/png' })
+    res.writeHead(200, { 'Content-Type': 'image/bmp' })
 
     res.write(croppedBuffer,'binary');
     res.end(null, 'binary');

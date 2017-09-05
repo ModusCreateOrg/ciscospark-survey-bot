@@ -30,7 +30,8 @@ const shareResults = async (bot, { surveyAsJSON, renderChartForResponses }) => {
       `
 
       if (question.type === 'multi') {
-        for (const [choiceIdx, [choiceText, responsesCount]] of question.responsesByChoice.entries()) {
+        for (const entry of question.responsesByChoice.entries()) {
+          const [choiceIdx, [choiceText, responsesCount]] = entry
           questionText += `
             ${choiceIdx + 1}. *${choiceText}*: **${responsesCount}**
           `
