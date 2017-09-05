@@ -137,5 +137,7 @@ export default class {
 
   listRooms = () => this.sparkUser.listRooms()
 
-  listRoomMembers = (roomId) => this.sparkUser.listRoomMembers(roomId)
+  listRoomMembers = roomId => this.sparkUser.listRoomMembers(roomId)
+
+  shareResults = surveyAsJSON => this.sparkBot.shareResults(surveyAsJSON)
 }

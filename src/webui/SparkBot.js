@@ -25,4 +25,11 @@ export default class {
       }
     }])
   }
+
+  shareResults = surveyAsJSON => {
+    this.controller.trigger('share_results', [this.bot, {
+      surveyAsJSON,
+      renderChartForResponses: async () => 'http://news.ycombinator.com'
+    }])
+  }
 }

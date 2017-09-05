@@ -12,7 +12,17 @@
     el: selector,
     data: {
       id: surveyId,
-      survey: {}
+      survey: {},
+      sharingStatus: 'unshared',
+    },
+    methods: {
+      jsonify: str => JSON.parse(JSON.stringify(str)),
+      shareResults: function () {
+        this.sharingStatus = 'sharing'
+        fetchJSON('POST', `/surveys/${surveyId}/share`).then(() => {
+          this.sharingStatus = 'shared'
+        })
+      }
     }
   })
 

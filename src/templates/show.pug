@@ -21,6 +21,16 @@ block content
       |  |
       a(target='_blank' :href='`/surveys/${id}/${survey.title}.json?download=1`')  JSON
 
+    p(v-if="survey.whoType === 'space'")
+      .button.small.secondary.share(@click="shareResults")
+        | Share results with {{survey.room && survey.room.title}}
+        span.share-status
+          template(v-if="sharingStatus === 'sharing'")
+            |  ⋯
+          template(v-if="sharingStatus === 'shared'")
+            |  ✔
+
+
     p {{survey.description}}
 
     .content
@@ -39,8 +49,8 @@ block content
                 .question__person(v-for="surveyTakerEmail in choiceResponses")
                   | {{survey.surveyTakers[surveyTakerEmail].name}}
             .columns.medium-6
-              .question__chart(v-if="question.responses.length")
-                pie-chart(:data="question.responsesByChoice" legend="bottom" donut="true")
+              .question__chart(v-if="question.responsesByChoice.length")
+                pie-chart(:data="jsonify(question.responsesByChoice)" legend="bottom" donut="true")
 
         .responses(v-if="question.type === 'text'")
           .row: .columns.medium-12: .question__answers

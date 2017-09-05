@@ -89,6 +89,11 @@ export default (controller, bot, io) => {
 
   const renderPhantom = phantom()
 
+  router.post('/surveys/:id/share', async (req, res) => {
+    req.actions.shareResults(await renderSurveyAsJSON(req))
+    res.json({ result: 'success' })
+  })
+
   router.get('/surveys/:id/chart/:questionIdx.png', async (req, res) => {
     const survey = await renderSurveyAsJSON(req)
     const responses = survey.questions[req.params.questionIdx].responsesByChoice

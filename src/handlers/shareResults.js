@@ -2,53 +2,58 @@ import u from './helpers/unindent'
 import markdownQuote from './helpers/markdownQuote'
 
 const shareResults = async (bot, { surveyAsJSON, renderChartForResponses }) => {
-  const messageBase = { channel: surveyAsJSON.room.id }
+  const questionsWithCharts = await Promise.all(
+    surveyAsJSON.questions.map(async question =>
+      question.type === 'multi'
+        ? { ...question, chartStream: await renderChartForResponses(question.responsesByChoice) }
+        : question
+    )
+  )
 
-  const title = u(`
-    **Results from ${surveyAsJSON.title}**
-    ${surveyAsJSON.description}
+  bot.startConversation({ channel: surveyAsJSON.room.id }, (err, convo) => {
+    if (err) throw(err)
 
-    Number of responses: ${Object.keys(surveyAsJSON.surveyTakers).length}
-  `)
-  bot.say({ text: title, ...messageBase })
+    const title = u(`
+      **Results from ${surveyAsJSON.title}**
 
+      ${surveyAsJSON.description}
 
-  console.log(surveyAsJSON.questions)
-  for (const questionIdx in surveyAsJSON.questions) {
-    const question = surveyAsJSON.questions[questionIdx]
+      Number of responses: ${Object.keys(surveyAsJSON.surveyTakers).length}
+    `)
+    convo.say({ text: title })
 
-    let questionText = `
-      **Question ${parseInt(questionIdx) + 1} of ${surveyAsJSON.questions.length}**
+    for (const [questionIdx, question] of questionsWithCharts.entries()) {
+      let questionText = `
+        **Question ${questionIdx + 1} of ${surveyAsJSON.questions.length}**
 
-      ${question.text}
+        ${question.text}
+      `
 
-    `
+      if (question.type === 'multi') {
+        for (const [choiceIdx, [choiceText, responsesCount]] of question.responsesByChoice.entries()) {
+          questionText += `
+            ${choiceIdx + 1}. *${choiceText}*: **${responsesCount}**
+          `
+        }
+      } else {
+        for (const { text, surveyTakerEmail } of question.responses) {
+          const name = surveyAsJSON.surveyTakers[surveyTakerEmail].name
+          questionText += `
+            ${markdownQuote(text)}
 
-    if (question.type == 'multi') {
-      for (const choiceIdx in question.responsesByChoice) {
-        const [choiceText, responsesCount, _responders] = question.responsesByChoice[choiceIdx]
-        questionText += `
-          ${parseInt(choiceIdx) + 1}. *${choiceText}*: **${responsesCount}**
-        `
+            — *${name}*
+          `
+        }
       }
-    } else {
-      for (const { text, surveyTakerEmail } of question.responses) {
-        const name = surveyAsJSON.surveyTakers[surveyTakerEmail].name
-        questionText += `
-          ${markdownQuote(text)}
-          — *${name}*
-        `
+
+      convo.say({ text: u(questionText) })
+
+      if (question.chartStream) {
+        // if `text` is undefined or empty string, it *sometimes* won't send the file.
+        convo.say({ text: ' ', files: [question.chartStream] })
       }
     }
-
-
-    bot.say({ text: u(questionText), ...messageBase })
-
-    if (question.type === 'multi') {
-      const chart = await renderChartForResponses(question.responsesByChoice)
-      bot.say({ files: [chart], ...messageBase })
-    }
-  }
+  })
 }
 
 export default shareResults
