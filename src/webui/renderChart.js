@@ -1,6 +1,5 @@
 import Jimp from 'jimp'
 import fs from 'fs'
-import isBuffer from 'lodash'
 import phantom from 'phantom-render-stream'
 import promisify from 'promisify-node'
 import streamToArray from 'stream-to-array'
@@ -14,7 +13,7 @@ const render = responses => {
 
   const scripts = [
     'bower_components/chart.js/dist/Chart.bundle.min.js',
-    'bower_components/chartkick/chartkick.js',
+    'bower_components/chartkick/chartkick.js'
   ]
 
   const html = `
@@ -36,7 +35,7 @@ const render = responses => {
   return stringToStream(html).pipe(renderPhantom({
     injectJs: scripts,
     width: 700,
-    height: 500,
+    height: 500
   }))
 }
 

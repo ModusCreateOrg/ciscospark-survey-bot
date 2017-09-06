@@ -3,5 +3,5 @@ import shareResults from './shareResults'
 
 export default {
   doSurvey,
-  shareResults,
+  shareResults
 }

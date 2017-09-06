@@ -150,35 +150,35 @@ test('bot sends survey results to space', async t => {
   const { bot, controller, user } = t.context
 
   const surveyAsJSON = {
-    title: "Lunch options",
-    description: "the description",
+    title: 'Lunch options',
+    description: 'the description',
     questions: [
       {
-        text: "Do you like spicy food?",
-        type: "multi",
-        choices: ["Yes", "No", "Only if it's not too spicy"],
+        text: 'Do you like spicy food?',
+        type: 'multi',
+        choices: ['Yes', 'No', "Only if it's not too spicy"],
         responses: [
-          { text: "No", surveyTakerEmail: "mike@promptworks.com" }
+          { text: 'No', surveyTakerEmail: 'mike@promptworks.com' }
         ],
         responsesByChoice: [
-          ["Yes", 0, []],
-          ["No", 2, ["mike@promptworks.com", "bob@promptworks.com"]],
+          ['Yes', 0, []],
+          ['No', 2, ['mike@promptworks.com', 'bob@promptworks.com']],
           ["Only if it's not too spicy", 0, []]
         ]
       },
       {
-        text: "Please list any dietary restrictions",
-        type: "text",
+        text: 'Please list any dietary restrictions',
+        type: 'text',
         responses: [
-          { text: "None", surveyTakerEmail: "mike@promptworks.com" },
-          { text: "I keep Kosher", surveyTakerEmail: "bob@promptworks.com" },
-        ],
-      },
+          { text: 'None', surveyTakerEmail: 'mike@promptworks.com' },
+          { text: 'I keep Kosher', surveyTakerEmail: 'bob@promptworks.com' }
+        ]
+      }
     ],
-    room: { id: user.channel, title: "New York Office", },
+    room: { id: user.channel, title: 'New York Office' },
     surveyTakers: {
-      "mike@promptworks.com": { name: "Mike Nicholaides" },
-      "bob@promptworks.com": { name: "Bob Barker" }
+      'mike@promptworks.com': { name: 'Mike Nicholaides' },
+      'bob@promptworks.com': { name: 'Bob Barker' }
     }
   }
 
@@ -211,6 +211,6 @@ test('bot sends survey results to space', async t => {
   t.regex(question2.text, /Question 2/)
   t.regex(question2.text, /dietary restrictions/)
   // split and join because regex's don't work well over multiple lines
-  t.regex(question2.text.split("\n").join(), /> None.*Mike/)
-  t.regex(question2.text.split("\n").join(), />.*Kosher.*Bob/)
+  t.regex(question2.text.split('\n').join(), /> None.*Mike/)
+  t.regex(question2.text.split('\n').join(), />.*Kosher.*Bob/)
 })

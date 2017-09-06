@@ -86,16 +86,17 @@ export default (controller, bot, io) => {
     res.json({ result: 'success' })
   })
 
+  // TODO: should only be available in dev/test mode
   router.get('/surveys/:id/chart/:questionIdx.png', async (req, res) => {
     const survey = await renderSurveyAsJSON(req)
     const responses = survey.questions[req.params.questionIdx].responsesByChoice
 
     const stream = await renderChart(responses)
-    const [buffer, ...rest] = await streamToArray(stream)
+    const [buffer] = await streamToArray(stream)
 
     res.writeHead(200, { 'Content-Type': 'image/png' })
-    res.write(buffer,'binary');
-    res.end(null, 'binary');
+    res.write(buffer, 'binary')
+    res.end(null, 'binary')
   })
 
   router.post('/surveys', async (req, res) => {

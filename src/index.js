@@ -4,7 +4,6 @@ import handlers from './handlers'
 import attachHandlers from './attachHandlers'
 import startServer from './server'
 import startWebUI from './webui'
-import promisify from 'promisify-node'
 
 attachHandlers(controller, handlers)
 

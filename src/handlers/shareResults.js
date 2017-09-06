@@ -11,7 +11,7 @@ const shareResults = async (bot, { surveyAsJSON, renderChartForResponses }) => {
   )
 
   bot.startConversation({ channel: surveyAsJSON.room.id }, (err, convo) => {
-    if (err) throw(err)
+    if (err) throw err
 
     const title = u(`
       **Results from ${surveyAsJSON.title}**

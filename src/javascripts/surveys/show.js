@@ -13,7 +13,7 @@
     data: {
       id: surveyId,
       survey: {},
-      sharingStatus: 'unshared',
+      sharingStatus: 'unshared'
     },
     methods: {
       jsonify: str => JSON.parse(JSON.stringify(str)),
