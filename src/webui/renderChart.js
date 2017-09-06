@@ -31,7 +31,7 @@ export default async responses => {
   const html = `
     <body style='background: white'>
     <div id=chart>
-      <pie-chart :data="${escapeHTML(JSON.stringify(responses))}" legend=bottom donut></pie-chart>
+      <pie-chart :data="${escapeHTML(JSON.stringify(responses))}" legend=bottom donut=true></pie-chart>
     </div>
     <script>new Vue({el: '#chart'})</script>
     </body>
