@@ -22,18 +22,23 @@ export default async responses => {
   const renderPhantom = phantom()
 
   const scripts = [
-    'bower_components/vue/dist/vue.min.js',
     'bower_components/chart.js/dist/Chart.bundle.min.js',
     'bower_components/chartkick/chartkick.js',
-    'bower_components/vue-chartkick/dist/vue-chartkick.min.js'
   ]
 
   const html = `
     <body style='background: white'>
-    <div id=chart>
-      <pie-chart :data="${escapeHTML(JSON.stringify(responses))}" legend=bottom donut=true></pie-chart>
-    </div>
-    <script>new Vue({el: '#chart'})</script>
+      <script>
+        window.onload = function () {
+          new Chartkick.PieChart(
+            'chart',
+            ${JSON.stringify(responses)},
+            { donut: true, legend: 'bottom' }
+          )
+        }
+      </script>
+
+      <div id=chart></div>
     </body>
   `
 
