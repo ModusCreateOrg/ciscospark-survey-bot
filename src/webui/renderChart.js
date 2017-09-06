@@ -1,24 +1,15 @@
 import Jimp from 'jimp'
-import escapeHTML from 'escape-html'
+import fs from 'fs'
 import isBuffer from 'lodash'
 import phantom from 'phantom-render-stream'
 import promisify from 'promisify-node'
 import streamToArray from 'stream-to-array'
-import stringStream from 'string-to-stream'
+import stringToStream from 'string-to-stream'
 import tmp from 'tmp'
-import { Readable } from 'stream'
-import fs from 'fs'
 
 promisify(tmp)
 
-export const bufferSourcedStream = buffer => {
-  const readable = new Readable()
-  readable.push(buffer)
-  readable.push(null)
-  return readable
-}
-
-export default async responses => {
+const render = responses => {
   const renderPhantom = phantom()
 
   const scripts = [
@@ -42,15 +33,18 @@ export default async responses => {
     </body>
   `
 
-  const stream = stringStream(html).pipe(renderPhantom({
+  return stringToStream(html).pipe(renderPhantom({
     injectJs: scripts,
     width: 700,
     height: 500,
   }))
+}
 
-  const buffer = Buffer.concat(await streamToArray(stream))
+const streamToBuffer = async stream => Buffer.concat(await streamToArray(stream))
 
-  let image = await Jimp.read(buffer)
+const crop = async (imageBuffer, outputFilePath) => {
+  const image = await Jimp.read(imageBuffer)
+
   const autocropped = image.clone().autocrop()
   const { width: wCropped, height: hCropped } = autocropped.bitmap
   const wOrig = image.bitmap.width
@@ -58,16 +52,23 @@ export default async responses => {
   const lrBorder = 20
   const bottomBorder = 30
 
+  const x = (wOrig - wCropped) / 2 - lrBorder
+  const y = 0
+  const width = wCropped + lrBorder * 2
+  const height = hCropped + bottomBorder
+
+  image.crop(x, y, width, height)
+
+  await promisify(image.write).call(image, outputFilePath)
+}
+
+export default async responses => {
+  const buffer = await streamToBuffer(render(responses))
+
   const tmpFilePath = (await tmp.tmpName()) + '.png'
 
-  image = image.crop(
-    (wOrig - wCropped) / 2 - lrBorder,
-    0,
-    wCropped + lrBorder * 2,
-    hCropped + bottomBorder,
-  )
+  await crop(buffer, tmpFilePath)
 
-  await promisify(image.write).call(image, tmpFilePath) // TODO: remove this file up after everything is done?
-
+  // TODO: remove this file up after everything is done?
   return fs.createReadStream(tmpFilePath)
 }

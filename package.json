@@ -40,7 +40,6 @@
     "bower": "^1.8.0",
     "caminte": "^0.3.6",
     "cookie-session": "^2.0.0-beta.2",
-    "escape-html": "^1.0.3",
     "express-async-router": "^0.1.12",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
