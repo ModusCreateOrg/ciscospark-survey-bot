@@ -7,6 +7,14 @@ import streamToArray from 'stream-to-array'
 import stringStream from 'string-to-stream'
 import { Readable } from 'stream'
 
+
+export const bufferSourcedStream = buffer => {
+  const readable = new Readable()
+  readable.push(buffer)
+  readable.push(null)
+  return readable
+}
+
 export default async responses => {
   const renderPhantom = phantom()
 
@@ -32,8 +40,7 @@ export default async responses => {
     height: 500,
   }))
 
-  const parts = await streamToArray(stream)
-  const buffer = Buffer.concat(parts.map(part => isBuffer(part) ? part : Buffer.from(part)))
+  const buffer = Buffer.concat(await streamToArray(stream))
 
   let image = await Jimp.read(buffer)
   const autocropped = image.clone().autocrop()
@@ -49,7 +56,7 @@ export default async responses => {
     hCropped + bottomBorder,
   )
 
-  const croppedBuffer = await promisify(image.getBuffer).call(image, 'image/bmp')
+  const croppedBuffer = await promisify(image.getBuffer).call(image, 'image/png')
 
-  return croppedBuffer
+  return bufferSourcedStream(croppedBuffer)
 }

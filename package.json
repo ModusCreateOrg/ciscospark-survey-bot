@@ -75,6 +75,7 @@
     "eslint-plugin-class-property": "^1.0.6",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
+    "file-type": "^6.1.0",
     "sinon": "^2.3.6"
   },
   "ava": {

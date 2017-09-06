@@ -1,5 +1,6 @@
 import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
+import streamToArray from 'stream-to-array'
 
 import Actions from './Actions'
 import surveyAsCSV from './surveyAsCSV'
@@ -89,11 +90,11 @@ export default (controller, bot, io) => {
     const survey = await renderSurveyAsJSON(req)
     const responses = survey.questions[req.params.questionIdx].responsesByChoice
 
-    const croppedBuffer = await renderChart(responses)
+    const stream = await renderChart(responses)
+    const [buffer, ...rest] = await streamToArray(stream)
 
-    res.writeHead(200, { 'Content-Type': 'image/bmp' })
-
-    res.write(croppedBuffer,'binary');
+    res.writeHead(200, { 'Content-Type': 'image/png' })
+    res.write(buffer,'binary');
     res.end(null, 'binary');
   })
 
