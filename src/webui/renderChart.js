@@ -5,8 +5,11 @@ import phantom from 'phantom-render-stream'
 import promisify from 'promisify-node'
 import streamToArray from 'stream-to-array'
 import stringStream from 'string-to-stream'
+import tmp from 'tmp'
 import { Readable } from 'stream'
+import fs from 'fs'
 
+promisify(tmp)
 
 export const bufferSourcedStream = buffer => {
   const readable = new Readable()
@@ -49,6 +52,9 @@ export default async responses => {
 
   const lrBorder = 20
   const bottomBorder = 30
+
+  const tmpFilePath = (await tmp.tmpName()) + '.png'
+
   image = image.crop(
     (wOrig - wCropped) / 2 - lrBorder,
     0,
@@ -56,7 +62,7 @@ export default async responses => {
     hCropped + bottomBorder,
   )
 
-  const croppedBuffer = await promisify(image.getBuffer).call(image, 'image/png')
+  await promisify(image.write).call(image, tmpFilePath) // TODO: remove this file up after everything is done?
 
-  return bufferSourcedStream(croppedBuffer)
+  return fs.createReadStream(tmpFilePath)
 }

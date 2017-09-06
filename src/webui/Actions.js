@@ -4,6 +4,8 @@ import redisUrl from 'redis-url'
 import uuid from 'uuid/v4'
 import map from 'lodash/map'
 
+import renderChart from './renderChart'
+
 const redisOptions = () => {
   const {
     port,
@@ -139,5 +141,6 @@ export default class {
 
   listRoomMembers = roomId => this.sparkUser.listRoomMembers(roomId)
 
-  shareResults = surveyAsJSON => this.sparkBot.shareResults(surveyAsJSON)
+  shareResults = surveyAsJSON =>
+    this.sparkBot.shareResults(surveyAsJSON, renderChart)
 }
