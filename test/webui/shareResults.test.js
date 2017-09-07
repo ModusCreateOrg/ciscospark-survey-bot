@@ -4,7 +4,6 @@ import sinon from 'sinon'
 import shareResults from '../../src/webui/shareResults'
 
 test('sharing survey results results with a space', async t => {
-
   const surveyAsJSON = {
     title: 'Lunch options',
     description: 'the description',
