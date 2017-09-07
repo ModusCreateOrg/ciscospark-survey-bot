@@ -1,4 +1,5 @@
 import u from './helpers/unindent'
+import markdownQuote from './helpers/markdownQuote'
 
 const formatQuestion = (text, idx, total) => u(`
   **Question ${idx} of ${total}**
@@ -41,14 +42,23 @@ const addMultipleChoiceQuestion = (convo, questionText, {choices}, recordAnswer)
   })
 }
 
-const introText = ({surveyorName, surveyTitle}) => `
-  **${surveyTitle}**
+const introText = ({surveyorName, title, description}) => {
+  let text = `
+    **${title}**
 
-  Hi! I'm your friendly neighborhood survey bot.  ${surveyorName} asked me to give you this survey titled *${surveyTitle}*. Thanks in advance for participating!
+    Hi! I'm your friendly neighborhood survey bot.  ${surveyorName} asked me to give you this survey titled *${title}*. Thanks in advance for participating!
+  `
+  if (description) {
+    text += `
+      About this survey:
 
-  ––––––––––––––––––––––––––––––––––––––––––––––––––––
+      ${markdownQuote(description || '')}
 
-`
+      ---
+    `
+  }
+  return text
+}
 
 export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordCompletion }) => {
   const messageBase = { user: personEmail, channel: roomForSurvey.id }
@@ -66,7 +76,8 @@ export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordC
         // Combine intro and first question because separate messages don't format as well
         questionText += introText({
           surveyorName: 'Someone',
-          surveyTitle: survey.data.title
+          title: survey.data.title,
+          description: survey.data.description
         })
       }
 
