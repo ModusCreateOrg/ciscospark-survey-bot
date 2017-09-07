@@ -5,10 +5,9 @@ import setupBot from '../helpers/setupBot'
 import calledAsync from '../helpers/calledAsync'
 
 test.beforeEach(setupBot)
-test.beforeEach(({ context }) => { context.user = context.bot.createUser() })
 
 test('sharing survey results results with a space', async t => {
-  const { bot, controller, user } = t.context
+  const { controller } = t.context
 
   const surveyAsJSON = {
     title: 'Lunch options',
