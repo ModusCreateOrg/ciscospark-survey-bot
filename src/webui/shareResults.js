@@ -1,5 +1,5 @@
-import u from './helpers/unindent'
-import markdownQuote from './helpers/markdownQuote'
+import u from '../handlers/helpers/unindent'
+import markdownQuote from '../handlers/helpers/markdownQuote'
 
 const shareResults = async ({ surveyAsJSON, postMessages, renderChartForResponses }) => {
   const questionsWithCharts = await Promise.all(
@@ -53,7 +53,7 @@ const shareResults = async ({ surveyAsJSON, postMessages, renderChartForResponse
     }
   }
 
-  postMessages(messages)
+  await postMessages(messages)
 }
 
 export default shareResults

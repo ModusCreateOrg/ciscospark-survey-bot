@@ -83,7 +83,7 @@ export default (controller, bot, io) => {
   })
 
   router.post('/surveys/:id/share', async (req, res) => {
-    req.actions.shareResults(await renderSurveyAsJSON(req), req.body.roomId)
+    await req.actions.shareResults(await renderSurveyAsJSON(req), req.body.roomId)
     res.json({ result: 'success' })
   })
 

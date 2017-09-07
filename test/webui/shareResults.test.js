@@ -1,13 +1,9 @@
 import test from 'ava'
 import sinon from 'sinon'
 
-import setupBot from '../helpers/setupBot'
-import calledAsync from '../helpers/calledAsync'
-
-test.beforeEach(setupBot)
+import shareResults from '../../src/webui/shareResults'
 
 test('sharing survey results results with a space', async t => {
-  const { controller } = t.context
 
   const surveyAsJSON = {
     title: 'Lunch options',
@@ -47,13 +43,7 @@ test('sharing survey results results with a space', async t => {
 
   const postMessages = sinon.stub()
 
-  controller.trigger(
-    'share_results',
-    [{ surveyAsJSON, postMessages, renderChartForResponses }]
-  )
-
-  // We can't `await controller.trigger` because it doesn't pass on the return values of the functions it triggers.
-  await calledAsync(postMessages)
+  await shareResults({ surveyAsJSON, postMessages, renderChartForResponses })
 
   t.true(postMessages.calledOnce)
   const [title, question1, question1Image, question2, ...rest] = postMessages.firstCall.args[0]
