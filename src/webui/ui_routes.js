@@ -42,7 +42,6 @@ export default (controller, bot, io) => {
   })
 
   router.get('/surveys/new', async (req, res) => {
-    res.locals.rooms = await req.actions.listRooms()
     res.render('new')
   })
 
