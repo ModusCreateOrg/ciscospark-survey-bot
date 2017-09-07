@@ -11,7 +11,7 @@ const router = AsyncRouter()
 import renderChart from './renderChart'
 
 // Needs to be async because we are using AsyncRouter
-const ensureLoggedIn = (loginPath) => async (req, res, next) => {
+const ensureLoggedIn = loginPath => async (req, res, next) => {
   if (!req.user) {
     res.redirect(loginPath)
     res.end()
@@ -47,10 +47,7 @@ export default (controller, bot, io) => {
   })
 
   router.get('/surveys/:id/edit', async (req, res) => {
-    [ res.locals.rooms, res.locals.survey ] = await Promise.all([
-      req.actions.listRooms(),
-      req.actions.getSurvey(req.params.id)
-    ])
+    res.locals.survey = await req.actions.getSurvey(req.params.id)
     res.render('edit')
   })
 
@@ -79,6 +76,10 @@ export default (controller, bot, io) => {
   router.get('/surveys/:id', async (req, res) => {
     res.locals.survey = await req.actions.getSurvey(req.params.id)
     res.render('show')
+  })
+
+  router.get('/rooms', async (req, res) => {
+    res.json(await req.actions.listRooms())
   })
 
   router.post('/surveys/:id/share', async (req, res) => {

@@ -1,5 +1,5 @@
 /* eslint-env browser */
-/* global $ Vue Awesomplete fetchJSON */
+/* global $ Vue fetchJSON */
 
 (function () {
   const questionTypes = ['text', 'multi']
@@ -25,7 +25,6 @@
 
   const selector = '#survey-form'
   const surveyData = $(selector).data('survey') || { data: newSurvey() }
-  const roomData = $(selector).data('rooms')
 
   const save = ({id, survey}) => {
     const [ method, path ] = id ? ['put', `/surveys/${id}`] : ['post', '/surveys']
@@ -40,7 +39,6 @@
       questionTypes,
       id: surveyData.id,
       survey: surveyData.data,
-      rooms: roomData,
       isConducting: false,
       questionSortOptions: {
         handle: '.question-sort-handle'
@@ -50,21 +48,6 @@
       },
       emailAddresses: [],
       emailAddressesText: ''
-    },
-    mounted: function () {
-      const list = this.rooms.map(({id, title, teamName}) => {
-        const label = teamName
-          ? `${teamName} / ${title}`
-          : title
-
-        return { label, value: id }
-      })
-
-      new Awesomplete(this.$refs.roomsInput, { // eslint-disable-line no-new
-        list,
-        minChars: 0,
-        maxItems: 20
-      })
     },
     methods: {
       addQuestion: function () {
@@ -106,16 +89,6 @@
         this.isConducting = true
         await conduct(survey)
         window.location = `/surveys/${survey.id}`
-      },
-      _setRoom: function (room) {
-        this.survey.room = {}
-        setTimeout(() => { this.survey.room = room }, 0)
-      },
-      roomSelected: function ({text: {value, label}}) {
-        this._setRoom({title: label, id: value})
-      },
-      roomSelectionCancel: function (event) {
-        this._setRoom(this.survey.room)
       },
 
       // HACK: reorder them, because vue.draggable isn't doing it itself

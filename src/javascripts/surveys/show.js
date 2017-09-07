@@ -13,14 +13,14 @@
     data: {
       id: surveyId,
       survey: {},
+      shareWithRoom: {},
       sharingStatus: 'unshared'
     },
     methods: {
       jsonify: str => JSON.parse(JSON.stringify(str)),
       shareResults: function () {
         this.sharingStatus = 'sharing'
-        console.log(this.survey)
-        fetchJSON('POST', `/surveys/${surveyId}/share`, { roomId: this.survey.room.id })
+        fetchJSON('POST', `/surveys/${surveyId}/share`, { roomId: this.shareWithRoom.id })
           .then(() => { this.sharingStatus = 'shared' })
       }
     }

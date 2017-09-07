@@ -21,19 +21,24 @@ block content
       |  |
       a(target='_blank' :href='`/surveys/${id}/${survey.title}.json?download=1`')  JSON
 
-    p(v-if="survey.whoType === 'space'")
-      .button.small.secondary.share(@click="shareResults")
-        | Share results with {{survey.room && survey.room.title}}
-        span.share-status
-          template(v-if="sharingStatus === 'sharing'")
-            |  ⋯
-          template(v-if="sharingStatus === 'shared'")
-            |  ✔
-
-
     p {{survey.description}}
 
     .content
+      form.row(@submit.prevent="shareResults")
+        .columns.medium-6
+          label
+            | Share results with:
+            room-selector(v-model="shareWithRoom" source="/rooms" required)
+        .columns.medium-6
+          label &nbsp;
+          button.button.small.secondary.share(:disabled="sharingStatus === 'sharing'")
+            | Share
+            span.share-status
+              template(v-if="sharingStatus === 'sharing'")
+                |  ⋯
+              template(v-if="sharingStatus === 'shared'")
+                |  ✔
+
       .questions(v-for="question, index in survey.questions")
         .question__title {{index+1}}. {{question.text}}
 
@@ -69,3 +74,7 @@ block content
 
   script(src='/bower/socket.io-client/dist/socket.io.slim.js')
   script(src='/static/javascripts/surveys/show.js')
+
+  link(href="/bower/awesomplete/awesomplete.css" rel="stylesheet")
+  script(src='/bower/awesomplete/awesomplete.min.js')
+  script(src='/static/javascripts/roomSelector.js')
