@@ -74,6 +74,5 @@ export default async responses => {
 
   await crop(buffer, tmpFilePath)
 
-  // TODO: remove this file up after everything is done?
   return fs.createReadStream(tmpFilePath)
 }

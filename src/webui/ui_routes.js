@@ -86,7 +86,6 @@ export default (controller, bot, io) => {
     res.json({ result: 'success' })
   })
 
-  // TODO: should only be available in dev/test mode
   router.get('/surveys/:id/chart/:questionIdx.png', async (req, res) => {
     const survey = await renderSurveyAsJSON(req)
     const responses = survey.questions[req.params.questionIdx].responsesByChoice
