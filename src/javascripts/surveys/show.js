@@ -19,9 +19,9 @@
       jsonify: str => JSON.parse(JSON.stringify(str)),
       shareResults: function () {
         this.sharingStatus = 'sharing'
-        fetchJSON('POST', `/surveys/${surveyId}/share`).then(() => {
-          this.sharingStatus = 'shared'
-        })
+        console.log(this.survey)
+        fetchJSON('POST', `/surveys/${surveyId}/share`, { roomId: this.survey.room.id })
+          .then(() => { this.sharingStatus = 'shared' })
       }
     }
   })

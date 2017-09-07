@@ -26,10 +26,17 @@ export default class {
     }])
   }
 
-  shareResults = (surveyAsJSON, renderChartForResponses) => {
-    this.controller.trigger('share_results', [this.bot, {
+  async postMessages (messages, roomId) {
+    for (const message of messages) {
+      await this.controller.api.messages.create({ roomId, ...message })
+    }
+  }
+
+  shareResults (surveyAsJSON, renderChartForResponses, roomId) {
+    this.controller.trigger('share_results', [{
       surveyAsJSON,
-      renderChartForResponses
+      renderChartForResponses,
+      postMessages: messages => this.postMessages(messages, roomId)
     }])
   }
 }
