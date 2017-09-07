@@ -45,6 +45,7 @@ export default class {
     return uniqBy(teamRooms.concat(nonTeamRooms), 'id')
   }
 
+  // requires scope spark:messages_write
   async postMessages (messages, roomId) {
     const spark = this._sparkClient()
     for (const message of messages) {

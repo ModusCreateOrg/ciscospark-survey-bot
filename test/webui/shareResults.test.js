@@ -41,12 +41,13 @@ test('sharing survey results results with a space', async t => {
   const mockQuestion1Image = { the: 'image' }
   renderChartForResponses.resolves(mockQuestion1Image)
 
-  const postMessages = sinon.stub()
-
-  await shareResults({ surveyAsJSON, postMessages, renderChartForResponses })
-
-  t.true(postMessages.calledOnce)
-  const [title, question1, question1Image, question2, ...rest] = postMessages.firstCall.args[0]
+  const [
+    title,
+    question1,
+    question1Image,
+    question2,
+    ...rest
+  ] = await shareResults({ surveyAsJSON, renderChartForResponses })
 
   t.regex(title.markdown, /Lunch options/)
   t.regex(title.markdown, /the description/)

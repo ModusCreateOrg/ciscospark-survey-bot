@@ -53,7 +53,7 @@ const shareResults = async ({ surveyAsJSON, postMessages, renderChartForResponse
     }
   }
 
-  await postMessages(messages)
+  return messages
 }
 
 export default shareResults

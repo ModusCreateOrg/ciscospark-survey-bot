@@ -142,10 +142,8 @@ export default class {
 
   listRoomMembers = roomId => this.sparkUser.listRoomMembers(roomId)
 
-  shareResults = (surveyAsJSON, roomId) =>
-    shareResultsFn({
-      surveyAsJSON,
-      renderChartForResponses: renderChart,
-      postMessages: messages => this.sparkUser.postMessages(messages, roomId)
-    })
+  async shareResults (surveyAsJSON, roomId) {
+    const messages = await shareResultsFn({ surveyAsJSON, renderChartForResponses: renderChart })
+    await this.sparkUser.postMessages(messages, roomId)
+  }
 }
