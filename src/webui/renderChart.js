@@ -8,9 +8,7 @@ import tmp from 'tmp'
 
 promisify(tmp)
 
-const render = responses => {
-  const renderPhantom = phantom()
-
+const render = (responses, renderPhantom) => {
   const scripts = [
     'bower_components/chart.js/dist/Chart.bundle.min.js',
     'bower_components/chartkick/chartkick.js'
@@ -61,8 +59,16 @@ const crop = async (imageBuffer, outputFilePath) => {
   await promisify(image.write).call(image, outputFilePath)
 }
 
+let phantomPool = null
+const lazyPhantomPool = () => {
+  if (!phantomPool) {
+    phantomPool = phantom()
+  }
+  return phantomPool
+}
+
 export default async responses => {
-  const buffer = await streamToBuffer(render(responses))
+  const buffer = await streamToBuffer(render(responses, lazyPhantomPool()))
 
   const tmpFilePath = (await tmp.tmpName()) + '.png'
 

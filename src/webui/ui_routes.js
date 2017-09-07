@@ -32,7 +32,7 @@ export default (controller, bot, io) => {
   router.use(ensureLoggedIn('/auth/login'))
 
   router.use(async (req, res, next) => {
-    req.actions = new Actions(req.user, controller, bot, io)
+    req.actions = new Actions({ user: req.user, controller, bot, io })
     next()
   })
 

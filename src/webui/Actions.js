@@ -57,7 +57,7 @@ import SparkUser from './SparkUser'
 import SparkBot from './SparkBot'
 
 export default class {
-  constructor (user, controller, bot, io) {
+  constructor ({ user, controller, bot, io }) {
     this.userId = user.profile.id
     this.sparkBot = new SparkBot(controller, bot)
 
@@ -143,7 +143,10 @@ export default class {
   listRoomMembers = roomId => this.sparkUser.listRoomMembers(roomId)
 
   async shareResults (surveyAsJSON, roomId) {
-    const messages = await shareResultsFn({ surveyAsJSON, renderChartForResponses: renderChart })
+    const messages = await shareResultsFn({
+      surveyAsJSON,
+      renderChartForResponses: renderChart
+    })
     await this.sparkUser.postMessages(messages, roomId)
   }
 }
