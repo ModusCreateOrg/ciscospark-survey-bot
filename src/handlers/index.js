@@ -1,5 +1,5 @@
-import doSurvey from './doSurvey'
+import conductSurvey from './conductSurvey'
 
 export default {
-  doSurvey
+  conductSurvey
 }

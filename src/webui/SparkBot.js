@@ -14,7 +14,7 @@ export default class {
       personEmail
     })
 
-    this.controller.trigger('survey_started', [this.bot, {
+    this.controller.trigger('conduct_survey', [this.bot, {
       roomForSurvey,
       personEmail,
       survey,
