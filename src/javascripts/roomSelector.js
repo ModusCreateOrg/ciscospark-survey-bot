@@ -39,8 +39,10 @@
         setTimeout(() => { this._emitRoom(room) }, 0)
       },
       roomSelected: function ({text: {value, label}}) {
-        $(this.$refs.input).trigger('blur')
-        this._setRoom({title: label, id: value})
+        setTimeout(() => {
+          $(this.$refs.input).trigger('blur')
+          this._setRoom({title: label, id: value})
+        }, 100) // Otherwise, Awesomplete keeps it selected
       },
       roomSelectionCancel: function (event) {
         this._setRoom(this.room)
