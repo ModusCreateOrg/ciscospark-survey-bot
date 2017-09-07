@@ -4,6 +4,9 @@ import redisUrl from 'redis-url'
 import uuid from 'uuid/v4'
 import map from 'lodash/map'
 
+import renderChart from './renderChart'
+import shareResultsFn from './shareResults'
+
 const redisOptions = () => {
   const {
     port,
@@ -54,7 +57,7 @@ import SparkUser from './SparkUser'
 import SparkBot from './SparkBot'
 
 export default class {
-  constructor (user, controller, bot, io) {
+  constructor ({ user, controller, bot, io }) {
     this.userId = user.profile.id
     this.sparkBot = new SparkBot(controller, bot)
 
@@ -137,5 +140,13 @@ export default class {
 
   listRooms = () => this.sparkUser.listRooms()
 
-  listRoomMembers = (roomId) => this.sparkUser.listRoomMembers(roomId)
+  listRoomMembers = roomId => this.sparkUser.listRoomMembers(roomId)
+
+  async shareResults (surveyAsJSON, roomId) {
+    const messages = await shareResultsFn({
+      surveyAsJSON,
+      renderChartForResponses: renderChart
+    })
+    await this.sparkUser.postMessages(messages, roomId)
+  }
 }

@@ -1,5 +1,5 @@
 mixin form(survey)
-  form#survey-form(data-survey=JSON.stringify(survey) data-rooms=JSON.stringify(rooms))
+  form#survey-form(data-survey=JSON.stringify(survey))
     .row
       .survey-title.columns.medium-12
         label Survey title
@@ -13,9 +13,9 @@ mixin form(survey)
 
       .survey-who.columns.medium-8
         // use `v-show` because awesomplete doesn't work with `v-if`
-        label(v-show="who('space')") Space
-          input.rooms(type="text" :value="survey.room.title" :required="who('space')" @awesomplete-select="roomSelected" @blur="roomSelectionCancel" ref="roomsInput" placeholder="Enter space name" name="")
-        label(v-show="who('email')") Email Addresses
+        label(v-if="who('space')" key='space') Space
+          room-selector.rooms(v-model="survey.room" :required="who('space')" source="/rooms")
+        label(v-if="who('email')" key='email') Email Addresses
           input.emails(type="text" v-model="survey.emailAddressesText" :required="who('email')" placeholder="Enter email addresses" @blur="parseEmailAddresses")
 
     .survey-description
@@ -89,3 +89,5 @@ mixin form(survey)
   script(src='/bower/Sortable/Sortable.min.js')
   script(src='/bower/vue.draggable/dist/vuedraggable.min.js')
   script(src='/bower/addressparser/src/emailjs-addressparser.js')
+
+  script(src='/static/javascripts/roomSelector.js')

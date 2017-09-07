@@ -24,6 +24,21 @@ block content
     p {{survey.description}}
 
     .content
+      form.row(@submit.prevent="shareResults")
+        .columns.medium-6
+          label
+            | Share results with:
+            room-selector(v-model="shareWithRoom" source="/rooms" required)
+        .columns.medium-6
+          label &nbsp;
+          button.button.small.secondary.share(:disabled="sharingStatus === 'sharing'")
+            | Share
+            span.share-status
+              template(v-if="sharingStatus === 'sharing'")
+                |  ⋯
+              template(v-if="sharingStatus === 'shared'")
+                |  ✔
+
       .questions(v-for="question, index in survey.questions")
         .question__title {{index+1}}. {{question.text}}
 
@@ -33,14 +48,14 @@ block content
               .question__subtitle
                 | Results
                 em  ({{question.responses.length}} responses)
-              .question__choice(v-for="[choice, _, choiceResponses] in responsesByChoice(question)")
+              .question__choice(v-for="[choice, _, choiceResponses] in question.responsesByChoice")
                 | {{choice}}
                 span.label  {{choiceResponses.length}}
-                .question__person(v-for="{ surveyTakerEmail } in choiceResponses")
+                .question__person(v-for="surveyTakerEmail in choiceResponses")
                   | {{survey.surveyTakers[surveyTakerEmail].name}}
             .columns.medium-6
-              .question__chart(v-if="question.responses.length")
-                pie-chart(:data="responsesByChoice(question)" legend="bottom" donut="true")
+              .question__chart(v-if="question.responsesByChoice.length")
+                pie-chart(:data="jsonify(question.responsesByChoice)" legend="bottom" donut="true")
 
         .responses(v-if="question.type === 'text'")
           .row: .columns.medium-12: .question__answers
@@ -59,3 +74,7 @@ block content
 
   script(src='/bower/socket.io-client/dist/socket.io.slim.js')
   script(src='/static/javascripts/surveys/show.js')
+
+  link(href="/bower/awesomplete/awesomplete.css" rel="stylesheet")
+  script(src='/bower/awesomplete/awesomplete.min.js')
+  script(src='/static/javascripts/roomSelector.js')

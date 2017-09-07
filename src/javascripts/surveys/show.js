@@ -12,14 +12,16 @@
     el: selector,
     data: {
       id: surveyId,
-      survey: {}
+      survey: {},
+      shareWithRoom: {},
+      sharingStatus: 'unshared'
     },
     methods: {
-      responsesByChoice: function ({choices, responses}) {
-        return choices.map(choice => {
-          const choiceResponses = responses.filter(({text}) => text === choice)
-          return [choice, choiceResponses.length, choiceResponses]
-        })
+      jsonify: str => JSON.parse(JSON.stringify(str)),
+      shareResults: function () {
+        this.sharingStatus = 'sharing'
+        fetchJSON('POST', `/surveys/${surveyId}/share`, { roomId: this.shareWithRoom.id })
+          .then(() => { this.sharingStatus = 'shared' })
       }
     }
   })

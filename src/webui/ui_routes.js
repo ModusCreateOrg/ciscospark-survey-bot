@@ -1,13 +1,17 @@
 import { AsyncRouter } from 'express-async-router'
 import groupBy from 'lodash/groupBy'
+import streamToArray from 'stream-to-array'
+
 import Actions from './Actions'
 import surveyAsCSV from './surveyAsCSV'
 import surveyAsJSON from './surveyAsJSON'
 
 const router = AsyncRouter()
 
+import renderChart from './renderChart'
+
 // Needs to be async because we are using AsyncRouter
-const ensureLoggedIn = (loginPath) => async (req, res, next) => {
+const ensureLoggedIn = loginPath => async (req, res, next) => {
   if (!req.user) {
     res.redirect(loginPath)
     res.end()
@@ -28,7 +32,7 @@ export default (controller, bot, io) => {
   router.use(ensureLoggedIn('/auth/login'))
 
   router.use(async (req, res, next) => {
-    req.actions = new Actions(req.user, controller, bot, io)
+    req.actions = new Actions({ user: req.user, controller, bot, io })
     next()
   })
 
@@ -38,15 +42,11 @@ export default (controller, bot, io) => {
   })
 
   router.get('/surveys/new', async (req, res) => {
-    res.locals.rooms = await req.actions.listRooms()
     res.render('new')
   })
 
   router.get('/surveys/:id/edit', async (req, res) => {
-    [ res.locals.rooms, res.locals.survey ] = await Promise.all([
-      req.actions.listRooms(),
-      req.actions.getSurvey(req.params.id)
-    ])
+    res.locals.survey = await req.actions.getSurvey(req.params.id)
     res.render('edit')
   })
 
@@ -75,6 +75,27 @@ export default (controller, bot, io) => {
   router.get('/surveys/:id', async (req, res) => {
     res.locals.survey = await req.actions.getSurvey(req.params.id)
     res.render('show')
+  })
+
+  router.get('/rooms', async (req, res) => {
+    res.json(await req.actions.listRooms())
+  })
+
+  router.post('/surveys/:id/share', async (req, res) => {
+    await req.actions.shareResults(await renderSurveyAsJSON(req), req.body.roomId)
+    res.json({ result: 'success' })
+  })
+
+  router.get('/surveys/:id/chart/:questionIdx.png', async (req, res) => {
+    const survey = await renderSurveyAsJSON(req)
+    const responses = survey.questions[req.params.questionIdx].responsesByChoice
+
+    const stream = await renderChart(responses)
+    const [buffer] = await streamToArray(stream)
+
+    res.writeHead(200, { 'Content-Type': 'image/png' })
+    res.write(buffer, 'binary')
+    res.end(null, 'binary')
   })
 
   router.post('/surveys', async (req, res) => {

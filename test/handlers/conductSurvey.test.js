@@ -21,7 +21,7 @@ test('bot gives a survey', async t => {
   const recordCompletion = sinon.stub()
 
   controller.trigger(
-    'survey_started',
+    'conduct_survey',
     [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
@@ -65,7 +65,7 @@ test('bot gives a survey with mulitple choice question', async t => {
   const recordCompletion = sinon.stub()
 
   controller.trigger(
-    'survey_started',
+    'conduct_survey',
     [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
@@ -109,7 +109,7 @@ test('bot requires number of mutiple choice answer', async t => {
   const recordCompletion = sinon.stub()
 
   controller.trigger(
-    'survey_started',
+    'conduct_survey',
     [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 

@@ -1,3 +1,3 @@
 export default (controller, handlers) => {
-  controller.on('survey_started', handlers.doSurvey)
+  controller.on('conduct_survey', handlers.conductSurvey)
 }
