@@ -55,9 +55,10 @@ const introText = ({surveyorName, title, description}) => {
       ${markdownQuote(description || '')}
 
       ---
+
     `
   }
-  return text
+  return u(text)
 }
 
 export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordCompletion }) => {
