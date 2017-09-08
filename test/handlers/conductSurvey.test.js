@@ -167,7 +167,6 @@ test('descriptions', async t => {
   t.regex(titleWithDescription.text, /About/)
   t.regex(titleWithDescription.text, /The Description/)
 
-
   trigger({
     data: {
       questions: [{ text: 'eh?', type: 'text', id: 1 }]
