@@ -2,15 +2,4 @@ extends layout.pug
 include _form.pug
 
 block content
-
-  nav(aria-label="You are here:" role="navigation")
-    ul.breadcrumbs
-      li
-        a(href="/") Dashboard
-      li
-        span Create New Survey
-
-  h2 New Survey
-
-  .content
-    +form
+  +form(survey, 'New Survey')
