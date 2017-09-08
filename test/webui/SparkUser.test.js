@@ -4,10 +4,17 @@ import every from 'lodash/every'
 import keyBy from 'lodash/keyBy'
 import map from 'lodash/map'
 import uniq from 'lodash/uniq'
+import shuffle from 'lodash/shuffle'
+import sortBy from 'lodash/sortBy'
+import sinon from 'sinon'
 
 import SparkUser from '../../src/webui/SparkUser'
 
+// For an actual account we set up for use with this test suite
 const SPARK_USER_ACCESS_TOKEN = 'Y2Q0MjNiNDMtODMyNi00ZDE2LTgwNTktY2ZlNDVjMWQ1ZWIxOWY3OWJkMTctYTI4'
+
+// Fake -- no real account like this exists
+const SPARK_BOT_EMAIL = 'survey-bot@example.com'
 
 const ROOMS = {
   teamGeneral: 'Y2lzY29zcGFyazovL3VzL1JPT00vNDcwY2ExNTAtOTA0Ni0xMWU3LWJmM2YtNzE1MzJmMTVhODBh',
@@ -16,7 +23,10 @@ const ROOMS = {
 }
 
 test.beforeEach(({ context }) => {
-  context.sparkUser = new SparkUser({ accessToken: SPARK_USER_ACCESS_TOKEN })
+  context.sparkUser = new SparkUser(
+    { accessToken: SPARK_USER_ACCESS_TOKEN },
+    [SPARK_BOT_EMAIL]
+  )
 })
 
 test('listRooms gets all the rooms the user is in, or is in their team', async t => {
@@ -53,4 +63,33 @@ test("listRoomMembers for room that user is in but not a member of the team's ro
 
 test("listRoomMembers for room that user is not a member of but is a member of the room's team", async t => {
   await assertSeesMembers(t, ROOMS.inTeamButUserNotInRoom)
+})
+
+test('listRoomMembers ignores bots and the survey bot user', async t => {
+  const { sparkUser } = t.context
+  const roomId = ROOMS.withUsersToIgnore
+
+  const membersToFilter = [
+    { personEmail: 'bot1@sparkbot.io' },                  // *@sparkbot.io
+    { personEmail: 'bob2@sparkbot.io' },                  //
+    { personEmail: SPARK_BOT_EMAIL },                     // email of the survey bot
+    { personEmail: 'spark-cisco-it-admin-bot@cisco.com' } // this email specifically
+  ]
+
+  const membersToAllow = [
+    { personEmail: 'bob@thepriceisright.tv' },
+    { personEmail: 'otherperson@cisco.com' }
+  ]
+
+  sparkUser._list = sinon.stub().resolves(
+    shuffle(membersToFilter.concat(membersToAllow))
+  )
+
+  const members = await sparkUser.listRoomMembers(roomId)
+
+  t.true(sparkUser._list.calledWith('memberships', { roomId }))
+  t.deepEqual(
+    sortBy(members, 'personEmail'),
+    sortBy(membersToAllow, 'personEmail')
+  )
 })

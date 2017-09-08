@@ -62,7 +62,8 @@ export default class {
     this.sparkBot = new SparkBot(controller, bot)
 
     const SparkUserClass = user.isLocal ? DummySparkUser : SparkUser
-    this.sparkUser = new SparkUserClass(user)
+
+    this.sparkUser = new SparkUserClass(user, controller.identity.emails)
 
     this.io = io
   }
@@ -113,9 +114,8 @@ export default class {
     return await this.getSurvey(id)
   }
 
-  async conductSurvey (id) {
-    const survey = await this.updateSurvey(id, { state: 'active' })
-    const roomMembers = survey.data.whoType === 'space'
+  _roomMembersForSurvey = async survey =>
+    survey.data.whoType === 'space'
       ? await this.listRoomMembers(survey.data.room.id)
       : survey.data.emailAddresses.map(({name, address}) => ({
         id: address,
@@ -123,8 +123,11 @@ export default class {
         personDisplayName: name || address
       }))
 
-    // Not async because Spark API client can't handle multiple async requests
-    for (const sparkUser of roomMembers) {
+  async conductSurvey (id) {
+    const survey = await this.updateSurvey(id, { state: 'active' })
+    const roomMembers = await this._roomMembersForSurvey(survey)
+
+    await Promise.all(roomMembers.map(async sparkUser => {
       const surveyTaker = await this.createSurveyTaker(sparkUser, survey.id)
       const { personEmail } = sparkUser
       await this.sparkBot.conductUserSurvey(
@@ -133,7 +136,7 @@ export default class {
         (...args) => this.saveSurveyResponse(...args, survey.token, surveyTaker.id),
         () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
       )
-    }
+    }))
 
     return survey
   }
