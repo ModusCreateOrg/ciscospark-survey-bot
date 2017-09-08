@@ -9,7 +9,6 @@ test('bot gives a survey', async t => {
   const { bot, controller, user } = t.context
 
   const survey = {
-    id: '143',
     data: {
       questions: [
         { text: 'What is your favorite color?', type: 'text', id: 1 },
@@ -25,11 +24,11 @@ test('bot gives a survey', async t => {
     [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
-  const firstQuestion = await bot.nextResponse()
-  t.is(firstQuestion.channel, user.channel)
-  t.regex(firstQuestion.text, /Hi!/)
-  t.regex(firstQuestion.text, /Question 1 of 2/)
-  t.regex(firstQuestion.text, /What is your favorite color\?/)
+  const introAndFirstQuestion = await bot.nextResponse()
+  t.is(introAndFirstQuestion.channel, user.channel)
+  t.regex(introAndFirstQuestion.text, /Hi!/)
+  t.regex(introAndFirstQuestion.text, /Question 1 of 2/)
+  t.regex(introAndFirstQuestion.text, /What is your favorite color\?/)
 
   const favoriteColor = 'blue'
   user.says(favoriteColor)
@@ -53,7 +52,6 @@ test('bot gives a survey with mulitple choice question', async t => {
   const { bot, controller, user } = t.context
 
   const survey = {
-    id: '143',
     data: {
       questions: [
         { text: 'What is your favorite color?', type: 'text', id: 1 },
@@ -69,9 +67,9 @@ test('bot gives a survey with mulitple choice question', async t => {
     [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
   )
 
-  const firstQuestion = await bot.nextResponse()
-  t.is(firstQuestion.channel, user.channel)
-  t.regex(firstQuestion.text, /What is your favorite color?/)
+  const introAndFirstQuestion = await bot.nextResponse()
+  t.is(introAndFirstQuestion.channel, user.channel)
+  t.regex(introAndFirstQuestion.text, /What is your favorite color?/)
 
   const favoriteColor = 'blue'
   user.says(favoriteColor)
@@ -98,7 +96,6 @@ test('bot requires number of mutiple choice answer', async t => {
   const { bot, controller, user } = t.context
 
   const survey = {
-    id: '147',
     data: {
       questions: [
         { text: 'Mac or PC?', type: 'multi', choices: [{ text: 'Mac' }, { text: 'PC' }], id: 1 }
@@ -144,4 +141,38 @@ test('bot requires number of mutiple choice answer', async t => {
 
   t.true(recordAnswer.calledWith(survey.data.questions[0].id, mac))
   t.true(recordCompletion.calledOnce)
+})
+
+test('descriptions', async t => {
+  const { bot, controller, user } = t.context
+
+  const trigger = survey => {
+    const recordAnswer = sinon.stub()
+    const recordCompletion = sinon.stub()
+
+    controller.trigger(
+      'conduct_survey',
+      [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
+    )
+  }
+
+  trigger({
+    data: {
+      description: 'The Description',
+      questions: [{ text: 'eh?', type: 'text', id: 1 }]
+    }
+  })
+
+  const titleWithDescription = await bot.nextResponse()
+  t.regex(titleWithDescription.text, /About/)
+  t.regex(titleWithDescription.text, /The Description/)
+
+  trigger({
+    data: {
+      questions: [{ text: 'eh?', type: 'text', id: 1 }]
+    }
+  })
+
+  const titleWithoutDescription = await bot.nextResponse()
+  t.falsy(titleWithoutDescription.text.match(/About/))
 })
