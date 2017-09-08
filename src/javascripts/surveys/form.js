@@ -47,7 +47,8 @@
         handle: '.choice-sort-handle'
       },
       emailAddresses: [],
-      emailAddressesText: ''
+      emailAddressesText: '',
+      kickMe: ''
     },
     methods: {
       addQuestion: function () {
@@ -108,12 +109,6 @@
       who: function (whoType) {
         return this.survey.whoType === whoType
       },
-      // HACK: Vue won't updated the text field when the model changes without this
-      _kickEmailAddressesField: function () {
-        const original = this.survey.description
-        this.survey.description += ' '
-        this.survey.description = original
-      },
       parseEmailAddresses: function () {
         this.survey.emailAddresses = window['emailjs-addressparser']
           .parse(this.survey.emailAddressesText.replace(/[\t\n]+/, ','))
@@ -122,15 +117,17 @@
         this.survey.emailAddressesText = this.survey.emailAddresses
           .map(({name, address}) => name ? `${name} <${address}>` : address)
           .join(', ')
-
-        this._kickEmailAddressesField()
       }
     }
   })
 
-  // HACK: kick vue.draggable
-  setTimeout(() => {
-    surveyForm.survey.questions.push(newQuestion())
-    surveyForm.survey.questions.pop()
-  }, 0)
+  window.survey = surveyForm
+
+  // HACK: kick all the things
+  // 👢 vue.draggable (othewise won't make things draggable)
+  // 👢 email address field (otherwise won't update when you move off of it)
+  // 👢 force the room selector to display
+  setInterval(() => {
+    surveyForm.kickMe += ' '
+  }, 300)
 })()
