@@ -3,6 +3,8 @@ import passport from 'passport'
 import CiscoSparkStrategy from 'passport-cisco-spark'
 import urlJoin from 'url-join'
 
+import scopes from './sparkScopes'
+
 const sparkOauthConfig = {
   clientID: process.env.SPARK_OAUTH__CLIENT_ID,
   clientSecret: process.env.SPARK_OAUTH__CLIENT_SECRET,
@@ -15,15 +17,7 @@ passport.use(new CiscoSparkStrategy(sparkOauthConfig, (accessToken, refreshToken
   done(null, { accessToken, refreshToken, profile })
 }))
 
-router.get('/', passport.authenticate('cisco-spark', {
-  scope: [
-    'spark:memberships_read', // required by SparkUser for knowing who is in a room
-    'spark:messages_write',   // required by SparkUser for sharing survey results
-    'spark:rooms_read',       // required by SparkUser for letting you choose a room to survey
-    'spark:teams_read',       // required by SparkUser for letting you choose a team room to survey
-    'spark:people_read'       // required by passport for fetching user info (name, avatar, etc...)
-  ]
-}))
+router.get('/', passport.authenticate('cisco-spark', { scope: scopes }))
 
 router.get('/callback', passport.authenticate('cisco-spark', {
   successRedirect: '/',

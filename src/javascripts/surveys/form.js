@@ -124,9 +124,9 @@
   window.survey = surveyForm
 
   // HACK: kick all the things
-  // 👢 vue.draggable (othewise won't make things draggable)
-  // 👢 email address field (otherwise won't update when you move off of it)
-  // 👢 force the room selector to display
+  // 👢💥 vue.draggable (othewise won't make things draggable)
+  // 👢💥 email address field (otherwise won't update when you move off of it)
+  // 👢💥 force the room selector to display
   setInterval(() => {
     surveyForm.kickMe += ' '
   }, 300)

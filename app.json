@@ -14,7 +14,8 @@
     },
     "SPARK_SECRET": {
       "description": "A secret for validating that incoming webhooks originate from Cisco Spark.",
-      "required": true
+      "required": true,
+      "generator": "secret"
     },
     "SPARK_OAUTH__CLIENT_ID": {
       "description": "The client id of the *integration* for this bot",
