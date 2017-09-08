@@ -18,7 +18,7 @@ export default (app, controller, bot) => {
   app.use(bodyParser.urlencoded())
   app.use(cookieSession({
     name: 'session',
-    keys: ['my secret key'], // TODO: put in .env.local
+    keys: [controller.config.secret],
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }))
   app.use(passport.initialize())
