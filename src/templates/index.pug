@@ -1,35 +1,23 @@
 extends layout.pug
 
+mixin list(surveys = [], title, urlFor)
+  if surveys.length
+    .surveys__header= title
+    ul.surveys__title
+      each survey in surveys
+        li
+          a.title(href=urlFor(survey))= survey.data.title
+          a.copy-survey(href=`/surveys/new?copy=${survey.id}`) copy
+
 block content
 
-  nav(aria-label="You are here:" role="navigation")
+  nav(aria-label='You are here:' role='navigation')
     ul.breadcrumbs
-      li
-        span Dashboard
+      li: span Dashboard
 
-  a.button.new(href="/surveys/new") + New Survey
+  a.button.new(href='/surveys/new') + New Survey
 
   .content
-    - var activeSurveys = surveys.active || []
-    if activeSurveys.length
-      .surveys__header Active Surveys
-      ul.surveys__title
-        each survey in activeSurveys
-          li(link-href=`/surveys/${survey.id}`)
-            a.title= survey.data.title
-
-    - var draftSurveys = surveys.draft || []
-    if draftSurveys.length
-      .surveys__header Draft Surveys
-      ul.surveys__title
-        each survey in draftSurveys
-          li(link-href=`/surveys/${survey.id}/edit`)
-            a.title= survey.data.title
-
-    - var completedSurveys = surveys.complete || []
-    if completedSurveys.length
-      .surveys__header Completed Surveys
-      ul.surveys__title
-        each survey in completedSurveys
-          li(link-href=`/surveys/${survey.id}`)
-            a.title= survey.data.title
+    +list(surveys.active,   'Active Surveys',    ({id}) => `/surveys/${id}`)
+    +list(surveys.draft,    'Draft Surveys',     ({id}) => `/surveys/${id}/edit`)
+    +list(surveys.complete, 'Completed Surveys', ({id}) => `/surveys/${id}`)

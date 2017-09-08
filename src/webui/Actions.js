@@ -155,4 +155,12 @@ export default class {
     })
     await this.sparkUser.postMessages(messages, roomId)
   }
+
+  async copySurvey (id) {
+    if (id) {
+      const survey = await this.getSurvey(id)
+      survey.id = undefined
+      return survey
+    }
+  }
 }

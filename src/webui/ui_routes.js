@@ -42,6 +42,7 @@ export default (controller, bot, io) => {
   })
 
   router.get('/surveys/new', async (req, res) => {
+    res.locals.survey = await req.actions.copySurvey(req.query.copy)
     res.render('new')
   })
 

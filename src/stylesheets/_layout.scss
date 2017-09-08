@@ -284,13 +284,29 @@ ul.breadcrumbs {
     padding-top: 4px;
     padding-bottom: 4px;
 
+    .copy-survey {
+      display: none;
+    }
+
     &:hover {
       background-color: #F6F6F6;
 
+      .copy-survey {
+        display: inline-block;
+      }
+    }
+
+    .copy-survey {
+      margin-left: 20px;
+      font-size: 90%;
+      color: silver;
+      &:hover {
+        color: gray;
+      }
     }
   }
 }
 
-div.awesomplete { // be more specific than the defaults
+div.awesomplete { // be more specific than the defaults to override them
   display: block;
 }

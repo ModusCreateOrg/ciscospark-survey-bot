@@ -1,85 +1,92 @@
-mixin form(survey)
-  form#survey-form(data-survey=JSON.stringify(survey))
-    .row
-      .survey-title.columns.medium-12
-        label Survey title
-          input(type='text' v-model.trim="survey.title" placeholder="Enter a title for your survey" required)
-    .row
-      .survey-who-type.columns.medium-4
-        label Who
-          select(v-model="survey.whoType")
-            option(value='space') Everyone in a Space
-            option(value='email') Email addresses
+mixin form(survey, title)
+  nav(aria-label='You are here:' role='navigation')
+    ul.breadcrumbs
+      li: a(href='/') Dashboard
+      li: span= title
 
-      .survey-who.columns.medium-8
-        // use `v-show` because awesomplete doesn't work with `v-if`
-        label(v-if="who('space')" key='space') Space
-          room-selector.rooms(v-model="survey.room" :required="who('space')" source="/rooms")
-        label(v-if="who('email')" key='email') Email Addresses
-          input.emails(type="text" v-model="survey.emailAddressesText" :required="who('email')" placeholder="Enter email addresses" @blur="parseEmailAddresses")
+  h2= title
+  .content
+    form#survey-form(data-survey=JSON.stringify(survey))
+      .row
+        .survey-title.columns.medium-12
+          label Survey title
+            input(type='text' v-model.trim="survey.title" placeholder="Enter a title for your survey" required)
+      .row
+        .survey-who-type.columns.medium-4
+          label Who
+            select(v-model="survey.whoType")
+              option(value='space') Everyone in a Space
+              option(value='email') Email addresses
 
-    .survey-description
-      label Description
-      textarea(v-model.trim="survey.description" placeholder="Describe your survey")
+        .survey-who.columns.medium-8
+          // use `v-show` because awesomplete doesn't work with `v-if`
+          label(v-if="who('space')" key='space') Space
+            room-selector.rooms(v-model="survey.room" :required="who('space')" source="/rooms")
+          label(v-if="who('email')" key='email') Email Addresses
+            input.emails(type="text" v-model="survey.emailAddressesText" :required="who('email')" placeholder="Enter email addresses" @blur="parseEmailAddresses")
 
-    h4 Questions
-    draggable.questions(v-model="survey.questions" element="ul" :options="questionSortOptions")
-      li.question(v-for="question, questionIdx in survey.questions")
-        .row
-          .columns.medium-7
-            label Question {{questionIdx+1}}:
-            input(type='text' v-model.trim="question.text" placeholder="Enter your question" required)
+      .survey-description
+        label Description
+        textarea(v-model.trim="survey.description" placeholder="Describe your survey")
 
-          .columns.medium-3
-            label Type:
-            select(v-model="question.type")
-              option(v-for="type in questionTypes") {{type}}
+      h4 Questions
+      draggable.questions(v-model="survey.questions" element="ul" :options="questionSortOptions")
+        li.question(v-for="question, questionIdx in survey.questions")
+          .row
+            .columns.medium-7
+              label Question {{questionIdx+1}}:
+              input(type='text' v-model.trim="question.text" placeholder="Enter your question" required)
 
-          .columns.medium-2
-              label &nbsp;
+            .columns.medium-3
+              label Type:
+              select(v-model="question.type")
+                option(v-for="type in questionTypes") {{type}}
 
-              span.hollow.button.small.question-sort-handle
-                |
-                i.fa.fa-bars
-              | &nbsp;
-              button.hollow.button.alert.small.remove-button(type="button" @click="removeQuestion(survey.questions, question, $event)")
-                |
-                i.fa.fa-close
+            .columns.medium-2
+                label &nbsp;
 
-        .multi-options(v-if="question.type === 'multi'")
-          template(v-if="choices = question.choices")
-            // ☝️ HACK: for some reason, `question.choices` is not available inside the `draggable`. But `choices` is...
+                span.hollow.button.small.question-sort-handle
+                  |
+                  i.fa.fa-bars
+                | &nbsp;
+                button.hollow.button.alert.small.remove-button(type="button" @click="removeQuestion(survey.questions, question, $event)")
+                  |
+                  i.fa.fa-close
 
-            draggable.choices(v-model="choices" element="ol" :options="choiceSortOptions" @start="dragChoiceStart(choices)" @end="dragChoiceEnd")
-              li.choice(v-for="choice, choiceIdx in choices")
-                .row
-                  .question-choice.columns.medium-9
-                    input(type='text' v-model.trim="choice.text" :placeholder="`Option ${choiceIdx+1}`" required)
-                  .columns.medium-3
-                    span.hollow.button.small.choice-sort-handle
-                      |
-                      i.fa.fa-bars
-                    | &nbsp;
-                    button.hollow.button.alert.tiny.remove-button(type="button" @click="removeChoice(choices, choice, $event)")
-                      |
-                      i.fa.fa-close
+          .multi-options(v-if="question.type === 'multi'")
+            template(v-if="choices = question.choices")
+              // ☝️ HACK: for some reason, `question.choices` is not available inside the `draggable`. But `choices` is...
 
-          button.small.secondary.button(type="button" @click="addChoice(question.choices)")
-            i.fa.fa-plus
-            |  Add Option
-    div: button.small.secondary.button.expanded(type="button" @click="addQuestion")
-      i.fa.fa-plus
-      |  Add Question
-    br
-    br
-    .button-group.expanded
-      button.secondary.button.hollow.expanded(type="button" @click="saveDraft" :disabled="isConducting") Save Draft
-      a.button.expanded(@click="conduct" :disabled="isConducting")
-        template(v-if="!isConducting")
-          | Conduct Survey &nbsp;
-          i.fa.fa-arrow-right
-        template(v-else=true)
-          | Conducting...
+              draggable.choices(v-model="choices" element="ol" :options="choiceSortOptions" @start="dragChoiceStart(choices)" @end="dragChoiceEnd")
+                li.choice(v-for="choice, choiceIdx in choices")
+                  .row
+                    .question-choice.columns.medium-9
+                      input(type='text' v-model.trim="choice.text" :placeholder="`Option ${choiceIdx+1}`" required)
+                    .columns.medium-3
+                      span.hollow.button.small.choice-sort-handle
+                        |
+                        i.fa.fa-bars
+                      | &nbsp;
+                      button.hollow.button.alert.tiny.remove-button(type="button" @click="removeChoice(choices, choice, $event)")
+                        |
+                        i.fa.fa-close
+
+            button.small.secondary.button(type="button" @click="addChoice(question.choices)")
+              i.fa.fa-plus
+              |  Add Option
+      div: button.small.secondary.button.expanded(type="button" @click="addQuestion")
+        i.fa.fa-plus
+        |  Add Question
+      br
+      br
+      .button-group.expanded
+        button.secondary.button.hollow.expanded(type="button" @click="saveDraft" :disabled="isConducting") Save Draft
+        a.button.expanded(@click="conduct" :disabled="isConducting")
+          template(v-if="!isConducting")
+            | Conduct Survey &nbsp;
+            i.fa.fa-arrow-right
+          template(v-else=true)
+            | Conducting...
 
 
 
