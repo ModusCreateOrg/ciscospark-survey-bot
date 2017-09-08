@@ -62,7 +62,7 @@ const introText = ({surveyorName, title, description}) => {
   return text
 }
 
-export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordCompletion }) => {
+export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordCompletion, surveyorName }) => {
   const messageBase = { user: personEmail, channel: roomForSurvey.id }
 
   bot.startConversation(messageBase, (err, convo) => {
@@ -77,7 +77,7 @@ export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordC
       if (idx === 0) {
         // Combine intro and first question because separate messages don't format as well
         questionText += introText({
-          surveyorName: 'Someone',
+          surveyorName,
           title: survey.data.title,
           description: survey.data.description
         })
