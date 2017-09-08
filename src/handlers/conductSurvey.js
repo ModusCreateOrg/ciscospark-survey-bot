@@ -1,14 +1,14 @@
 import u from './helpers/unindent'
 import markdownQuote from './helpers/markdownQuote'
 
-const formatQuestion = (text, idx, total) => u(`
+const formatQuestion = (text, idx, total) => `
   **Question ${idx} of ${total}**
 
   ${text}
-`)
+`
 
 const addTextQuestion = (convo, questionText, question, recordAnswer) => {
-  convo.addQuestion(questionText, (response, convo) => {
+  convo.addQuestion(u(questionText), (response, convo) => {
     recordAnswer(response)
     convo.next()
   })
@@ -23,15 +23,15 @@ const choiceListText = choices =>
   choices.map((choice, i) => `${i + 1}. ${choice.text}`).join('\n')
 
 const addMultipleChoiceQuestion = (convo, questionText, {choices}, recordAnswer) => {
-  convo.addMessage(questionText)
+  convo.addMessage(u(questionText))
 
-  const questionWithChoicesText = u(`
+  const questionWithChoicesText = `
     ${choiceListText(choices)}
 
     Please enter the number corresponding to your answer.
-  `)
+  `
 
-  convo.addQuestion(questionWithChoicesText, (response, convo) => {
+  convo.addQuestion(u(questionWithChoicesText), (response, convo) => {
     if (isValidAnswer(choices, response.text)) {
       recordAnswer(response)
     } else {
@@ -50,6 +50,7 @@ const introText = ({surveyorName, title, description}) => {
   `
   if (description) {
     text += `
+
       About this survey:
 
       ${markdownQuote(description || '')}
@@ -58,7 +59,7 @@ const introText = ({surveyorName, title, description}) => {
 
     `
   }
-  return u(text)
+  return text
 }
 
 export default (bot, { roomForSurvey, personEmail, survey, recordAnswer, recordCompletion }) => {
