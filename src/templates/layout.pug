@@ -1,32 +1,29 @@
 doctype html
-html(lang='en' xml:lang="en" xmlns= "http://www.w3.org/1999/xhtml")
+html(lang='en' xml:lang='en' xmlns= 'http://www.w3.org/1999/xhtml')
   head
     title Survey Bot
-    meta(name="google" content="notranslate")
-    meta(http-equiv="Content-Language" content="en")
+    meta(name='google' content='notranslate')
+    meta(http-equiv="Content-Language" content='en')
     link(href='/static/stylesheets/index.css' type='text/css' rel='stylesheet')
     link(href='/bower/components-font-awesome/css/font-awesome.min.css' type='text/css' rel='stylesheet')
-    script(src="/bower/jquery/dist/jquery.min.js")
-    script(src="/bower/vue/dist/vue.min.js")
+    script(src='/bower/jquery/dist/jquery.min.js')
+    script(src='/bower/vue/dist/vue.min.js')
     script(src='/static/javascripts/index.js')
 
   body
     header.main-header.top-bar
-      div.brand.top-bar-left
+      a.brand.top-bar-left(href='/')
         img.cisco(src='/static/images/cisco.png')
         span.spark Spark
-        | &nbsp;
-        h1 Survey Bot
+        h1  Survey Bot
 
       if currentUser
         .current-user.top-bar-right
           img.avatar(src=currentUser.profile.avatar width=32 height=32)
           span.name= currentUser.profile.displayName
-          // .data= JSON.stringify(currentUser)
           span.logout
             a(href='/auth/logout') Logout
 
-    .row
-      .small-12.small-centered.medium-10.large-8.columns
-        section.content-box
-          block content
+    .row: .small-12.small-centered.medium-10.large-8.columns
+      section.content-box
+        block content
