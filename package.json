@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prod": "node lib/index.js",
-    "start": "concurrently  'npm run server-dev'  'gulp'  'npm run redis'",
+    "start": "concurrently  'yarn server-dev'  'gulp'  'yarn redis'",
     "server-dev": "./inenv.sh babel-watch src/index.js",
     "ngrok": "ngrok http 3000 -subdomain=sparksurvey",
     "redis": "redis-server",
@@ -18,12 +18,12 @@
     "lint": "eslint .",
     "fix": "eslint . --fix",
     "webui-dummy-server": "babel-watch src/dummy-ui.js",
-    "webui-dev": "concurrently  'npm run webui-dummy-server'  'gulp'",
+    "webui-dev": "concurrently  'yarn webui-dummy-server'  'gulp'",
     "build": "gulp build",
     "gulp": "gulp",
     "bower": "bower",
-    "postinstall": "echo 'rebuild node-sass b/c Yarn bug'  &&  npm rebuild node-sass  &&  npm run bower install  &&  npm run gulp clean  &&  npm run gulp build",
-    "heroku-postbuild": "npm run gulp clean-transpiled  &&  npm run transpile"
+    "postinstall": "echo 'rebuild node-sass b/c Yarn bug'  &&  npm rebuild node-sass  &&  yarn bower install -- --allow-root  &&  yarn gulp clean  &&  yarn gulp build",
+    "heroku-postbuild": "yarn gulp clean-transpiled  &&  yarn transpile"
   },
   "author": "",
   "license": "MIT",
