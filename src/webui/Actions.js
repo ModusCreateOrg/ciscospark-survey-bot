@@ -59,6 +59,8 @@ import SparkBot from './SparkBot'
 export default class {
   constructor ({ user, controller, bot, io }) {
     this.userId = user.profile.id
+    this.userDisplayName = user.profile.displayName
+
     this.sparkBot = new SparkBot(controller, bot)
 
     const SparkUserClass = user.isLocal ? DummySparkUser : SparkUser
@@ -133,6 +135,7 @@ export default class {
       await this.sparkBot.conductUserSurvey(
         personEmail,
         survey,
+        this.userDisplayName,
         (...args) => this.saveSurveyResponse(...args, survey.token, surveyTaker.id),
         () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
       )

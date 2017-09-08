@@ -8,6 +8,8 @@ test.beforeEach(({ context }) => { context.user = context.bot.createUser() })
 test('bot gives a survey', async t => {
   const { bot, controller, user } = t.context
 
+  const surveyorName = 'Bob'
+
   const survey = {
     data: {
       questions: [
@@ -21,12 +23,13 @@ test('bot gives a survey', async t => {
 
   controller.trigger(
     'conduct_survey',
-    [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion }]
+    [bot, { survey, roomForSurvey: { id: user.channel }, personEmail: user.id, recordAnswer, recordCompletion, surveyorName }]
   )
 
   const introAndFirstQuestion = await bot.nextResponse()
   t.is(introAndFirstQuestion.channel, user.channel)
   t.regex(introAndFirstQuestion.text, /Hi!/)
+  t.regex(introAndFirstQuestion.text, /Bob/)
   t.regex(introAndFirstQuestion.text, /Question 1 of 2/)
   t.regex(introAndFirstQuestion.text, /What is your favorite color\?/)
 
@@ -48,7 +51,7 @@ test('bot gives a survey', async t => {
   t.true(recordCompletion.calledOnce)
 })
 
-test('bot gives a survey with mulitple choice question', async t => {
+test('bot gives a survey with multiple choice question', async t => {
   const { bot, controller, user } = t.context
 
   const survey = {
