@@ -1,13 +1,22 @@
 import CiscoSpark from 'ciscospark'
 import uniqBy from 'lodash/uniqBy'
 import flatten from 'lodash/flatten'
+import find from 'lodash/find'
 
 const asyncFlatMap = async (...args) => flatten(await asyncMap(...args))
 const asyncMap = (items, cb) => Promise.all(items.map(cb))
 
 export default class {
-  constructor (user) {
+  constructor (user, surveyBotEmails = []) {
     this.user = user
+
+    this.blacklistRegexps = [
+      /@sparkbot.io$/
+    ]
+
+    this.blacklistEmails = surveyBotEmails.concat([
+      'spark-cisco-it-admin-bot@cisco.com'
+    ])
   }
 
   _sparkClient = () => CiscoSpark.init({
@@ -25,8 +34,14 @@ export default class {
   // requires scope spark:rooms_read
   listNonTeamRooms = () => this._list('rooms', { type: 'group' })
 
+  isNotBlackListed = ({personEmail}) => !(
+    find(this.blacklistRegexps, regexp => personEmail.match(regexp)) ||
+    find(this.blacklistEmails, email => personEmail === email)
+  )
+
   // requires scope spark:memberships_read
-  listRoomMembers = roomId => this._list('memberships', { roomId })
+  listRoomMembers = async roomId =>
+    (await this._list('memberships', { roomId })).filter(this.isNotBlackListed)
 
   _list = async (resource, args = {}) =>
     (await this._sparkClient()[resource].list(args)).items
