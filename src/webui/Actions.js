@@ -98,9 +98,13 @@ export default class {
     return { survey, surveyTakers, surveyResponses }
   }
 
+  emitSurveyUpdated(surveyToken) {
+    this.io.to(surveyToken).emit('survey updated')
+  }
+
   saveSurveyResponse = async (questionId, response, surveyToken, surveyTakerId) => {
     await SurveyResponse.createAsync({ questionId, response, surveyTakerId })
-    this.io.to(surveyToken).emit('survey updated')
+    this.emitSurveyUpdated(surveyToken)
   }
 
   saveSurveyCompletion = async (surveyTakerId, surveyId) => {
@@ -162,5 +166,10 @@ export default class {
       survey.id = undefined
       return survey
     }
+  }
+
+  async endSurvey (id) {
+    const survey = await this.updateSurvey(id, { state: 'complete' })
+    this.emitSurveyUpdated(survey.token)
   }
 }

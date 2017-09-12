@@ -15,6 +15,12 @@ block content
 
     h1 {{survey.title}}
 
+    .state
+      .state-desc Survey is <em>{{survey.state}}</em>
+      button.button.small.secondary.survey-end(v-if="survey.state === 'active'" @click='endSurvey' :disabled='isEndingSurvey')
+        template(v-if='isEndingSurvey') Ending…
+        template(v-else) End Survey
+
     .export-links
       | Export as
       a(target='_blank' :href='`/surveys/${id}/${survey.title}.csv?download=1`')  CSV

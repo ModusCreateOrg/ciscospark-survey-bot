@@ -220,12 +220,6 @@ ul.breadcrumbs {
   }
 }
 
-
-
-*[link-href] {
-  cursor: pointer;
-}
-
 .login {
   text-align: center;
 
@@ -249,6 +243,12 @@ ul.breadcrumbs {
 
 .content .questions {
   padding-left: 10px;
+}
+
+.state {
+  .state-name {
+    display: inline-block;
+  }
 }
 
 

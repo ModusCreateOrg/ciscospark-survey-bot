@@ -114,5 +114,10 @@ export default (controller, bot, io) => {
     res.json(survey)
   })
 
+  router.post('/surveys/:id/end', async (req, res) => {
+    await req.actions.endSurvey(req.params.id)
+    res.json({ result: 'success' })
+  })
+
   return router
 }
