@@ -82,7 +82,7 @@ export default class {
     SurveyTaker.updateAsync({ id: surveyTakerId }, attributes)
 
   getSurveyTakers = surveyId =>
-    SurveyTaker.allAsync({ where: { surveyId }})
+    SurveyTaker.allAsync({ where: { surveyId } })
 
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
@@ -105,7 +105,7 @@ export default class {
     return { survey, surveyTakers, surveyResponses }
   }
 
-  emitSurveyUpdated(surveyToken) {
+  emitSurveyUpdated (surveyToken) {
     this.io.to(surveyToken).emit('survey updated')
   }
 
