@@ -34,7 +34,8 @@ const SurveyTaker = schema.define('SurveyTaker', {
   surveyId: { type: Number, index: true },
   userData: { type: schema.Json },
   userSparkId: { type: String, index: true },
-  isFinished: { type: Boolean, default: false, index: true }
+  isFinished: { type: Boolean, default: false, index: true },
+  roomId: { type: String }
 })
 
 const SurveyResponse = schema.define('SurveyResponse', {
@@ -76,6 +77,12 @@ export default class {
 
   createSurveyTaker = (userData, surveyId) =>
     SurveyTaker.createAsync({ userSparkId: userData.id, userData, surveyId })
+
+  updateSurveyTaker = (surveyTakerId, attributes) =>
+    SurveyTaker.updateAsync({ id: surveyTakerId }, attributes)
+
+  getSurveyTakers = surveyId =>
+    SurveyTaker.allAsync({ where: { surveyId }})
 
   getSurvey = id => Survey.findOneAsync({where: { userSparkId: this.userId, id }})
 
@@ -136,13 +143,14 @@ export default class {
     await Promise.all(roomMembers.map(async sparkUser => {
       const surveyTaker = await this.createSurveyTaker(sparkUser, survey.id)
       const { personEmail } = sparkUser
-      await this.sparkBot.conductUserSurvey(
+      const room = await this.sparkBot.conductUserSurvey(
         personEmail,
         survey,
         this.userDisplayName,
         (...args) => this.saveSurveyResponse(...args, survey.token, surveyTaker.id),
         () => this.saveSurveyCompletion(surveyTaker.id, survey.id)
       )
+      await this.updateSurveyTaker(surveyTaker.id, { roomId: room.id })
     }))
 
     return survey
@@ -170,6 +178,13 @@ export default class {
 
   async endSurvey (id) {
     const survey = await this.updateSurvey(id, { state: 'complete' })
+
+    const surveyTakers = await this.getSurveyTakers(id)
+
+    await Promise.all(surveyTakers.map(({roomId}) =>
+      this.sparkBot.closeSurveyRoom(roomId)
+    ))
+
     this.emitSurveyUpdated(survey.token)
   }
 }
