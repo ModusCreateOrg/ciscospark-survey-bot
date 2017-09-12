@@ -25,5 +25,15 @@ export default class {
         setTimeout(() => this.controller.api.rooms.remove(roomForSurvey), 10000)
       }
     }])
+
+    return roomForSurvey
+  }
+
+  async closeSurveyRoom (roomId) {
+    if (roomId) {
+      await this.controller.api.rooms.remove(roomId).catch(e =>
+        console.log('Error removing room, which is probably ok', e)
+      )
+    }
   }
 }

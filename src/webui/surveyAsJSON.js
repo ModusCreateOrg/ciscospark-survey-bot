@@ -40,6 +40,7 @@ const jsonSurveyTakers = (surveyTakers) => fromPairs(
 
 export default ({ survey, surveyTakers, surveyResponses }) => ({
   ...survey.data,
+  state: survey.state,
   surveyTakers: jsonSurveyTakers(surveyTakers),
   questions: jsonQuestions(survey.data.questions, surveyResponses, surveyTakers)
 })

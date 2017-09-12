@@ -14,7 +14,8 @@
       id: surveyId,
       survey: {},
       shareWithRoom: {},
-      sharingStatus: 'unshared'
+      sharingStatus: 'unshared',
+      isEndingSurvey: false
     },
     methods: {
       jsonify: str => JSON.parse(JSON.stringify(str)),
@@ -22,6 +23,11 @@
         this.sharingStatus = 'sharing'
         fetchJSON('POST', `/surveys/${surveyId}/share`, { roomId: this.shareWithRoom.id })
           .then(() => { this.sharingStatus = 'shared' })
+      },
+      endSurvey: function () {
+        this.isEndingSurvey = true
+        fetchJSON('POST', `/surveys/${surveyId}/end`)
+          .then(() => { this.isEndingSurvey = false })
       }
     }
   })

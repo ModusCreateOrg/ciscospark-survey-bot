@@ -220,12 +220,6 @@ ul.breadcrumbs {
   }
 }
 
-
-
-*[link-href] {
-  cursor: pointer;
-}
-
 .login {
   text-align: center;
 
@@ -243,12 +237,22 @@ ul.breadcrumbs {
 }
 
 
-#survey .content {
-  margin-top: 50px;
-}
-
 .content .questions {
   padding-left: 10px;
+}
+
+.state {
+  margin-top: 10px;
+  .state-desc {
+    display: inline-block;
+  }
+  .state-name {
+    display: inline-block;
+  }
+  button {
+    margin-left: 10px;
+    vertical-align: baseline;
+  }
 }
 
 
