@@ -6,6 +6,7 @@ import map from 'lodash/map'
 
 import renderChart from './renderChart'
 import shareResultsFn from './shareResults'
+import { allowDevLogin } from '../env'
 
 const redisOptions = () => {
   const {
@@ -66,7 +67,11 @@ export default class {
 
     const SparkUserClass = user.isLocal ? DummySparkUser : SparkUser
 
-    this.sparkUser = new SparkUserClass(user, controller.identity.emails)
+    const botEmails = controller.identity
+      ? controller.identity.emails
+      : (allowDevLogin && ['surveyBot@example.com'])
+
+    this.sparkUser = new SparkUserClass(user, botEmails)
 
     this.io = io
   }
@@ -125,6 +130,15 @@ export default class {
   async updateSurvey (id, attributes) {
     await Survey.updateAsync({ userSparkId: this.userId, id }, attributes)
     return await this.getSurvey(id)
+  }
+
+  async deleteSurvey (id) {
+    const { survey, surveyTakers, surveyResponses } = await this.getSurveyAndAllResponses(id)
+    await Promise.all([
+      Survey.removeAsync({ where: { id: survey.id } }),
+      SurveyTaker.removeAsync({ where: { id: map(surveyTakers, 'id') } }),
+      SurveyResponse.removeAsync({ where: { id: map(surveyResponses, 'id') } })
+    ])
   }
 
   _roomMembersForSurvey = async survey =>

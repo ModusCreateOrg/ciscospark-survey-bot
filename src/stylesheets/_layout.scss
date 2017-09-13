@@ -288,25 +288,13 @@ ul.breadcrumbs {
     padding-top: 4px;
     padding-bottom: 4px;
 
-    .copy-survey {
-      display: none;
-    }
-
-    &:hover {
-      background-color: #F6F6F6;
-
-      .copy-survey {
-        display: inline-block;
-      }
-    }
-
-    .copy-survey {
-      margin-left: 20px;
+    .actions {
+      &, a:link, a:visited { color: silver; }
+      a:hover { color: gray; }
+      display: inline-block;
+      margin-right: 20px;
       font-size: 90%;
-      color: silver;
-      &:hover {
-        color: gray;
-      }
+
     }
   }
 }

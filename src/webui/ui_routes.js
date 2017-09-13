@@ -109,6 +109,11 @@ export default (controller, bot, io) => {
     res.json(survey)
   })
 
+  router.delete('/surveys/:id', async (req, res) => {
+    await req.actions.deleteSurvey(req.params.id)
+    res.json({ result: 'success' })
+  })
+
   router.post('/surveys/:id/conduct', async (req, res) => {
     const survey = await req.actions.conductSurvey(req.params.id)
     res.json(survey)
