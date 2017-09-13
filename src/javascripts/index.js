@@ -2,7 +2,7 @@
 /* global $ */
 
 (function () {
-  window.fetchJSON = (method, url, json) =>
+  const fetchJSON = (method, url, json) =>
     fetch(url, {
       method,
       credentials: 'include',
@@ -30,4 +30,6 @@
       })
     }
   })
+
+  window.fetchJSON = fetchJSON
 })()
