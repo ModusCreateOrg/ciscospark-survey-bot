@@ -119,7 +119,7 @@ Put your environment variables in `.env.local` and run via:
 
 1. Add a Redirect URI to your Spark Integration settings that uses your ngrok URI. E.g.
 
-        https://http://sparksurvey.ngrok.io/auth/spark/callback
+        https://sparksurvey.ngrok.io/auth/spark/callback
 
 ### Tests
 
