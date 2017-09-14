@@ -5,9 +5,12 @@ mixin list(surveys = [], title, urlFor)
     .surveys__header= title
     ul.surveys__title
       each survey in surveys
-        li
+        li(id=`survey-${survey.id}`)
+          .actions
+            a.copy-survey(href=`/surveys/new?copy=${survey.id}`)  copy
+            |  |
+            a.delete-survey(href=`/surveys/${survey.id}` data-delete=`#survey-${survey.id}`)  delete
           a.title(href=urlFor(survey))= survey.data.title
-          a.copy-survey(href=`/surveys/new?copy=${survey.id}`) copy
 
 block content
 

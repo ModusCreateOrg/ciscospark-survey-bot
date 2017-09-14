@@ -2,7 +2,7 @@
 /* global $ */
 
 (function () {
-  window.fetchJSON = (method, url, json) =>
+  const fetchJSON = (method, url, json) =>
     fetch(url, {
       method,
       credentials: 'include',
@@ -16,7 +16,20 @@
       return response.json()
     })
 
-  $(document).on('click', '[link-href]', function () {
-    window.location = $(this).attr('link-href')
+  $(document).on('click', 'a[data-delete]', function (event) {
+    event.preventDefault()
+
+    const $el = $(this)
+    const href = $el.attr('href')
+    const $target = $($el.data('delete'))
+
+    if (confirm('Are you sure?')) {
+      $target.css({ pointerEvents: 'none' }) // setting the `disabled` attr doesn't work
+      fetchJSON('DELETE', href).then(() => {
+        $target.slideUp()
+      })
+    }
   })
+
+  window.fetchJSON = fetchJSON
 })()
