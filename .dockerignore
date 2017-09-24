@@ -1,0 +1,9 @@
+.env.local
+lib
+node_modules
+bower_components
+dump.rdb
+.git
+public
+test
+.DS_Store

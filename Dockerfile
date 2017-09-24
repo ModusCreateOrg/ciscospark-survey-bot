@@ -1,10 +1,9 @@
-FROM library/node:argon-slim
+FROM library/node:8.4
 
 WORKDIR /app
 
-COPY package.json /app
-RUN npm install --production
 COPY . /app
-RUN npm run transpile
+RUN yarn install --production
+RUN yarn heroku-postbuild
 
-CMD ["npm", "run", "prod"]
+CMD ["yarn", "prod"]
