@@ -67,6 +67,7 @@ A self-hosted Cisco Spark bot for taking surveys.
     * `SPARK_SECRET` -- [secret for validating the origin of webhooks](https://developer.ciscospark.com/webhooks-explained.html#auth) and for encrypting cookies. Generate a random string for this value. If you are using Heroku, this will be generated for you if you use the "Deploy to Heroku" button. In development, feel free to ignore this as one will be generated for you but it will be different every time your app starts.
     * `REDIS_URL` -- URL of your Redis server. If you are using Heroku, this will be added for you.
     * `PORT` -- the port to run the web server. If you are using Heroku, this will be added for you.
+    * `RESTRICT_LOGINS_TO_DOMAINS` -- only allow users to log in if they match certain domains. Set to a comma separated list of allowed domain names. E.g. `example.com,example.net,email.example.biz`. Must provide the full domain-- e.g. `bob@mail.example.com` will not be allowed to log in if your list is `example.com`. If not set, it will allow logins with any domain name.
 
 ## Deploying on Heroku
 

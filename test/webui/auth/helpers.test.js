@@ -23,6 +23,7 @@ testExamples('emailDomain',
     t.true(emailDomain(email) == expectedDomain)
   },
   ['a@a.com', 'a.com'],
+  ['a@a.b.com', 'a.b.com'],
   ['a@a.x', 'a.x'],
   ['a@sdfsdf!@@a.x', 'a.x'],
 )
@@ -36,6 +37,7 @@ testExamples('parseDomainList',
   [[ ['bob@a.com'], ['b.com'] ], false],
   [[ ['bob@a.com'], ['aa.com'] ], false],
   [[ ['bob@a.com'], ['b.com', 'c.com'] ], false],
+  [[ ['bob@a.b.com'], ['b.com', 'c.com'] ], false],
 
   [[ ['bob@a.com'], [] ], true],
   [[ ['bob@a.com', 'bob@b.com'], [] ], true],
