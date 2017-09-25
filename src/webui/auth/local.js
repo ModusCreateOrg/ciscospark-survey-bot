@@ -11,16 +11,20 @@ const imageUrlForEmoji = (emoji) => `data:image/svg+xml;utf8,
   </svg>
 `
 
-passport.use(new LocalStrategy((username, password, done) => {
-  done(null, {
-    isLocal: true,
-    profile: {
-      displayName: username,
-      id: uuid(),
-      avatar: imageUrlForEmoji('😃')
-    }
-  })
-}))
+passport.use(new LocalStrategy({
+  passReqToCallback: true
+},
+  (req, username, password, done) => {
+    done(null, {
+      isLocal: true,
+      profile: {
+        displayName: username,
+        emails: [req.body.email],
+        id: uuid(),
+        avatar: imageUrlForEmoji('😃')
+      }
+    })
+  }))
 
 export const router = express.Router()
 
