@@ -4,9 +4,16 @@ import * as env from '../../env'
 
 import { router as localRouter } from './local'
 import { router as sparkRouter } from './spark'
+import { parseDomainList, emailsAreWithinDomains } from './helpers'
 
 passport.serializeUser((user, done) => {
-  done(null, JSON.stringify(user))
+  const allowedDomains = parseDomainList(process.env.RESTRICT_LOGINS_TO_DOMAINS)
+
+  if (emailsAreWithinDomains(user.profile.emails, allowedDomains)) {
+    done(null, JSON.stringify(user))
+  } else {
+    done(`Login email address must be in one of these domains: ${JSON.stringify(allowedDomains)}`)
+  }
 })
 
 passport.deserializeUser((user, done) => {

@@ -5,15 +5,17 @@ block content
 
   .login
     .spark
-      a.button.spark-login-button(href="/auth/spark")
-        img(src="/static/images/spark-logo-white.png")
+      a.button.spark-login-button(href='/auth/spark')
+        img(src='/static/images/spark-logo-white.png')
         | Login with Cisco Spark
 
     if env.allowDevLogin
       .or or
 
-      form.dev(action="/auth/local" method="POST")
+      form.dev(action='/auth/local' method='POST')
         h2 Dev Login
-        input(type="text" name="username" required=true placeholder="Your name")
-        input(name="password" type="hidden" value='just need something here')
+        input(type='text' name='username' required=true value='Randy Butternubs' placeholder='Your name')
+        input(type='email' name='email' required=true placeholder='Your email' value='randy@bn.co')
+        input(name='password' type='hidden' value='just need something here')
+        br
         button.button Submit
