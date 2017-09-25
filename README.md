@@ -47,11 +47,13 @@ A self-hosted Cisco Spark bot for taking surveys.
         <!-- pulled from src/webui/auth/sparkScopes.js -->
         Choose the following scopes:
 
-          - `spark:people_read`      -- so OAuth can fetch user info (name, avatar, etc...)
-          - `spark:rooms_read`       -- for letting you choose a room to survey
-          - `spark:memberships_read` -- for knowing who is in a room
-          - `spark:messages_write`   -- for sharing survey results
-          - `spark:teams_read`       -- for letting you choose a team room to survey
+        | Scope                    | Reason for needing it                               |
+        | ------------------------ | --------------------------------------------------- |
+        | `spark:people_read`      | so OAuth can fetch user info (name, avatar, etc...) |
+        | `spark:rooms_read`       | for letting you choose a room to survey             |
+        | `spark:memberships_read` | for knowing who is in a room                        |
+        | `spark:messages_write`   | for sharing survey results                          |
+        | `spark:teams_read`       | for letting you choose a team room to survey        |
 
     4. Once you create the integration, grab the Client ID and Client Secret.
       These will be the environment variables `SPARK_OAUTH__CLIENT_ID` and `SPARK_OAUTH__CLIENT_SECRET`.
@@ -60,14 +62,17 @@ A self-hosted Cisco Spark bot for taking surveys.
 
 3. Set the following environment variables. If developing locally, you can put these in the `.env` or `.env.local` files:
 
-    * `PUBLIC_ADDRESS` -- the address at which your bot can be reached
-    * `ACCESS_TOKEN` -- the access token from the *user* you created
-    * `SPARK_OAUTH__CLIENT_ID` -- the client id of the *integration* you created
-    * `SPARK_OAUTH__CLIENT_SECRET` -- the client secret of the *integration* you created
-    * `SPARK_SECRET` -- [secret for validating the origin of webhooks](https://developer.ciscospark.com/webhooks-explained.html#auth) and for encrypting cookies. Generate a random string for this value. If you are using Heroku, this will be generated for you if you use the "Deploy to Heroku" button. In development, feel free to ignore this as one will be generated for you but it will be different every time your app starts.
-    * `REDIS_URL` -- URL of your Redis server. If you are using Heroku, this will be added for you.
-    * `PORT` -- the port to run the web server. If you are using Heroku, this will be added for you.
-    * `RESTRICT_LOGINS_TO_DOMAINS` -- only allow users to log in if they match certain domains. Set to a comma separated list of allowed domain names. E.g. `example.com,example.net,email.example.biz`. Must provide the full domain-- e.g. `bob@mail.example.com` will not be allowed to log in if your list is `example.com`. If not set, it will allow logins with any domain name.
+
+    | Environment variable         | Description                                                                                                                                                                                                                                                                                                                                                                                                         |
+    | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `PUBLIC_ADDRESS`             | the address at which your bot can be reached                                                                                                                                                                                                                                                                                                                                                                        |
+    | `ACCESS_TOKEN`               | the access token from the *user* you created                                                                                                                                                                                                                                                                                                                                                                        |
+    | `SPARK_OAUTH__CLIENT_ID`     | the client id of the *integration* you created                                                                                                                                                                                                                                                                                                                                                                      |
+    | `SPARK_OAUTH__CLIENT_SECRET` | the client secret of the *integration* you created                                                                                                                                                                                                                                                                                                                                                                  |
+    | `SPARK_SECRET`               | [secret for validating the origin of webhooks](https://developer.ciscospark.com/webhooks-explained.html#auth) and for encrypting cookies. Generate a random string for this value. If you are using Heroku, this will be generated for you if you use the "Deploy to Heroku" button. In development, feel free to ignore this as one will be generated for you but it will be different every time your app starts. |
+    | `REDIS_URL`                  | URL of your Redis server. If you are using Heroku, this will be added for you.                                                                                                                                                                                                                                                                                                                                      |
+    | `PORT`                       | the port to run the web server. If you are using Heroku, this will be added for you.                                                                                                                                                                                                                                                                                                                                |
+    | `RESTRICT_LOGINS_TO_DOMAINS` | only allow users to log in if they match certain domains. Set to a comma separated list of allowed domain names. E.g. `example.com,example.net,email.example.biz`. Must provide the full domain-- e.g. `bob@mail.example.com` will not be allowed to log in if your list is `example.com`. If not set, it will allow logins with any domain name.                                                                   |
 
 ## Deploying on Heroku
 
