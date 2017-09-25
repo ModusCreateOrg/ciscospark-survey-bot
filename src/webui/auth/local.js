@@ -12,8 +12,8 @@ const imageUrlForEmoji = (emoji) => `data:image/svg+xml;utf8,
 `
 
 passport.use(new LocalStrategy({
-    passReqToCallback: true
-  },
+  passReqToCallback: true
+},
   (req, username, password, done) => {
     done(null, {
       isLocal: true,

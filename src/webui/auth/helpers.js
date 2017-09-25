@@ -10,4 +10,4 @@ export const emailsAreWithinDomains = (emails, domains) =>
   )
 
 export const parseDomainList = str =>
-  (str || '').split(',').map(s=>s.trim()).filter(s=>s)
+  (str || '').split(',').map(s => s.trim()).filter(s => s)
