@@ -24,6 +24,10 @@
     "SPARK_OAUTH__CLIENT_SECRET": {
       "description": "The client secret of the *integration* for this bot",
       "required": true
+    },
+    "RESTRICT_LOGINS_TO_DOMAINS": {
+      "description": "Restrict access to this service to a single or multiple email domains. Domains can be comma seperated E.g. example.com,example.net,email.example.biz",
+      "required": false
     }
   },
   "logo": "https://node-js-sample.herokuapp.com/node.svg",
