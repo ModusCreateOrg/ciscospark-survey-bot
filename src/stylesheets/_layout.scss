@@ -24,9 +24,11 @@ a {
   color: #2b72bb;
 }
 
+
+
 .button,
 .button.primary {
-  background-color: #2b72bb;
+  border-radius: .28571429rem;
 }
 
 .remove-button {
@@ -36,11 +38,11 @@ a {
 
 .main-header {
   text-align: center;
-  padding: 1rem;
+  padding: 1.6rem;
   color: $dark-gray;
 
   h1 {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     font-weight: 300;
     display: inline;
   }
@@ -78,8 +80,6 @@ a {
   }
 
   h2 {
-    // font-weight: 300;
-    // font-size: 1.4em;
 
     .chat-bubble {
       width: 2.5rem;
@@ -89,9 +89,6 @@ a {
   }
 
   p {
-    // font-size: 1.2rem;
-    // font-weight: 300;
-    // margin-bottom: 2rem;
     line-height: 1.5;
   }
 
@@ -141,6 +138,8 @@ h3 {
   // margin: 2em 0 .5em;
 }
 
+
+
 ul.questions {
   padding: 0;
   margin: 0;
@@ -148,10 +147,9 @@ ul.questions {
 
   .question {
     position: relative;
-    margin: 0 0 2rem 0;
+    margin: 0 1rem 2rem 0;
     padding: 1rem 1rem 0rem;
     border: 1px solid $light-gray;
-    // box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
     border-radius: 2px;
   }
 
@@ -243,18 +241,27 @@ ul.breadcrumbs {
 
 .state {
   margin-top: 10px;
+
   .state-desc {
     display: inline-block;
+    border: 1px solid #cacaca;
+    border-radius: 4px;
+    padding: 3px 7px;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
   }
+
+  .state-desc + button {
+    float: right;
+    margin-right: 60px;
+  }
+
   .state-name {
     display: inline-block;
   }
-  button {
-    margin-left: 10px;
-    vertical-align: baseline;
-  }
-}
 
+}
 
 .responses {
   margin-bottom: 20px;
@@ -269,35 +276,57 @@ ul.breadcrumbs {
   }
 }
 
+.export-links {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 
-.surveys__header {
-  padding: 0.5rem;
-  border-bottom: dotted 1px #DDDDDD;
-  text-transform: uppercase;
-  font-weight: 500;
-  font-size: 14px;
+  a {
+    border: 1px solid #2b72bb;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 4px;
+    margin-left: 10px;
+  }
 }
 
 
-.surveys__title {
-  background-color: #FFFFFF;
+.surveys {
+  &__header {
+    padding: 0.5rem;
+    border-bottom: dotted 1px #DDDDDD;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 14px;
+    margin-top: 20px;
+  }
 
-  li {
-    list-style: none;
-    padding-left: 10px;
-    padding-top: 4px;
-    padding-bottom: 4px;
 
-    .actions {
-      &, a:link, a:visited { color: silver; }
-      a:hover { color: gray; }
-      display: inline-block;
-      margin-right: 20px;
-      font-size: 90%;
+  &__title {
+    background-color: #FFFFFF;
 
+    li {
+      list-style: none;
+      padding-left: 10px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+
+      .actions {
+        &, a:link, a:visited {
+          color: silver;
+        }
+        a:hover {
+          color: gray;
+        }
+        display: inline-block;
+        margin-right: 20px;
+        font-size: 90%;
+
+      }
     }
   }
 }
+
+
 
 div.awesomplete { // be more specific than the defaults to override them
   display: block;
