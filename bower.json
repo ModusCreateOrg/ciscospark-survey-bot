@@ -18,7 +18,7 @@
     "chart.js": "^2.6.0",
     "awesomplete": "^1.1.2",
     "components-font-awesome": "^4.7.0",
-    "Sortable": "sortable.js#^1.6.0",
+    "Sortable": "~1.7.0",
     "vue.draggable": "^2.14.1",
     "addressparser": "^1.0.1"
   },
