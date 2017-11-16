@@ -123,7 +123,8 @@ export default class {
 
   saveSurveyCompletion = async (surveyTakerId, surveyId) => {
     await SurveyTaker.updateAsync({ id: surveyTakerId }, { isFinished: 'true' })
-    if (0 === await SurveyTaker.countAsync({ surveyId, isFinished: 'false' })) {
+    const unfinished = await SurveyTaker.countAsync({ surveyId, isFinished: 'false' })
+    if (unfinished === 0) {
       const survey = await this.updateSurvey(surveyId, { state: 'complete' })
       this.emitSurveyUpdated(survey.token)
     }
