@@ -24,25 +24,27 @@ const redisOptions = () => {
 const schema = new Schema('redis', redisOptions())
 
 const Survey = schema.define('Survey', {
-  userSparkId: { type: String, index: true },
-  data: { type: schema.Json },
-  state: { type: String, default: 'draft' },
+  userSparkId: { type: schema.String, index: true },
+  data: { type: schema.JSON },
+  state: { type: schema.String, default: 'draft' },
   created: { type: schema.Date, default: Date.now },
-  token: { type: String, default: uuid }
+  token: { type: schema.String, default: uuid }
 })
 
 const SurveyTaker = schema.define('SurveyTaker', {
-  surveyId: { type: Number, index: true },
-  userData: { type: schema.Json },
-  userSparkId: { type: String, index: true },
-  isFinished: { type: Boolean, default: false, index: true },
-  roomId: { type: String }
+  surveyId: { type: schema.Number, index: true },
+  userData: { type: schema.JSON },
+  userSparkId: { type: schema.String, index: true },
+  roomId: { type: schema.String },
+
+  // Caminte's Redis adapter doesn't correctly support Boolean so use a string instead
+  isFinished: { type: schema.String, default: 'false', index: true }
 })
 
 const SurveyResponse = schema.define('SurveyResponse', {
-  surveyTakerId: { type: Number, index: true },
-  questionId: { type: String, index: true },
-  response: { type: String }
+  surveyTakerId: { type: schema.Number, index: true },
+  questionId: { type: schema.String, index: true },
+  response: { type: schema.String }
 })
 
 const models = [Survey, SurveyResponse, SurveyTaker]
@@ -120,10 +122,10 @@ export default class {
   }
 
   saveSurveyCompletion = async (surveyTakerId, surveyId) => {
-    await SurveyTaker.updateAsync({ id: surveyTakerId }, { isFinished: true })
-    const unfinished = await SurveyTaker.countAsync({ surveyId, isFinished: false })
-    if (unfinished === 0) {
-      await this.updateSurvey(surveyId, { state: 'complete' })
+    await SurveyTaker.updateAsync({ id: surveyTakerId }, { isFinished: 'true' })
+    if (0 === await SurveyTaker.countAsync({ surveyId, isFinished: 'false' })) {
+      const survey = await this.updateSurvey(surveyId, { state: 'complete' })
+      this.emitSurveyUpdated(survey.token)
     }
   }
 
