@@ -38,7 +38,7 @@
     "botkit": "^0.5.5",
     "botkit-storage-redis": "^1.1.0",
     "bower": "^1.8.0",
-    "caminte": "^0.3.6",
+    "caminte": "^0.4.0",
     "cookie-session": "^2.0.0-beta.2",
     "express-async-router": "^0.1.12",
     "gulp": "^3.9.0",
