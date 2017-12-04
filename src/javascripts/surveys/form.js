@@ -111,7 +111,7 @@
       },
       parseEmailAddresses: function () {
         this.survey.emailAddresses = window['emailjs-addressparser']
-          .parse(this.survey.emailAddressesText.replace(/[\t\n]+/, ','))
+          .parse((this.survey.emailAddressesText || '').replace(/[\t\n]+/, ','))
           .filter(({address}) => address)
 
         this.survey.emailAddressesText = this.survey.emailAddresses
