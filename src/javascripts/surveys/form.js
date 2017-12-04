@@ -48,7 +48,7 @@
       },
       emailAddresses: [],
       emailAddressesText: '',
-      kickMe: ''
+      kickMeHere: ''
     },
     methods: {
       addQuestion: function () {
@@ -117,17 +117,20 @@
         this.survey.emailAddressesText = this.survey.emailAddresses
           .map(({name, address}) => name ? `${name} <${address}>` : address)
           .join(', ')
+      },
+      // HACK: kick all the things (make Vue rerender)
+      // 👢💥 vue.draggable (othewise won't make things draggable)
+      // 👢💥 email address field (otherwise won't update when you move off of it)
+      // 👢💥 force the room selector to display
+      kickMe: function () {
+        if (this.$refs.emailAddresses !== document.activeElement) {
+          this.kickMeHere += ' '
+        }
       }
     }
   })
 
   window.survey = surveyForm
 
-  // HACK: kick all the things
-  // 👢💥 vue.draggable (othewise won't make things draggable)
-  // 👢💥 email address field (otherwise won't update when you move off of it)
-  // 👢💥 force the room selector to display
-  setInterval(() => {
-    surveyForm.kickMe += ' '
-  }, 300)
+  setInterval(surveyForm.kickMe, 300)
 })()
