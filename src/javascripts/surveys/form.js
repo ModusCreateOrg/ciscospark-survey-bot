@@ -113,7 +113,12 @@
       parseEmailAddresses: function () {
         this.survey.emailAddresses = window['emailjs-addressparser']
           .parse((this.survey.emailAddressesText || '').replace(/[\t\n]+/, ','))
-          .filter(({address}) => address)
+          .filter(({address}) => {
+            if (!address) return
+            const [username, domain] = address.split('@')
+            if (!username || !domain || !domain.match(/\..+$/)) return
+            return true
+          })
 
         this.survey.emailAddressesText = this.survey.emailAddresses
           .map(({name, address}) => name ? `${name} <${address}>` : address)
