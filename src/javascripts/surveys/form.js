@@ -73,17 +73,18 @@
           }
         })
       },
-      _validate: function () {
-        return this.$el.reportValidity()
+      _isValid: async function () {
+        await Vue.nextTick()
+        return !this.$el.reportValidity()
       },
       saveDraft: async function () {
-        if (!this._validate()) return
+        if (await this._isValid()) return
 
         await save(this)
         window.location = '/'
       },
       conduct: async function () {
-        if (!this._validate()) return
+        if (await this._isValid()) return
 
         const survey = await save(this)
 
@@ -117,6 +118,9 @@
         this.survey.emailAddressesText = this.survey.emailAddresses
           .map(({name, address}) => name ? `${name} <${address}>` : address)
           .join(', ')
+
+        // force the DOM to update so that the form is invalid before anyone tries to submit it
+        this.kickMe()
       },
       // HACK: kick all the things (make Vue rerender)
       // 👢💥 vue.draggable (othewise won't make things draggable)
