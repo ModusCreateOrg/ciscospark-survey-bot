@@ -1,4 +1,4 @@
-# Survey Bot for Cisco Spark
+# Survey Bot for Webex Teams
 
 [![CircleCI](https://circleci.com/gh/promptworks/ciscospark-survey-bot.svg?style=svg)](https://circleci.com/gh/promptworks/ciscospark-survey-bot)
 
