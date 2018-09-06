@@ -41,4 +41,3 @@ export default async (controller, bot) => {
   controller.createWebhookEndpoints(webserver, bot, () => console.log('SPARK: Webhooks set up!'))
   return webserver
 }
-

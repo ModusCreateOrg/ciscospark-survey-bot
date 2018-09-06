@@ -11,16 +11,16 @@
   "dependencies": {
     "foundation-sites": "~6.3.0",
     "motion-ui": "~1.2.2",
-    "vue": "2.3.3",
-    "socket.io-client": "^2.0.3",
-    "chartkick": "^2.2.4",
-    "vue-chartkick": "^0.2.0",
-    "chart.js": "^2.6.0",
-    "awesomplete": "^1.1.2",
-    "components-font-awesome": "^4.7.0",
-    "Sortable": "1.6.0",
-    "vue.draggable": "^2.14.1",
-    "addressparser": "^1.0.1"
+    "vue": "~2.3.3",
+    "socket.io-client": "~2.0.3",
+    "chartkick": "~2.2.4",
+    "vue-chartkick": "~0.2.0",
+    "chart.js": "~2.6.0",
+    "awesomplete": "~1.1.2",
+    "components-font-awesome": "~4.7.0",
+    "Sortable": "sortable.js#~1.6.0",
+    "vue.draggable": "~2.14.1",
+    "addressparser": "~1.0.1"
   },
   "ignore": [
     "**/.*",

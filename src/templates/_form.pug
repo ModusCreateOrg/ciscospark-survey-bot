@@ -23,7 +23,7 @@ mixin form(survey, title)
           label(v-if="who('space')" key='space') Space
             room-selector.rooms(v-model="survey.room" :required="who('space')" source="/rooms")
           label(v-if="who('email')" key='email') Email Addresses
-            input.emails(type="text" v-model="survey.emailAddressesText" :required="who('email')" placeholder="Enter email addresses" @blur="parseEmailAddresses")
+            input.emails(type="text" ref="emailAddresses" v-model="survey.emailAddressesText" :required="who('email')" placeholder="Enter email addresses" @blur="parseEmailAddresses")
 
       .survey-description
         label Description
@@ -88,7 +88,7 @@ mixin form(survey, title)
           template(v-else=true)
             | Conducting...
 
-      .kickMe {{kickMe}}
+      .kickMeHere {{kickMeHere}}
 
 
 
