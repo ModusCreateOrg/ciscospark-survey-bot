@@ -1,8 +1,8 @@
-# Survey Bot for Cisco Spark
+# Survey Bot for Webex Teams
 
 [![CircleCI](https://circleci.com/gh/promptworks/ciscospark-survey-bot.svg?style=svg)](https://circleci.com/gh/promptworks/ciscospark-survey-bot)
 
-A self-hosted Cisco Spark bot for taking surveys.
+A self-hosted Cisco Webex Teams bot for taking surveys.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
